@@ -16,7 +16,7 @@ public class NotesService
     NotesRepository notesRepository;
 
 
-    public Notes addNotes(Notes notes, MultipartFile file) throws IOException
+    public Notes uploadNotes(Notes notes, MultipartFile file) throws IOException
     {
         notes.setFileName(file.getOriginalFilename());
         notes.setFileType(file.getContentType());
