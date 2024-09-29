@@ -4,7 +4,9 @@ import com.noteseva.model.Notes;
 import com.noteseva.repository.NotesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -14,8 +16,11 @@ public class NotesService
     NotesRepository notesRepository;
 
 
-    public Notes addNotes(Notes notes)
+    public Notes addNotes(Notes notes, MultipartFile file) throws IOException
     {
+        notes.setFileName(file.getOriginalFilename());
+        notes.setFileType(file.getContentType());
+        notes.setFileData(file.getBytes());
         return notesRepository.save(notes);
     }
 
@@ -26,6 +31,6 @@ public class NotesService
 
     public Notes getNotes(Integer id)
     {
-        return notesRepository.findById(id).get();
+        return notesRepository.findById(id).orElse(null);
     }
 }
