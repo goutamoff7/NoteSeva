@@ -1,9 +1,6 @@
 package com.noteseva.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -25,6 +22,8 @@ public class PYQ
     //file handling
     private String fileName;
     private String fileType;
+    @Lob
+    @Column(columnDefinition = "longblob")
     private byte[] fileData;
 
     //verification
