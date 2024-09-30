@@ -63,7 +63,7 @@ public class PYQController
         }
     }
 
-    @GetMapping("/downlo/{id}")
+    @GetMapping("/downloadPYQ/{id}")
     public ResponseEntity<?> downloadPYQ(@PathVariable Integer id)
     {
         try{
