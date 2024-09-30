@@ -20,12 +20,7 @@ public class NotesController
     @Autowired
     NotesService notesService;
 
-    @GetMapping("/")
-    public String greet()
-    {
-        return "Welcome to NoteSeva";
-    }
-
+    
     @GetMapping("/notes")
     public ResponseEntity<List<Notes>> getAllNotes()
     {
