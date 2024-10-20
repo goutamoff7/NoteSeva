@@ -7,6 +7,7 @@ import { ToastContainer } from 'react-toastify';
 import store from './store/store'; // Import the Redux store
 import App from './App';
 import 'react-toastify/dist/ReactToastify.css'; // Import the CSS for Toastify
+import './index.css';  // Adjust the path according to your project structure
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
