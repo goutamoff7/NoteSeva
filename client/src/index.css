@@ -4,6 +4,9 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+    font-family: 'Poppins', sans-serif;
+}
 
 .active{
     @apply text-btngreen underline underline-offset-2 ;
