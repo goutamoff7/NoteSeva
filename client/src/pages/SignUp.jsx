@@ -36,7 +36,7 @@ const SignUpPage = () => {
               />
             </div>
 
-            <div>
+            {/* <div>
               <label className="block text-gray-400 mb-2" htmlFor="email"> University Roll No.</label>
               <input
                 className="w-full p-3 rounded-lg bg-gray-700 text-white outline-none focus:ring-2 focus:ring-green-500"
@@ -45,7 +45,7 @@ const SignUpPage = () => {
                 placeholder="2780012029"
                 required
               />
-            </div>
+            </div> */}
 
 
             <div>
