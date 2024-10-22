@@ -39,12 +39,11 @@ public class NotesController
             if (notes != null)
                 return new ResponseEntity<>(notes, HttpStatus.OK);
             else
-                throw new Exception("May be this notes is not available!!");
-
+                return new ResponseEntity<>("May be this notes is not available!!", HttpStatus.NOT_FOUND);
         }catch(Exception e)
         {
             System.out.println(e.getMessage());
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -74,11 +73,11 @@ public class NotesController
                 return new ResponseEntity<>(fileData, headers, HttpStatus.OK);
             }
             else
-                throw new Exception("May be this notes is not available!!");
+                return new ResponseEntity<>("May be this notes is not available!!",HttpStatus.NOT_FOUND);
         }catch(Exception e)
             {
                 System.out.println(e.getMessage());
-                return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
 
 
