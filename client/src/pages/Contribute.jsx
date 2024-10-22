@@ -1,5 +1,6 @@
 import React from "react";
 import Footer from "../components/Footer";
+import { Link } from 'react-router-dom';
 
 const Contribute = () => {
   return (
@@ -18,12 +19,17 @@ const Contribute = () => {
               fun & friends
             </p>
             <div className="flex flex-row gap-[100px]  ">
-              <button className="bg-btngreen w-[300px] h-[64px] rounded-xl text-whitee ">
-                <span className="text-2xl font-bold">Notes</span>
-              </button>
-              <button className="bg-midblue w-[300px]  h-[64px] rounded-xl text-whitee">
-                <span className="text-2xl font-bold">Project</span>
-              </button>
+              <Link to="/contribute/notesUpload">
+                <button className="bg-btngreen w-[300px] h-[64px] rounded-xl text-whitee text-2xl font-bold ">
+                  Notes
+                </button>
+              </Link>
+              
+              <Link to="/contribute/projectUpload">
+                <button className="bg-midblue w-[300px] h-[64px] rounded-xl text-whitee text-2xl font-bold ">
+                  Projects
+                </button>
+              </Link>
             </div>
           </div>
         </div>
