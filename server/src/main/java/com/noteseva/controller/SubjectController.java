@@ -50,6 +50,7 @@ public class SubjectController
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @PostMapping("/setSubjectList")
     public ResponseEntity<?>setSubjects(@RequestBody List<Subject> subjects)
     {
         try{
@@ -58,6 +59,7 @@ public class SubjectController
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @PostMapping("/setSubject")
     public ResponseEntity<?>setSubject(@RequestBody Subject subject)
     {
         try{
