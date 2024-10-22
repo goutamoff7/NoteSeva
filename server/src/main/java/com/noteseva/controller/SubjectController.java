@@ -50,4 +50,20 @@ public class SubjectController
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    public ResponseEntity<?>setSubjects(@RequestBody List<Subject> subjects)
+    {
+        try{
+            return new ResponseEntity<> (subjectService.setSubjects(subjects),HttpStatus.CREATED);
+        }catch(Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    public ResponseEntity<?>setSubject(@RequestBody Subject subject)
+    {
+        try{
+            return new ResponseEntity<>(subjectService.setSubject(subject),HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

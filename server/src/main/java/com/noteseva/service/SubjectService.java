@@ -26,5 +26,12 @@ public class SubjectService
         return subjectRepository.getSubjects(department);
     }
 
-
+    public List<Subject> setSubjects(List<Subject> subject)
+    {
+        return subjectRepository.saveAll(subject);
+    }
+    public Subject setSubject(Subject subject)
+    {
+        return subjectRepository.save(subject);
+    }
 }
