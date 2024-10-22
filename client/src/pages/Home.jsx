@@ -10,7 +10,7 @@ import HContribute from '../components/HomeParts/HContribute'
 
 const Home = () => {
   return (
-    <div className="bg-[url('darkbg.png')] bg-cover bg-center w-full h-full bg-repeat flex flex-col">
+    <div className="bg-[url('darkbg.png')] bg-cover bg-center w-full h-full bg-repeat flex flex-col shadow-md">
 
         <HSearchBar/>
 
@@ -22,9 +22,9 @@ const Home = () => {
 
         <HContribute/>
 
-
+          
         
-        {/* <Footer></Footer> */}
+        <Footer></Footer>
 
     </div>
   )
