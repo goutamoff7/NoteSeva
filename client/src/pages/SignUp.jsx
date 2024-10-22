@@ -16,8 +16,8 @@ const SignUpPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 flex items-center justify-center w-full pt-[40px]">
-      <div className="w-[70%] bg-gray-800 p-10 rounded-xl shadow-lg flex flex-col md:flex-row space-x-0 md:space-x-10 space-y-10 md:space-y-0">
+    <div className="min-h-screen bg-whitee flex items-center justify-center w-full pt-[40px]">
+      <div className="w-[60%] bg-gray-800 p-10 rounded-xl shadow-lg flex flex-col md:flex-row space-x-0 md:space-x-10 space-y-10 md:space-y-0">
 
         {/* Form Section */}
         <div className="w-full md:w-1/2">

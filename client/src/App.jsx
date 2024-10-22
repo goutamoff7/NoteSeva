@@ -8,6 +8,8 @@ import Chatbot from './pages/Chatbot';
 import Navbar from './components/Navbar';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
+import NotesUpload from './pages/NotesUpload';
+import ProjectUpload from './pages/ProjectUpload';
 
 
 function App() {
@@ -22,6 +24,8 @@ function App() {
         <Route path="/contribute" element={<Contribute />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/contribute/notesUpload" element={<NotesUpload />} />
+        <Route path="/contribute/projectUpload" element={<ProjectUpload />} />
       </Routes>
     </div>
   );
