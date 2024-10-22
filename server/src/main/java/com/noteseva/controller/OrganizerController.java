@@ -35,15 +35,13 @@ public class OrganizerController
     {
         try{
             Organizer organizer = organizerService.getOrganizer(id);
-            if (organizer!=null){
+            if (organizer!=null)
                 return new ResponseEntity<>(organizer,HttpStatus.OK);
-            }
-            else{
-                throw new Exception("May be this organizer is not available!!");
-            }
+            else
+                return new ResponseEntity<>("May be this organizer is not available!!",HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -74,12 +72,10 @@ public class OrganizerController
                 return new ResponseEntity<>(fileData, headers, HttpStatus.OK);
             }
             else
-            {
-                throw new Exception("May be this organizer is not available!!");
-            }
+                return new ResponseEntity<>("May be this organizer is not available!!",HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

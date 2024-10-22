@@ -35,18 +35,13 @@ public class PYQController
         try {
             PYQ pyq = pyqService.getPYQ(id);
             if(pyq!=null)
-            {
                 return new ResponseEntity<>(pyq,HttpStatus.OK);
-            }
             else
-            {
-                throw new Exception("May be Question Papers are not available!!");
-            }
+                return new ResponseEntity<>("May be Question Papers are not available!!",HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
     @PostMapping("/uploadPYQ")
@@ -77,12 +72,12 @@ public class PYQController
                 return new ResponseEntity<>(fileData,headers,HttpStatus.OK);
             }
             else
-                throw new Exception("May be Question Papers are not available!!");
+                return new ResponseEntity<>("May be Question Papers are not available!!",HttpStatus.NOT_FOUND);
         }
         catch(Exception e)
         {
             System.out.println(e.getMessage());
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
