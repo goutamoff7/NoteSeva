@@ -1,9 +1,9 @@
 import React from 'react'
 
-const Contact = () => {
+const Chatbot = () => {
   return (
     <div>Contact</div>
   )
 }
 
-export default Contact
+export default Chatbot
