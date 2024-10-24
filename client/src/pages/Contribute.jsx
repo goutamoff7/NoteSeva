@@ -20,13 +20,13 @@ const Contribute = () => {
             </p>
             <div className="flex flex-row gap-[100px]  ">
               <Link to="/contribute/notesUpload">
-                <button className="bg-btngreen w-[300px] h-[64px] rounded-xl text-whitee text-2xl font-bold ">
+                <button className="bg-btngreen w-[300px] h-[64px] rounded-xl custom-shadow text-whitee text-2xl font-bold ">
                   Notes
                 </button>
               </Link>
               
               <Link to="/contribute/projectUpload">
-                <button className="bg-midblue w-[300px] h-[64px] rounded-xl text-whitee text-2xl font-bold ">
+                <button className="bg-midblue w-[300px] h-[64px] rounded-xl custom-shadow text-whitee text-2xl font-bold ">
                   Projects
                 </button>
               </Link>

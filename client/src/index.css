@@ -11,3 +11,7 @@ body {
 .active{
     @apply text-btngreen underline underline-offset-2 ;
 }
+
+.custom-shadow{
+    box-shadow: 4.84px 4.84px 9.69px 0px rgba(170, 170, 204, 0.25);
+}
