@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import { FcGoogle } from "react-icons/fc";
-import { FaEye,FaEyeSlash} from "react-icons/fa";
+import { FaEye,FaEyeSlash ,FaGithub} from "react-icons/fa";
 
 
 
@@ -108,10 +108,18 @@ const SignUpPage = () => {
             </button>
           </form>
 
-          <button className="mt-4 w-full flex justify-center items-center gap-2 bg-darkblack text-white p-3 rounded-lg hover:bg-gray-600 transition-colors">
-            <FcGoogle className='w-[30px] h-[30px]' />
-            Sign in with Google
-          </button> 
+          <div className='flex justify-between'>
+            <button className="mt-4 w-[45%] flex justify-center items-center gap-2 bg-darkblack text-white p-3 rounded-lg hover:bg-gray-600 transition-colors">
+              <FcGoogle className='w-[30px] h-[30px]' />
+              Google
+            </button> 
+            <button className="mt-4 w-[45%] flex justify-center items-center gap-2 bg-darkblack text-white p-3 rounded-lg hover:bg-gray-600 transition-colors">
+              <FaGithub className='w-[30px] h-[30px]' />
+              GitHub
+            </button> 
+
+          </div>
+
 
           <p className="mt-6 text-gray-400">
             Already have an account? 

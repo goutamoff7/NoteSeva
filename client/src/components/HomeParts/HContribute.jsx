@@ -1,5 +1,5 @@
 import React from 'react';
-import { MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
+import { Link } from 'react-router-dom';
 
 
 const Contribute = () => {
@@ -22,9 +22,11 @@ const Contribute = () => {
           <p className="text-darkblack text-sm mb-6">
             Send us your Best Notes and Resources that will be helpful to all your Seniors, Juniors & Friends.
           </p>
+          <Link to="/contribute">
             <button className="bg-btngreen text-white py-3 px-6 w-[200px] rounded-full shadow hover:bg-green-600 transition">
                 Continue  <span className='text-xl font-extrabold'>→</span>
             </button>
+          </Link>
         </div>
     </div>
   );

@@ -88,7 +88,7 @@ const NotesUpload = () => {
 
         {/* Submit Button */}
         <div className="">
-          <button className="w-full bg-btngreen text-whitee font-semibold text-2xl p-3 rounded hover:bg-green-700 transition-all">
+          <button className="w-full bg-btngreen custom-shadow text-whitee font-semibold text-2xl p-3 rounded hover:bg-green-700 transition-all">
             Submit
           </button>
         </div>
