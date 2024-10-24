@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const Homechatbot = () => {
   return (
@@ -9,7 +10,9 @@ const Homechatbot = () => {
           <div className='max-w-[300px]'>
             <h2 className=' text-xl font-bold text-center'> <span className='text-btngreen'>NoteBuddy</span> - Your AI Notes <span className='text-btngreen'>Buddy</span></h2>
             <p className='text-sm text-center'>Unlock Infinite Conversations: NoteBuddy, Your AI Companion!</p>
-            <button className='h-[40px] w-[100px] bg-btngreen text-whitee rounded-full mt-[10px] ml-[100px]'>Continue</button>
+            <Link to='./chatbot'>
+              <button className='h-[40px] w-[100px] bg-btngreen text-whitee rounded-full mt-[10px] ml-[100px]'>Continue</button>
+            </Link>
           </div>
     </div>
   )
