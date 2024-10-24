@@ -73,7 +73,7 @@ const NotesUpload = () => {
           <input
             type="text"
             placeholder="Ex: Deadlock"
-            className="w-full p-3 rounded bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full p-3 rounded-[12px] bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
           />
         </div>
         {/* Attach files */}
@@ -82,16 +82,17 @@ const NotesUpload = () => {
           <input
             type="file"
             accept="application/pdf"
-            className="w-full p-3 bg-gray-800 text-white rounded focus:outline-none"
+            className="w-full rounded-[12px] p-3 bg-gray-800 text-white focus:outline-none"
           />
         </div>
 
         {/* Submit Button */}
         <div className="">
-          <button className="w-full bg-btngreen custom-shadow text-whitee font-semibold text-2xl p-3 rounded hover:bg-green-700 transition-all">
-            Submit
-          </button>
-        </div>
+            <button className="w-full bg-btngreen custom-shadow text-white font-semibold text-2xl p-3 rounded-[12px] hover:bg-green-700 transition-all">
+              Submit
+            </button>
+          </div>
+
       </div>
     </div>
   );
