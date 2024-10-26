@@ -1,47 +1,23 @@
 import Card from "../components/Card";
+import Footer from "../components/Footer";
 
 const courses = [
-  {
-    title: "B.Tech",
-    para: "Something short and simple here",
-    image: "btech.png",
-  },
-  {
-    title: "B.Pharm",
-    para: "Something short and simple here",
-    image: "btech.png",
-  },
-  {
-    title: "MBBS",
-    para: "Something short and simple here",
-    image: "btech.png",
-  },
-  {
-    title: "Diploma",
-    para: "Something short and simple here",
-    image: "btech.png",
-  },
-  {
-    title: "Nursing",
-    para: "Something short and simple here",
-    image: "btech.png",
-  },
-  {
-    title: "B.Arch",
-    para: "Something short and simple here",
-    image: "btech.png",
-  },
+  { title: "B.Tech", para: "Technological innovation starts here", image: "btech icon.png" },
+  { title: "B.Pharm", para: "Gateway to pharmaceutical innovation.", image: "bpharm icon.png" },
+  { title: "MBBS", para: "Medicine's future starts here.", image: "mbbs icon.png" },
+  { title: "Diploma", para: "Gateway to specialized skills & opportunities.", image: "diploma icon.png" },
+  { title: "Nursing", para: "Compassionate care begins here.", image: "nursing icon.png" },
+  { title: "B.Arch", para: "Creativity shapes spaces here.", image: "barch icon.png" },
 ];
 
 const Course = () => {
   return (
-    <div className="bg-darkbg max-w-full min-h-screen flex flex-col justify-center">
-      {/* first row card */}
-
-      <div className=" mx-auto max-w-6xl  pt-11 pl-5 grid grid-cols-4 gap-12 ">
-        {courses.slice(0, 4).map((course, index) => (
+    <div className="bg-darkbg max-w-full flex flex-col">
+      {/* Course cards in a 4-column grid */}
+      <div className="my-[80px] max-w-[80%] pl-5 flex flex-wrap justify-center gap-12 mx-auto">
+        {courses.map((course, index) => (
           <Card
-            key={index}
+            key={index} 
             title={course.title}
             image={course.image}
             para={course.para}
@@ -49,18 +25,9 @@ const Course = () => {
         ))}
       </div>
 
-      {/* second row card */}
 
-      <div className=" mx-auto max-w-6xl  pt-11 pl-5 grid grid-cols-2 gap-12 justify-center ">
-        {courses.slice(4).map((course, index) => (
-          <Card
-            key={index}
-            title={course.title}
-            image={course.image}
-            para={course.para}
-          />
-        ))}
-      </div>
+
+      <Footer />
     </div>
   );
 };

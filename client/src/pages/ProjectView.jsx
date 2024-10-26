@@ -1,10 +1,14 @@
 import React from "react";
 import ProjectCard from "../components/ProjectCard";
+import { FaUser , FaLink  } from "react-icons/fa";
+import { MdDateRange } from "react-icons/md";
+
+
 const relatedProjects = [
   {
     title: "Weather app",
     para: "description ",
-    image: "Project_image.png",
+    image: "/Project_image.png",
     userName: "NAME",
     rating: "5",
     isVerified: "true",
@@ -12,7 +16,7 @@ const relatedProjects = [
   {
     title: "Weather app",
     para: "description ",
-    image: "Project_image.png",
+    image: "/Project_image.png",
     userName: "NAME",
     rating: "5",
     isVerified: "true",
@@ -20,30 +24,43 @@ const relatedProjects = [
   {
     title: "Weather app",
     para: "description ",
-    image: "Project_image.png",
+    image: "/Project_image.png",
     userName: "NAME",
     rating: "5",
     isVerified: "true",
   },
 ];
-const ProjectView = () => {
+const ProjectView = ({ id, title, para, image, userName, rating, isVerified }) => {
   return (
-    <section className="bg-darkbg p-10 ">
-      <div>
+    <section className="bg-darkbg">
+      <div className="max-w-[80%] mx-auto py-[100px]">
         <div className=" object-cover overflow-hidden ">
-          <img src="/project_banner.png" alt="" className="w-full mx-auto " />
+          <img src="/project_banner.png" alt="" className="w-full h-full" />
         </div>
         <h2 className="font-semibold text-4xl text-white_1 mt-10">
           Weather App created using java and Android Studio
         </h2>
-        <div className="flex flex-row gap-1 py-3 text-whitee justify-between">
+        <div className="flex flex-col gap-1 py-3 text-whitee justify-between">
           {/* icon */}
-          <span className="uppercase font-bold text-xl tracking-wider">
-            name
-          </span>
-          <p>date</p>
+          <div className="flex gap-3 items-center">
+            <FaUser />
+            <p className="text-md tracking-wider">
+              Team Members
+            </p>
+          </div>
+
+          <div className="flex gap-3 items-center">
+            <MdDateRange />
+            <p className="">Date</p>
+          </div>
+
+          <div className="flex gap-3 items-center">
+            <FaLink />
+            <a href="#">Project Link</a>
+          </div>
+
         </div>
-        <p className="text-whitee text-xl">
+        <p className="text-whitee text-md">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut ab nihil
           odio quas provident in vel reiciendis qui delectus deleniti. Vero
           asperiores eius commodi dolores! Soluta, saepe illo vero numquam
@@ -66,20 +83,23 @@ const ProjectView = () => {
           repudiandae iste quis sint.
         </p>
       </div>
-      <div className="">
-        <h3 className="text-white text-5xl uppercase text-center mt-10 underline">
+
+      <div className="max-w-[80%] mx-auto pb-[60px]">
+        <h3 className="text-white text-5xl text-center underline ">
           Related Projects
         </h3>
         <div className="grid grid-cols-3 gap-10 mt-14">
           {relatedProjects.map((project, index) => (
             <ProjectCard
-              title={project.title}
-              para={project.para}
-              image={project.image}
-              userName={project.userName}
-              rating={project.rating}
-              isVerified={project.isVerified}
-            />
+            key={project.id}
+            id={project.id} // Pass the id
+            title={project.title}
+            para={project.para}
+            image={project.image}
+            userName={project.userName}
+            rating={project.rating}
+            isVerified={project.isVerified}
+          />
           ))}
         </div>
       </div>
