@@ -31,16 +31,16 @@ const ProfileCard = () => {
       dev: "Full Stack Developer",
       Linkedin: "https://www.linkedin.com/in/md-ramij-zamadar/",
       GitHub: "https://github.com/mdramijzamadar",
-      X: "#",
-      Facebook: "#",
-      Instagram: "#",
+      X: "https://x.com/RamijZamadar",
+      Facebook: "https://www.facebook.com/profile.php?id=61566764977591",
+      Instagram: "https://www.instagram.com/webdev.ramij/",
     },
     {
       id: 3,
       name: "Goutam Dam",
       image: "Goutam.jpeg",
       dev: "Java Backend Developer",
-      Linkedin: "https: //linkedin.com/in/goutamoff7",
+      Linkedin: "https://linkedin.com/in/goutamoff7",
       GitHub: "https://github.com/goutamoff7",
       X: "#",
       Facebook: "#",
@@ -120,7 +120,9 @@ const ProfileCard = () => {
         <h2 className="text-center text-2xl font-semibold">
           {students[currentIndex].name}
         </h2>
-        <p className="text-center text-gray-400">{students[currentIndex].dev}</p>
+        <p className="text-center text-gray-400">
+          {students[currentIndex].dev}
+        </p>
 
         {/* Share Profile Button */}
         <div className="flex justify-center mt-4">
@@ -141,7 +143,10 @@ const ProfileCard = () => {
             >
               <FaTimes className="text-darkblack text-xl" />
             </button>
-            <a href={students[currentIndex].Linkedin} className="text-[#0A66C2]">
+            <a
+              href={students[currentIndex].Linkedin}
+              className="text-[#0A66C2]"
+            >
               <FaLinkedin size={30} />
             </a>
             <a href={students[currentIndex].GitHub} className="text-[#171515]">
@@ -150,7 +155,10 @@ const ProfileCard = () => {
             <a href={students[currentIndex].X} className="text-[#171515]">
               <FaXTwitter size={30} />
             </a>
-            <a href={students[currentIndex].Facebook} className="text-[#1877F2]">
+            <a
+              href={students[currentIndex].Facebook}
+              className="text-[#1877F2]"
+            >
               <FaFacebook size={30} />
             </a>
             <a

@@ -50,4 +50,36 @@ public class SubjectController
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @GetMapping("/getSubjectList")
+    public ResponseEntity<?> getAllSubjects()
+    {
+        try{
+            List<Subject> subjectList = subjectService.getAllSubjects();
+            if(subjectList!=null)
+                return new ResponseEntity<>(subjectList,HttpStatus.OK);
+            else
+                return new ResponseEntity<>("List is not found!!",HttpStatus.NOT_FOUND);
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>("Nothing is wrong!!",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @PostMapping("/setSubjectList")
+    public ResponseEntity<?>setSubjects(@RequestBody List<Subject> subjects)
+    {
+        try{
+            return new ResponseEntity<> (subjectService.setSubjects(subjects),HttpStatus.CREATED);
+        }catch(Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @PostMapping("/setSubject")
+    public ResponseEntity<?>setSubject(@RequestBody Subject subject)
+    {
+        try{
+            return new ResponseEntity<>(subjectService.setSubject(subject),HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
