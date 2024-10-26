@@ -78,7 +78,7 @@ const ProjectUpload = () => {
           <div className="">
             <label className="block text-sm mb-2">Project Description</label>
             <textarea
-              placeholder="Ex: Ex:- Tic-Tac-Toe in Java is a simple game played on a 3x3 grid..."
+              placeholder="Ex:Tic-Tac-Toe in Java is a simple game played on a 3x3 grid..."
               className="w-full p-3 rounded-[12px] bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>

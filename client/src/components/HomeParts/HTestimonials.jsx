@@ -49,7 +49,7 @@ const ProfileCard = () => {
     {
       id: 4,
       name: "Arpan Kundu",
-      image: "Arpan.jpeg",
+      image: "Arpan.jpg",
       dev: "Java Backend Developer",
       Linkedin: " https://www.linkedin.com/in/kunduarpan",
       GitHub: "https://github.com/kundu-A ",
