@@ -1,20 +1,17 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import StarRating from "./StarRatting";
 import VerifiedBadge from "./VarifiedBadge";
-import { Link } from "react-router-dom";
 
-const ProjectCard = ({ title, para, image, userName, rating, isVerified }) => {
+const ProjectCard = ({ id, title, para, image, userName, rating, isVerified }) => {
   return (
-    <Link to="/project/projectview">
-      <div
-        className="bg-whitee p-5 flex flex-col justify-center gap-4 rounded-3xl
-    "
-      >
+    <Link to={`/project/${id}`}>
+      <div className="bg-whitee p-5 flex flex-col justify-center gap-4 rounded-3xl w-[350px] h-[350px]">
         <div className="rounded-2xl bg-blue-300 object-cover overflow-hidden">
-          <img src={image} alt="project_image" className="w-full h-[200px]" />
+          <img src={image} alt="project_image" className="w-full h-full" />
         </div>
         <div className="flex flex-col gap-2">
-          <h1 className="uppercase font-semibold text-xl text-darkblue ">
+          <h1 className="uppercase font-semibold text-xl text-darkblue">
             {title}
           </h1>
           <p className="text-text_blue font-normal text-sm ">{para}</p>

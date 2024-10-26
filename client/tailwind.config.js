@@ -29,9 +29,6 @@ module.exports = {
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],
       },
-      backgroundImage: {
-        backGroundImg: "url('project-frame1.png')",
-      },
     },
   },
 

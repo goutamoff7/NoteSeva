@@ -116,10 +116,10 @@ const ProjectUpload = () => {
 
           {/* Cover Pic */}
           <div className="">
-            <label className="block text-sm mb-2">Attach Cover (PNG, JPEG*)</label>
+            <label className="block text-sm mb-2">Attach Cover (PNG, JPG, JPEG*)</label>
             <input
               type="file"
-              accept="image/png, image/jpeg"
+              accept="image/png, image/jpeg, image/jpg"
               className="w-full p-3 bg-gray-800 text-white rounded-[12px] focus:outline-none"
             />
           </div>
@@ -130,7 +130,7 @@ const ProjectUpload = () => {
             <input
               type="url"
               placeholder="https://example.com"
-              className="w-full p-3 bg-gray-800 text-white rounded-[12px] focus:outline-none"
+              className="w-full p-3 bg-gray-800 text-white rounded-[12px] focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
 

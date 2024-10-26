@@ -26,7 +26,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/contribute/notesUpload" element={<NotesUpload />} />
         <Route path="/contribute/projectUpload" element={<ProjectUpload />} />
-        <Route path="/project/projectview" element={<ProjectView />} />
+        <Route path="/project/:projectId" element={<ProjectView />} />
       </Routes>
     </div>
   );
