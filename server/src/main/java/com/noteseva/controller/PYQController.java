@@ -18,6 +18,7 @@ public class PYQController
     @Autowired
     PYQService pyqService;
 
+    //localhost:8080/pyq
     @GetMapping("/pyq")
     public ResponseEntity<?> getAllPYQ()
     {
@@ -29,6 +30,7 @@ public class PYQController
         }
     }
 
+    //localhost:8080/pyq/1
     @GetMapping("/pyq/{id}")
     public ResponseEntity<?> getPYQ(@PathVariable Integer id)
     {
@@ -44,6 +46,7 @@ public class PYQController
         }
     }
 
+    //localhost:8080/uploadPYQ
     @PostMapping("/uploadPYQ")
     public ResponseEntity<?> uploadPYQ(@RequestPart PYQ pyq,
                          @RequestPart MultipartFile file)
@@ -58,6 +61,7 @@ public class PYQController
         }
     }
 
+    //localhost:8080/downloadPYQ/1
     @GetMapping("/downloadPYQ/{id}")
     public ResponseEntity<?> downloadPYQ(@PathVariable Integer id)
     {

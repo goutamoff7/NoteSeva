@@ -19,7 +19,7 @@ public class NotesController
     @Autowired
     NotesService notesService;
 
-    
+    //localhost:8080/notes
     @GetMapping("/notes")
     public ResponseEntity<?> getAllNotes()
     {
@@ -31,6 +31,7 @@ public class NotesController
         }
     }
 
+    //localhost:8080/notes/1
     @GetMapping("/notes/{id}")
     public ResponseEntity<?> getNotes(@PathVariable Integer id)
     {
@@ -47,6 +48,7 @@ public class NotesController
         }
     }
 
+    //localhost:8080/uploadNotes
     @PostMapping("/uploadNotes")
     public ResponseEntity<?> uploadNotes(@RequestPart Notes notes,
                           @RequestPart MultipartFile file)
@@ -61,6 +63,8 @@ public class NotesController
            return new ResponseEntity<>("Something went wrong!!",HttpStatus.BAD_REQUEST);
         }
     }
+
+    //localhost:8080/downloadNotes/1
     @GetMapping("/downloadNotes/{id}")
     public ResponseEntity<?> downloadNotes(@PathVariable Integer id){
         try{
@@ -79,7 +83,5 @@ public class NotesController
                 System.out.println(e.getMessage());
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
-
-
     }
 }

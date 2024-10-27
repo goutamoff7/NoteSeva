@@ -50,6 +50,7 @@ public class SubjectController
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    //localhost:8080/getSubjectList
     @GetMapping("/getSubjectList")
     public ResponseEntity<?> getAllSubjects()
     {
@@ -64,6 +65,7 @@ public class SubjectController
             return new ResponseEntity<>("Nothing is wrong!!",HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    //localhost:8080/setSubjectList
     @PostMapping("/setSubjectList")
     public ResponseEntity<?>setSubjects(@RequestBody List<Subject> subjects)
     {
@@ -73,6 +75,7 @@ public class SubjectController
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    //localhost:8080/setSubject
     @PostMapping("/setSubject")
     public ResponseEntity<?>setSubject(@RequestBody Subject subject)
     {

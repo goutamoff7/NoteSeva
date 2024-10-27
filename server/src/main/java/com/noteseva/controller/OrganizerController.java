@@ -19,6 +19,7 @@ public class OrganizerController
     @Autowired
     OrganizerService organizerService;
 
+    //localhost:8080/organizer
     @GetMapping("/organizer")
     public ResponseEntity<?> getAllOrganizer()
     {
@@ -30,6 +31,7 @@ public class OrganizerController
         }
     }
 
+    //localhost:8080/organizer/1
     @GetMapping("/organizer/{id}")
     public ResponseEntity<?> getOrganizer(@PathVariable Integer id)
     {
@@ -45,6 +47,7 @@ public class OrganizerController
         }
     }
 
+    //localhost:8080/uploadOrganizer
     @PostMapping("/uploadOrganizer")
     public ResponseEntity<?> uploadOrganizer(@RequestPart Organizer organizer,
                                              @RequestPart MultipartFile file)
@@ -58,6 +61,7 @@ public class OrganizerController
         }
     }
 
+    //localhost:8080/downloadOrganizer/1
     @GetMapping("/downloadOrganizer/{id}")
     public ResponseEntity<?> downloadOrganizer(@PathVariable Integer id)
     {
