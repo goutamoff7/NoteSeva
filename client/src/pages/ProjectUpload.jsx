@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Select from 'react-select';
+import { ToastContainer, toast } from 'react-toastify';
 
 const ProjectUpload = () => {
   // Mock data for the dropdowns
@@ -20,6 +21,7 @@ const ProjectUpload = () => {
   // Function to handle adding a new input field for team members
   const addNewMember = () => {
     setTeamMembers([...teamMembers, { name: '' }]);
+    toast.success("New team member added!");
   };
 
   // Function to handle removing an input field
@@ -27,6 +29,7 @@ const ProjectUpload = () => {
     const newTeamMembers = [...teamMembers];
     newTeamMembers.splice(index, 1); // Remove the member at the specific index
     setTeamMembers(newTeamMembers);
+    toast.error("One team member deleted");
   };
 
   // Function to handle changes in team member inputs
@@ -38,6 +41,8 @@ const ProjectUpload = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-evenly bg-gray-900 text-white">
+      <ToastContainer position="top-center" autoClose={2000} hideProgressBar={false} />
+      
       {/* Left Part */}
       <div className='max-w-[400px] space-y-[30px]'>
         <img src="/projectsupload.png" alt="" className='h-[300px] w-[380px]' />
