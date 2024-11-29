@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @CrossOrigin
 @RestController
+@RequestMapping("pyq")
 public class PYQController
 {
 
@@ -19,7 +20,7 @@ public class PYQController
     PYQService pyqService;
 
     //localhost:8080/pyq
-    @GetMapping("/pyq")
+    @GetMapping("/all")
     public ResponseEntity<?> getAllPYQ()
     {
         try {
@@ -31,7 +32,7 @@ public class PYQController
     }
 
     //localhost:8080/pyq/1
-    @GetMapping("/pyq/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getPYQ(@PathVariable Integer id)
     {
         try {
@@ -47,7 +48,7 @@ public class PYQController
     }
 
     //localhost:8080/uploadPYQ
-    @PostMapping("/uploadPYQ")
+    @PostMapping("/upload")
     public ResponseEntity<?> uploadPYQ(@RequestPart PYQ pyq,
                          @RequestPart MultipartFile file)
     {
@@ -62,7 +63,7 @@ public class PYQController
     }
 
     //localhost:8080/downloadPYQ/1
-    @GetMapping("/downloadPYQ/{id}")
+    @GetMapping("/download/{id}")
     public ResponseEntity<?> downloadPYQ(@PathVariable Integer id)
     {
         try{

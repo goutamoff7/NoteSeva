@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 @CrossOrigin
 @RestController
+@RequestMapping("organizer")
 public class OrganizerController
 {
 
@@ -20,7 +21,7 @@ public class OrganizerController
     OrganizerService organizerService;
 
     //localhost:8080/organizer
-    @GetMapping("/organizer")
+    @GetMapping("/all")
     public ResponseEntity<?> getAllOrganizer()
     {
         try {
@@ -32,7 +33,7 @@ public class OrganizerController
     }
 
     //localhost:8080/organizer/1
-    @GetMapping("/organizer/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getOrganizer(@PathVariable Integer id)
     {
         try{
@@ -48,7 +49,7 @@ public class OrganizerController
     }
 
     //localhost:8080/uploadOrganizer
-    @PostMapping("/uploadOrganizer")
+    @PostMapping("/upload")
     public ResponseEntity<?> uploadOrganizer(@RequestPart Organizer organizer,
                                              @RequestPart MultipartFile file)
     {
@@ -62,7 +63,7 @@ public class OrganizerController
     }
 
     //localhost:8080/downloadOrganizer/1
-    @GetMapping("/downloadOrganizer/{id}")
+    @GetMapping("/download/{id}")
     public ResponseEntity<?> downloadOrganizer(@PathVariable Integer id)
     {
         try{
