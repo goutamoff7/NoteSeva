@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 @CrossOrigin
 @RestController
+@RequestMapping("notes")
 public class NotesController
 {
 
@@ -20,7 +21,7 @@ public class NotesController
     NotesService notesService;
 
     //localhost:8080/notes
-    @GetMapping("/notes")
+    @GetMapping("/all")
     public ResponseEntity<?> getAllNotes()
     {
         try {
@@ -32,7 +33,7 @@ public class NotesController
     }
 
     //localhost:8080/notes/1
-    @GetMapping("/notes/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getNotes(@PathVariable Integer id)
     {
         try {
@@ -49,7 +50,7 @@ public class NotesController
     }
 
     //localhost:8080/uploadNotes
-    @PostMapping("/uploadNotes")
+    @PostMapping("/upload")
     public ResponseEntity<?> uploadNotes(@RequestPart Notes notes,
                           @RequestPart MultipartFile file)
     {
@@ -65,7 +66,7 @@ public class NotesController
     }
 
     //localhost:8080/downloadNotes/1
-    @GetMapping("/downloadNotes/{id}")
+    @GetMapping("/download/{id}")
     public ResponseEntity<?> downloadNotes(@PathVariable Integer id){
         try{
             Notes notes=notesService.getNotes(id);
