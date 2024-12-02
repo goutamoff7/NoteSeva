@@ -1,5 +1,4 @@
 package com.noteseva.configuration;
-
 import com.noteseva.service.JwtService;
 import com.noteseva.service.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;

@@ -2,87 +2,95 @@ package com.noteseva.controller;
 
 import com.noteseva.model.Notes;
 import com.noteseva.service.NotesService;
+import com.noteseva.service.UtilityService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
 @CrossOrigin
 @RestController
 @RequestMapping("notes")
-public class NotesController
-{
+public class NotesController {
 
     @Autowired
     NotesService notesService;
 
-    //localhost:8080/notes
+    @Autowired
+    UtilityService utilityService;
+
+    //localhost:8080/notes/all
     @GetMapping("/all")
-    public ResponseEntity<?> getAllNotes()
-    {
+    public ResponseEntity<?> getAllNotes() {
         try {
             return new ResponseEntity<>(notesService.getAllNotes(), HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return new ResponseEntity<>("May be Notes are not available",HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("May be Notes are not available", HttpStatus.NOT_FOUND);
         }
     }
 
     //localhost:8080/notes/1
     @GetMapping("/{id}")
-    public ResponseEntity<?> getNotes(@PathVariable Integer id)
-    {
+    public ResponseEntity<?> getNotes(@PathVariable Integer id) {
         try {
             Notes notes = notesService.getNotes(id);
             if (notes != null)
                 return new ResponseEntity<>(notes, HttpStatus.OK);
             else
                 return new ResponseEntity<>("May be this notes is not available!!", HttpStatus.NOT_FOUND);
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    //localhost:8080/uploadNotes
+    //localhost:8080/notes/upload
     @PostMapping("/upload")
-    public ResponseEntity<?> uploadNotes(@RequestPart Notes notes,
-                          @RequestPart MultipartFile file)
-    {
-        try
-        {
-            Notes notes1 = notesService.uploadNotes(notes,file);
-            return new ResponseEntity<>(notes1,HttpStatus.CREATED);
-        } catch (Exception e)
-        {
+    public ResponseEntity<?> uploadNotes(@RequestPart @Valid Notes notes,
+                                         @RequestPart MultipartFile file
+    ) {
+        try {
+            // Validate the file
+            utilityService.validateFile(file);
+
+            //Getting uploader name
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+            // Process and save notes and file
+            Notes notes1 = notesService.uploadNotes(notes, file, username);
+            return new ResponseEntity<>(notes1, HttpStatus.CREATED);
+
+        } catch (ResponseStatusException e) {
+            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
+        } catch (Exception e) {
             System.out.println(e.getMessage());
-           return new ResponseEntity<>("Something went wrong!!",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Something went wrong!!", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    //localhost:8080/downloadNotes/1
+    //localhost:8080/notes/download/1
     @GetMapping("/download/{id}")
-    public ResponseEntity<?> downloadNotes(@PathVariable Integer id){
-        try{
-            Notes notes=notesService.getNotes(id);
-            if(notes!=null) {
+    public ResponseEntity<?> downloadNotes(@PathVariable Integer id) {
+        try {
+            Notes notes = notesService.getNotes(id);
+            if (notes != null) {
                 byte[] fileData = notes.getFileData();
                 String fileType = notes.getFileType();
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.valueOf(fileType));
                 return new ResponseEntity<>(fileData, headers, HttpStatus.OK);
-            }
-            else
-                return new ResponseEntity<>("May be this notes is not available!!",HttpStatus.NOT_FOUND);
-        }catch(Exception e)
-            {
-                System.out.println(e.getMessage());
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+            } else
+                return new ResponseEntity<>("May be this notes is not available!!", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
