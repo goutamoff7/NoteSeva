@@ -1,7 +1,9 @@
 package com.noteseva.controller;
 
 import com.noteseva.model.Users;
+import com.noteseva.repository.UserRepository;
 import com.noteseva.service.AdminService;
+import com.noteseva.service.UtilityService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,26 +22,32 @@ public class AdminController {
     @Autowired
     AdminService adminService;
 
+    @Autowired
+    UserRepository  userRepository;
+
+    @Autowired
+    UtilityService utilityService;
+
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody @Valid Users user , BindingResult bindingResult)
-    {
-        if(bindingResult.hasErrors()){
-            Map<String , String> errors=new HashMap<>();
-            bindingResult.getFieldErrors().forEach(error->
-                    errors.put(error.getField(),error.getDefaultMessage()));
-            return  new ResponseEntity<>(errors,HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> register(@RequestBody @Valid Users user) {
+        try {
+            String username = utilityService.extractUsernameFromEmail(user);
+            if (userRepository.findByUsername(username)==null)
+                return new ResponseEntity<>(adminService.registerAdmin(user), HttpStatus.CREATED);
+            return new ResponseEntity<>("Admin already exist",HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>("Admin Registration Unsuccessful",HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(adminService.registerAdmin(user), HttpStatus.CREATED);
     }
 
     @GetMapping("/get-all-user")
-    public ResponseEntity<?> getAllUser()
-    {
+    public ResponseEntity<?> getAllUser() {
         try {
             return new ResponseEntity<>(adminService.getAllUser(), HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return new ResponseEntity<>("No user available",HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("No user available", HttpStatus.NOT_FOUND);
         }
     }
 
