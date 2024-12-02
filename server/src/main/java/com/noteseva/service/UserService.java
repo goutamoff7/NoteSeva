@@ -27,22 +27,27 @@ public class UserService {
     @Autowired
     JwtService jwtService;
 
+    @Autowired
+    UtilityService utilityService;
+
     public Users register(Users user) {
+        user.setUsername(utilityService.extractUsernameFromEmail(user)); // username = substring of email id, before @ symbol
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.ROLE_USER);
         return userRepository.save(user);
     }
 
     public String verify(Users user) {
+        String username=utilityService.extractUsernameFromEmail(user);
         Authentication authentication =
                 authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(
-                                user.getUsername(),
+                                username,
                                 user.getPassword()
                         )
                 );
         if (authentication.isAuthenticated())
-            return jwtService.generateToken(user.getUsername());
+            return jwtService.generateToken(username);
         return "Login Failed";
     }
 

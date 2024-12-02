@@ -23,7 +23,11 @@ public class AdminService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    UtilityService utilityService;
+
     public Users registerAdmin(Users user) {
+        user.setUsername(utilityService.extractUsernameFromEmail(user));  // username = substring of email id, before @ symbol
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.ROLE_ADMIN);
         return userRepository.save(user);
