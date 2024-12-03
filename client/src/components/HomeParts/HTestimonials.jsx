@@ -88,7 +88,6 @@ const ProfileCard = () => {
       setFade(false); // Fade back in
     }, 400); // Delay to match the transition duration
   };
-
   return (
     <div className="relative flex flex-col items-center justify-center my-[60px] space-y-[40px]">
       <h2 className="text-whitee text-4xl font-semibold ">Our Testimonials</h2>
