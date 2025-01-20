@@ -12,8 +12,4 @@ public interface SubjectRepository extends JpaRepository<Subject,Integer> {
     @Query("SELECT s from Subject s WHERE "+
             "LOWER(s.subjectName) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<Subject> searchSubject(String keyword);
-
-    @Query("SELECT s from Subject s WHERE "+
-            "LOWER(s.department) LIKE LOWER(CONCAT('%', :department, '%'))")
-    List<Subject> getSubjects(String department);
 }

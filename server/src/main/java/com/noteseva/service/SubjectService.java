@@ -21,10 +21,10 @@ public class SubjectService
         return subjectRepository.searchSubject(keyword);
     }
 
-    public List<Subject> getSubjects(String department)
+    /*public List<Subject> getSubjects(String department)
     {
         return subjectRepository.getSubjects(department);
-    }
+    }*/
 
     public List<Subject> setSubjects(List<Subject> subject)
     {

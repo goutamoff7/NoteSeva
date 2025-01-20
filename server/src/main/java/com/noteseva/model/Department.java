@@ -6,28 +6,27 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.util.Set;
 
 @Data
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class Subject
-{
+public class Department {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="subject_id")
+    @Column(name="department_id")
     private Integer id;
 
-    @NotBlank
-    @Column(name="subject_code",nullable = false,unique = true)
-    private String subjectCode;
+    @NotBlank(message = "Please enter the Department name")
+    @Column(name="department_name",nullable = false,unique = true)
+    private String departmentName;
 
-    @NotBlank
-    @Column(name="subject_name",nullable = false)
-    private String subjectName;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="course_id",nullable = false)
+    private Course course;
 
-    @OneToMany(mappedBy = "subject",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "department",fetch = FetchType.LAZY)
     private Set<SubjectDepartment> subjectDepartment;
 }
