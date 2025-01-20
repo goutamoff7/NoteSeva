@@ -1,13 +1,11 @@
 package com.noteseva.service;
 
 import com.noteseva.model.Organizer;
-import com.noteseva.model.VerificationStatus;
 import com.noteseva.repository.OrganizerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -31,7 +29,6 @@ public class OrganizerService {
             organizer.setFileData(file.getBytes());
             organizer.setSharedBy(username);
             organizer.setDate(LocalDate.now());
-            organizer.setVerificationStatus(VerificationStatus.NOT_VERIFIED);
         } catch (Exception e) {
             System.out.println(e.getMessage() + "from service class.");
         }

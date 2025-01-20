@@ -1,7 +1,6 @@
 package com.noteseva.service;
 
 import com.noteseva.model.Notes;
-import com.noteseva.model.VerificationStatus;
 import com.noteseva.repository.NotesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,6 @@ public class NotesService {
         notes.setFileData(file.getBytes());
         notes.setSharedBy(username);
         notes.setDate(LocalDate.now());
-        notes.setVerificationStatus(VerificationStatus.NOT_VERIFIED);
         return notesRepository.save(notes);
     }
 

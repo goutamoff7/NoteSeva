@@ -1,7 +1,6 @@
 package com.noteseva.service;
 
 import com.noteseva.model.PYQ;
-import com.noteseva.model.VerificationStatus;
 import com.noteseva.repository.PYQRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +29,6 @@ public class PYQService {
         pyq.setFileData(file.getBytes());
         pyq.setSharedBy(username);
         pyq.setDate(LocalDate.now());
-        pyq.setVerificationStatus(VerificationStatus.NOT_VERIFIED);
         return pyqRepository.save(pyq);
     }
 }
