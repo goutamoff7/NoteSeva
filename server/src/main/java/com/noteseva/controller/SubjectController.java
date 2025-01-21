@@ -35,21 +35,21 @@ public class SubjectController
     }
 
     //localhost:8080/subjects?department=CSE
-//    @GetMapping("/subjects")
-//    public ResponseEntity<?> getSubjects(@RequestParam String department)
-//    {
-//        try {
-//            List<Subject> subjectList = subjectService.getSubjects(department);
-//            if (subjectList != null)
-//                return new ResponseEntity<>(subjectList, HttpStatus.OK);
-//            else
-//                return new ResponseEntity<>("No Subject Found", HttpStatus.NOT_FOUND);
-//        }catch(Exception e)
-//        {
-//            System.out.println(e.getMessage());
-//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
+   @GetMapping("/subjects")
+    public ResponseEntity<?> getSubjects(@RequestParam String department)
+    {
+        try {
+            List<Subject> subjectList = subjectService.getSubjects(department);
+            if (subjectList != null)
+                return new ResponseEntity<>(subjectList, HttpStatus.OK);
+            else
+                return new ResponseEntity<>("No Subject Found", HttpStatus.NOT_FOUND);
+        }catch(Exception e)
+        {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     //localhost:8080/getSubjectList
     @GetMapping("/getSubjectList")
     public ResponseEntity<?> getAllSubjects()
