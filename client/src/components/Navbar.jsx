@@ -1,72 +1,58 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-
-  // Navitems array
-  const navitems = [
-    {path:"/",link:"Home"},
-    {path:"/course",link:"Courses"},
-    {path:"/project",link:"Projects"},
-    {path:"/contribute",link:"Contribute"},
-    {path:"/Chatbot",link:"Chatbot"},
-  ];
+  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   return (
-    <div className='flex justify-between items-center h-[100px] shadow-md bg-navcol'>
-      
+    <div className="flex justify-between items-center h-[100px] shadow-md bg-navcol">
       {/* Logo Section */}
-      <NavLink to="/"><img src="logoNote.svg" alt="Logo" className='h-[150px] w-[205px]'/></NavLink>
+      <NavLink to="/">
+        <img src="logoNote.svg" alt="Logo" className="h-[150px] w-[205px]" />
+      </NavLink>
 
       {/* Navigation Links */}
-      <div className='md:flex gap-12 text-lg hidden'>
-        {
-          navitems.map(({ path, link }) => (
-            <li className='text-darkblack font-semibold text-2xl list-none' key={path}>
-              <NavLink 
-                to={path} 
-                className={({ isActive, isPending }) =>
-                  isActive
-                    ? "active" // Active state
-                    : isPending
-                    ? "pending" // Pending state (optional)
-                    : "hover:underline" // Default hover state
-                }
-              >
-                {link}
-              </NavLink>
-            </li>
-          ))
-        }
+      <div className="md:flex gap-12 hidden text-xl font-semibold">
+        <NavLink to="/" className={({ isActive }) => (isActive ? "active" : "hover:underline")}>Home</NavLink>
+        <NavLink to="/course" className={({ isActive }) => (isActive ? "active" : "hover:underline")}>Courses</NavLink>
+        <NavLink to="/project" className={({ isActive }) => (isActive ? "active" : "hover:underline")}>Projects</NavLink>
+        <NavLink to="/contribute" className={({ isActive }) => (isActive ? "active" : "hover:underline")}>Contribute</NavLink>
+        <NavLink to="/contact" className={({ isActive }) => (isActive ? "active" : "hover:underline")}>Contact</NavLink>
       </div>
 
-      <div className='flex space-x-6 mr-10'>
-
-        <NavLink to="/login">
-          <button className='w-[80px] h-[40px] bg-btngreen text-white text-xl text-semibold rounded-sm'>
-            Login
+      <div className="flex space-x-6 mr-10">
+        {/* Conditional Button for Authentication */}
+        {!isLoggedIn ? (
+          <button
+            onClick={() => navigate('/signup')}
+            className="w-fit h-[40px] py-1 px-2 bg-btngreen text-white text-xl font-semibold rounded-sm"
+          >
+            Register/Login
           </button>
-        </NavLink>
-
-        <NavLink to="/signup">
-          <button className='w-[100px] h-[40px] bg-btngreen text-white text-xl text-semibold rounded-sm'>
-            Sign Up
-          </button>
-        </NavLink>
-
-        <NavLink to="/logout">
-          <button className='hidden w-[100px] h-[40px] bg-btngreen text-white text-xl text-semibold rounded-sm'>
-            Log Out
-          </button>
-        </NavLink>
-
-        <NavLink to="/myprofile">
-          <button className='hidden w-[100px] h-[40px] bg-btngreen text-white text-xl text-semibold rounded-sm'>
-            My Profile
-          </button>
-        </NavLink>
+        ) : (
+          <div className="flex items-center gap-2 cursor-pointer group relative">
+            <img className="w-4  rounded-full" src="./dropdown_icon.svg" alt="Dropdown Icon" />
+            <img className="w-10 h-10 rounded-full" src="./Manojit.jpg" alt="User Profile" />
+            <div className="absolute top-0 right-0 pt-14 text-base font-medium text-gray-600 z-20 hidden group-hover:block">
+              <div className="min-w-48 bg-stone-100 rounded flex flex-col gap-4 p-4">
+                <p onClick={() => navigate("/my-profile")} className="hover:text-black cursor-pointer">
+                  My Profile
+                </p>
+                <p onClick={() => navigate("/my-contribution")} className="hover:text-black cursor-pointer">
+                  My Contribution
+                </p>
+                <p
+                  onClick={() => setIsLoggedIn(false)}
+                  className="hover:text-black cursor-pointer"
+                >
+                  Logout
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-      
     </div>
   );
 };
