@@ -26,9 +26,7 @@ const Home = () => {
         <HContribute/>
 
         <HTestimonials/>
-
-          
-        
+      
         <Footer></Footer>
 
     </div>

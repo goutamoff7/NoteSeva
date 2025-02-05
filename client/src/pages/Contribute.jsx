@@ -9,7 +9,7 @@ const Contribute = () => {
         <div className="flex justify-center items-center w-full h-full gap-11   ">
           {/* right side */}
           <div className="w-[500px]   ">
-            <img src="/public/contribute_1.png" alt="" className=" w-full" />
+            <img src="/contribute_1.png" alt="" className=" w-full" />
           </div>
           {/* left side */}
           <div className="flex flex-col gap-5 w-[745px]">
