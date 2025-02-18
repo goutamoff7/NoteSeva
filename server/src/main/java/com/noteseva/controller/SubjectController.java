@@ -4,6 +4,8 @@ import com.noteseva.model.Notes;
 import com.noteseva.model.Subject;
 import com.noteseva.service.NotesService;
 import com.noteseva.service.SubjectService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import java.util.List;
 
 @CrossOrigin
 @RestController
+@Tag(name="Subject APIs",description = "View, Search, add Subject")
 public class SubjectController
 {
 
@@ -23,6 +26,7 @@ public class SubjectController
     SubjectService subjectService;
 
     //localhost:8080/subject/search?keyword=DBMS
+    @Operation(summary = "")
     @GetMapping("/subject/search")
     public ResponseEntity<?> searchSubject(@RequestParam String keyword)
     {
@@ -35,6 +39,7 @@ public class SubjectController
     }
 
     //localhost:8080/subjects?department=CSE
+   @Operation(summary = "")
    @GetMapping("/subjects")
     public ResponseEntity<?> getSubjects(@RequestParam String department)
     {
@@ -51,6 +56,7 @@ public class SubjectController
         }
     }
     //localhost:8080/getSubjectList
+    @Operation(summary = "")
     @GetMapping("/getSubjectList")
     public ResponseEntity<?> getAllSubjects()
     {
@@ -66,6 +72,7 @@ public class SubjectController
         }
     }
     //localhost:8080/setSubjectList
+    @Operation(summary = "")
     @PostMapping("/setSubjectList")
     public ResponseEntity<?>setSubjects(@RequestBody List<Subject> subjects)
     {
@@ -76,6 +83,7 @@ public class SubjectController
         }
     }
     //localhost:8080/setSubject
+    @Operation(summary = "")
     @PostMapping("/setSubject")
     public ResponseEntity<?>setSubject(@RequestBody Subject subject)
     {

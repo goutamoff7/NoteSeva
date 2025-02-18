@@ -1,7 +1,11 @@
 package com.noteseva.controller;
+import com.noteseva.DTO.OrganizerDTO;
 import com.noteseva.model.Organizer;
+import com.noteseva.service.DTOService;
 import com.noteseva.service.OrganizerService;
 import com.noteseva.service.UtilityService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -16,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 @CrossOrigin
 @RestController
 @RequestMapping("organizer")
+@Tag(name="Organizer APIs",description = "View, Search, Upload and Download Organizer")
 public class OrganizerController {
 
     @Autowired
@@ -24,7 +29,11 @@ public class OrganizerController {
     @Autowired
     UtilityService utilityService;
 
+    @Autowired
+    DTOService dtoService;
+
     //localhost:8080/organizer/all
+    @Operation(summary = "")
     @GetMapping("/all")
     public ResponseEntity<?> getAllOrganizer() {
         try {
@@ -36,6 +45,7 @@ public class OrganizerController {
     }
 
     //localhost:8080/organizer/1
+    @Operation(summary = "")
     @GetMapping("/{id}")
     public ResponseEntity<?> getOrganizer(@PathVariable Integer id) {
         try {
@@ -51,10 +61,12 @@ public class OrganizerController {
     }
 
     //localhost:8080/organizer/upload
+    @Operation(summary = "")
     @PostMapping("/upload")
-    public ResponseEntity<?> uploadOrganizer(@RequestPart @Valid Organizer organizer,
+    public ResponseEntity<?> uploadOrganizer(@RequestPart @Valid OrganizerDTO organizerDTO,
                                              @RequestPart MultipartFile file) {
         try {
+            Organizer organizer = dtoService.getOrganizer(organizerDTO);
             // Validate the file
             utilityService.validateFile(file);
 
@@ -74,6 +86,7 @@ public class OrganizerController {
     }
 
     //localhost:8080/organizer/download/1
+    @Operation(summary = "")
     @GetMapping("/download/{id}")
     public ResponseEntity<?> downloadOrganizer(@PathVariable Integer id) {
         try {

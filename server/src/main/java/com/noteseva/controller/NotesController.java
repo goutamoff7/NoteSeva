@@ -1,8 +1,12 @@
 package com.noteseva.controller;
 
+import com.noteseva.DTO.NotesDTO;
 import com.noteseva.model.Notes;
+import com.noteseva.service.DTOService;
 import com.noteseva.service.NotesService;
 import com.noteseva.service.UtilityService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 @CrossOrigin
 @RestController
 @RequestMapping("notes")
+@Tag(name="Notes APIs",description = "View, Search, Upload and Download Notes")
 public class NotesController {
 
     @Autowired
@@ -25,7 +30,11 @@ public class NotesController {
     @Autowired
     UtilityService utilityService;
 
+    @Autowired
+    DTOService dtoService;
+
     //localhost:8080/notes/all
+    @Operation(summary = "")
     @GetMapping("/all")
     public ResponseEntity<?> getAllNotes() {
         try {
@@ -37,6 +46,7 @@ public class NotesController {
     }
 
     //localhost:8080/notes/1
+    @Operation(summary = "")
     @GetMapping("/{id}")
     public ResponseEntity<?> getNotes(@PathVariable Integer id) {
         try {
@@ -52,11 +62,13 @@ public class NotesController {
     }
 
     //localhost:8080/notes/upload
+    @Operation(summary = "")
     @PostMapping("/upload")
-    public ResponseEntity<?> uploadNotes(@RequestPart @Valid Notes notes,
+    public ResponseEntity<?> uploadNotes(@RequestPart @Valid NotesDTO notesDTO,
                                          @RequestPart MultipartFile file
     ) {
         try {
+            Notes notes = dtoService.getNotes(notesDTO);
             // Validate the file
             utilityService.validateFile(file);
 
@@ -76,6 +88,7 @@ public class NotesController {
     }
 
     //localhost:8080/notes/download/1
+    @Operation(summary = "")
     @GetMapping("/download/{id}")
     public ResponseEntity<?> downloadNotes(@PathVariable Integer id) {
         try {

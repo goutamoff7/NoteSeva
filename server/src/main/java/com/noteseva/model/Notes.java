@@ -20,17 +20,17 @@ public class Notes {
     @Column(name="notes_id")
     private Integer id;
 
-    @NotBlank(message = "Topic name can't be blank.")
-    @Column(name = "topic_name", nullable = false)
-    @Size(min = 5, max = 50, message = "Topic name must be within 5 to 50 characters.")
-    private String topicName;
-
     @NotBlank(message = "Username can't be null")
     @Column(name="shared_by", nullable = false)
     private String sharedBy;
 
     @Column(name="upload_date",nullable = false)
     private LocalDate date;
+
+    @NotBlank(message = "Topic name can't be blank.")
+    @Column(name = "topic_name", nullable = false)
+    @Size(min = 5, max = 50, message = "Topic name must be within 5 to 50 characters.")
+    private String topicName;
 
     @ManyToOne
     @NotNull(message ="Choose proper subject name")

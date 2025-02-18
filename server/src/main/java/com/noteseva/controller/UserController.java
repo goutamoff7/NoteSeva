@@ -1,9 +1,13 @@
 package com.noteseva.controller;
 
+import com.noteseva.DTO.UsersDTO;
 import com.noteseva.model.Users;
 import com.noteseva.repository.UserRepository;
+import com.noteseva.service.DTOService;
 import com.noteseva.service.UserService;
 import com.noteseva.service.UtilityService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +21,7 @@ import java.util.Map;
 @CrossOrigin
 @RestController
 @RequestMapping("public")
+@Tag(name = "User APIs", description = "Register and Login User")
 public class UserController {
 
     @Autowired
@@ -28,9 +33,15 @@ public class UserController {
     @Autowired
     UtilityService utilityService;
 
+    @Autowired
+    DTOService dtoService;
+
+    //localhost:8080/public/register
+    @Operation(summary = "")
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody @Valid Users user) {
+    public ResponseEntity<?> register(@RequestBody @Valid UsersDTO userDTO) {
         try {
+            Users user = dtoService.getUser(userDTO);
             String username = utilityService.extractUsernameFromEmail(user);
             if (userRepository.findByUsername(username)==null)
                 return new ResponseEntity<>(userService.register(user), HttpStatus.CREATED);
@@ -42,9 +53,12 @@ public class UserController {
 
     }
 
+    //localhost:8080/public/login
+    @Operation(summary = "")
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody @Valid Users user) {
+    public ResponseEntity<?> login(@RequestBody @Valid UsersDTO userDTO) {
         try {
+            Users user = dtoService.getUser(userDTO);
             return new ResponseEntity<>(userService.verify(user), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Login Failed", HttpStatus.INTERNAL_SERVER_ERROR);
