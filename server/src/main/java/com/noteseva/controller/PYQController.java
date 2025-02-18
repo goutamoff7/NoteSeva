@@ -1,7 +1,11 @@
 package com.noteseva.controller;
+import com.noteseva.DTO.PYQDTO;
 import com.noteseva.model.PYQ;
+import com.noteseva.service.DTOService;
 import com.noteseva.service.PYQService;
 import com.noteseva.service.UtilityService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -16,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 @CrossOrigin
 @RestController
 @RequestMapping("pyq")
+@Tag(name="Previous Year Question APIs",description = "View, Search, Upload and Download Previous Year Question")
 public class PYQController {
 
     @Autowired
@@ -24,7 +29,11 @@ public class PYQController {
     @Autowired
     UtilityService utilityService;
 
+    @Autowired
+    DTOService dtoService;
+
     //localhost:8080/pyq/all
+    @Operation(summary = "")
     @GetMapping("/all")
     public ResponseEntity<?> getAllPYQ() {
         try {
@@ -36,6 +45,7 @@ public class PYQController {
     }
 
     //localhost:8080/pyq/1
+    @Operation(summary = "")
     @GetMapping("/{id}")
     public ResponseEntity<?> getPYQ(@PathVariable Integer id) {
         try {
@@ -51,10 +61,12 @@ public class PYQController {
     }
 
     //localhost:8080/pyq/upload
+    @Operation(summary = "")
     @PostMapping("/upload")
-    public ResponseEntity<?> uploadPYQ(@RequestPart @Valid PYQ pyq,
+    public ResponseEntity<?> uploadPYQ(@RequestPart @Valid PYQDTO pyqDTO,
                                        @RequestPart MultipartFile file) {
         try {
+            PYQ pyq = dtoService.getPYQ(pyqDTO);
             // Validate the file
             utilityService.validateFile(file);
 
@@ -74,6 +86,7 @@ public class PYQController {
     }
 
     //localhost:8080/pyq/download/1
+    @Operation(summary = "")
     @GetMapping("/download/{id}")
     public ResponseEntity<?> downloadPYQ(@PathVariable Integer id) {
         try {

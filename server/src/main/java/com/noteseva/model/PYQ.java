@@ -17,16 +17,16 @@ public class PYQ {
     @Column(name="pyq_id")
     private Integer id;
 
-    @NotBlank(message = "Please choose any Year")
-    @Column(name="published_year",nullable = false,length = 4)
-    private String year;
-
     @NotBlank(message = "Username can't be null")
     @Column(name="shared_by", nullable = false)
     private String sharedBy;
 
     @Column(name="published_date",nullable = false)
     private LocalDate date;
+
+    @NotBlank(message = "Please choose any Year")
+    @Column(name="published_year",nullable = false,length = 4)
+    private String year;
 
     @ManyToOne
     @NotNull(message ="Choose proper subject name")
