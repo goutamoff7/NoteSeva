@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-@CrossOrigin
 @RestController
 @RequestMapping("organizer")
 @Tag(name="Organizer APIs",description = "View, Search, Upload and Download Organizer")

@@ -1,4 +1,5 @@
 package com.noteseva.model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -27,24 +28,24 @@ public class Users{
     @Column(name="user_role")
     private Role role;
 
-    @NotBlank(message = "Please enter your name")
     @Column(name="name",nullable = false)
     private String name;
 
-    @NotBlank(message = "Please enter a valid email")
     @Column(name = "email", nullable = false , unique = true)
-    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$"
-            , message = "Please enter a valid email")
     private String email;
 
-    @NotBlank(message = "Please enter a valid password")
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).{8,}$"
-    , message = "At least one lowercase letter [a-z]\n" +
-            "    At least one uppercase letter [A-Z]\n" +
-            "    At least one special character [@#$%^&+=]\n" +
-            "    Minimum length of 8 characters.\n" +
-            "    At least one digit [0-9]")
+    @JsonIgnore
     @Column(name="password",nullable = false)
     private String password;
+
+    //relationship
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
+    private Set<Notes> notes;
+
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
+    private Set<Organizer> organizer;
+
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
+    private Set<PYQ> pyq;
 
 }

@@ -16,15 +16,15 @@ public class SubjectService
     @Autowired
     SubjectRepository subjectRepository;
 
-    public List<Subject> searchSubject(String keyword)
-    {
-        return subjectRepository.searchSubject(keyword);
-    }
+//    public List<Subject> searchSubject(String keyword)
+//    {
+//        return subjectRepository.searchSubject(keyword);
+//    }
 
-    public List<Subject> getSubjects(String department)
-    {
-        return subjectRepository.getSubjects(department);
-    }
+//    public List<Subject> getSubjects(String department)
+//    {
+//        return subjectRepository.getSubjects(department);
+//    }
 
     public List<Subject> setSubjects(List<Subject> subject)
     {

@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin
 @RestController
 @RequestMapping("admin")
 @Tag(name = "Admin APIs", description = "Create admin, Get all user info")
@@ -38,7 +37,7 @@ public class AdminController {
     public ResponseEntity<?> register(@RequestBody @Valid UsersDTO userDTO) {
         try {
             Users user = dtoService.getUser(userDTO);
-            String username = utilityService.extractUsernameFromEmail(user);
+            String username = utilityService.extractUsernameFromEmail(user.getEmail());
             if (userRepository.findByUsername(username) == null)
                 return new ResponseEntity<>(adminService.registerAdmin(user), HttpStatus.CREATED);
             return new ResponseEntity<>("Admin already exist", HttpStatus.BAD_REQUEST);

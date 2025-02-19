@@ -37,7 +37,9 @@ public class SwaggerConfiguration {
                                 new Tag().name("Organizer APIs"),
                                 new Tag().name("Previous Year Question APIs"),
                                 new Tag().name("Subject APIs"),
-                                new Tag().name("User APIs")
+                                new Tag().name("User APIs"),
+                                new Tag().name("Oauth2.0 Login API")
+
                         )
                 )
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))

@@ -2,6 +2,7 @@ package com.noteseva.service;
 
 import com.noteseva.model.Organizer;
 import com.noteseva.repository.OrganizerRepository;
+import com.noteseva.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,6 +14,9 @@ import java.util.List;
 public class OrganizerService {
     @Autowired
     OrganizerRepository organizerRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     public List<Organizer> getAllOrganizer() {
         return organizerRepository.findAll();
@@ -27,7 +31,7 @@ public class OrganizerService {
             organizer.setFileName(file.getOriginalFilename());
             organizer.setFileType(file.getContentType());
             organizer.setFileData(file.getBytes());
-            organizer.setSharedBy(username);
+            organizer.setUser(userRepository.findByUsername(username));
             organizer.setDate(LocalDate.now());
         } catch (Exception e) {
             System.out.println(e.getMessage() + "from service class.");

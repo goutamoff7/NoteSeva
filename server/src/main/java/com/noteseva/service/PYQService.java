@@ -2,6 +2,7 @@ package com.noteseva.service;
 
 import com.noteseva.model.PYQ;
 import com.noteseva.repository.PYQRepository;
+import com.noteseva.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,6 +16,9 @@ public class PYQService {
     @Autowired
     PYQRepository pyqRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
     public List<PYQ> getAllPYQ() {
         return pyqRepository.findAll();
     }
@@ -27,7 +31,7 @@ public class PYQService {
         pyq.setFileName(file.getOriginalFilename());
         pyq.setFileType(file.getContentType());
         pyq.setFileData(file.getBytes());
-        pyq.setSharedBy(username);
+        pyq.setUser(userRepository.findByUsername(username));
         pyq.setDate(LocalDate.now());
         return pyqRepository.save(pyq);
     }

@@ -4,6 +4,7 @@ import com.noteseva.DTO.NotesDTO;
 import com.noteseva.model.Notes;
 import com.noteseva.service.DTOService;
 import com.noteseva.service.NotesService;
+import com.noteseva.service.UserDetailsServiceImpl;
 import com.noteseva.service.UtilityService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,11 +15,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-@CrossOrigin
 @RestController
 @RequestMapping("notes")
 @Tag(name="Notes APIs",description = "View, Search, Upload and Download Notes")
@@ -65,12 +66,12 @@ public class NotesController {
     @Operation(summary = "")
     @PostMapping("/upload")
     public ResponseEntity<?> uploadNotes(@RequestPart @Valid NotesDTO notesDTO,
-                                         @RequestPart MultipartFile file
-    ) {
+                                         @RequestPart MultipartFile file) {
         try {
-            Notes notes = dtoService.getNotes(notesDTO);
             // Validate the file
             utilityService.validateFile(file);
+
+            Notes notes = dtoService.getNotes(notesDTO);
 
             //Getting uploader name
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
