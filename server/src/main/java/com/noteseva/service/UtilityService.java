@@ -15,10 +15,8 @@ public class UtilityService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "File size must not exceed 5MB.");
     }
 
-    public String extractUsernameFromEmail(Users user) {
-        String email = user.getEmail().toLowerCase();
-        int endIndex = email.indexOf('@');
-        return email.substring(0, endIndex);
+    public String extractUsernameFromEmail(String email) {
+        return email.split("@")[0];
     }
 
 

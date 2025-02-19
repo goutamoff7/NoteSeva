@@ -6,8 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -21,10 +20,10 @@ public class Course {
     @Column(name="course_id")
     private Integer id;
 
-    @NotBlank(message = "Please enter the Course name")
-    @Column(name="course_name",nullable = false,unique = true)
-    private String courseName;
+    @NotBlank(message = "Please enter the Course")
+    @Column(name="course",nullable = false,unique = true)
+    private String course;
 
-    @OneToMany(mappedBy = "course",fetch = FetchType.LAZY)
-    private Set<Department> departments;
+    @OneToMany(mappedBy = "course",fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
+    private Set<Department> department;
 }

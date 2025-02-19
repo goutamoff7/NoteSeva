@@ -16,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-@CrossOrigin
 @RestController
 @Tag(name="Subject APIs",description = "View, Search, add Subject")
 public class SubjectController
@@ -26,35 +25,35 @@ public class SubjectController
     SubjectService subjectService;
 
     //localhost:8080/subject/search?keyword=DBMS
-    @Operation(summary = "")
-    @GetMapping("/subject/search")
-    public ResponseEntity<?> searchSubject(@RequestParam String keyword)
-    {
-        try {
-            return new ResponseEntity<>(subjectService.searchSubject(keyword), HttpStatus.OK);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new ResponseEntity<>("No Result Found",HttpStatus.NOT_FOUND);
-        }
-    }
+//    @Operation(summary = "")
+//    @GetMapping("/subject/search")
+//    public ResponseEntity<?> searchSubject(@RequestParam String keyword)
+//    {
+//        try {
+//            return new ResponseEntity<>(subjectService.searchSubject(keyword), HttpStatus.OK);
+//        } catch (Exception e) {
+//            System.out.println(e.getMessage());
+//            return new ResponseEntity<>("No Result Found",HttpStatus.NOT_FOUND);
+//        }
+//    }
 
     //localhost:8080/subjects?department=CSE
-   @Operation(summary = "")
-   @GetMapping("/subjects")
-    public ResponseEntity<?> getSubjects(@RequestParam String department)
-    {
-        try {
-            List<Subject> subjectList = subjectService.getSubjects(department);
-            if (subjectList != null)
-                return new ResponseEntity<>(subjectList, HttpStatus.OK);
-            else
-                return new ResponseEntity<>("No Subject Found", HttpStatus.NOT_FOUND);
-        }catch(Exception e)
-        {
-            System.out.println(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+//   @Operation(summary = "")
+//   @GetMapping("/subjects")
+//    public ResponseEntity<?> getSubjects(@RequestParam String department)
+//    {
+//        try {
+//            List<Subject> subjectList = subjectService.getSubjects(department);
+//            if (subjectList != null)
+//                return new ResponseEntity<>(subjectList, HttpStatus.OK);
+//            else
+//                return new ResponseEntity<>("No Subject Found", HttpStatus.NOT_FOUND);
+//        }catch(Exception e)
+//        {
+//            System.out.println(e.getMessage());
+//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
     //localhost:8080/getSubjectList
     @Operation(summary = "")
     @GetMapping("/getSubjectList")

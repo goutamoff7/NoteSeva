@@ -19,20 +19,20 @@ public class SubjectDepartment {
     @Column(name = "subject_department_id")
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
     @JoinColumn(name="subject_id" ,nullable = false)
     private Subject subject;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
     @JoinColumn(name="department_id" ,nullable = false)
     private Department department;
 
-    @OneToMany(mappedBy = "subjectDepartment",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "subjectDepartment",fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
     private Set<Notes> notes;
 
-    @OneToMany(mappedBy = "subjectDepartment",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "subjectDepartment",fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
     private Set<Organizer> organizer;
 
-    @OneToMany(mappedBy = "subjectDepartment",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "subjectDepartment",fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
     private Set<PYQ> pyq;
 }

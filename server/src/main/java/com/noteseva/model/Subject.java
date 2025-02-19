@@ -26,8 +26,9 @@ public class Subject
 
     @NotBlank
     @Column(name="subject_name",nullable = false)
-    private String subjectName;
+    private String subject;
 
-    @OneToMany(mappedBy = "subject",fetch = FetchType.LAZY)
+    //relationship
+    @OneToMany(mappedBy = "subject",fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
     private Set<SubjectDepartment> subjectDepartment;
 }

@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-@CrossOrigin
 @RestController
 @RequestMapping("pyq")
 @Tag(name="Previous Year Question APIs",description = "View, Search, Upload and Download Previous Year Question")

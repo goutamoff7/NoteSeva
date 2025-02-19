@@ -14,11 +14,9 @@ import org.springframework.stereotype.Component;
 public class UsersDTO {
 
 //    @NotBlank(message = "Please enter your name")
-    @Column(name = "name", nullable = false)
     private String name;
 
     @NotBlank(message = "Please enter a valid email")
-    @Column(name = "email", nullable = false, unique = true)
     @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$"
             , message = "Please enter a valid email")
     private String email;
@@ -30,6 +28,5 @@ public class UsersDTO {
             "    At least one special character [@#$%^&+=]\n" +
             "    Minimum length of 8 characters.\n" +
             "    At least one digit [0-9]")
-    @Column(name = "password", nullable = false)
     private String password;
 }

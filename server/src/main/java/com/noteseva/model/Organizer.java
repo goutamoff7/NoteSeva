@@ -18,21 +18,11 @@ public class Organizer
     @Column(name="organizer_id")
     private Integer id;
 
-    @NotBlank(message = "Username can't be null")
-    @Column(name="shared_by", nullable = false)
-    private String sharedBy;
-
     @Column(name="upload_date",nullable = false)
     private LocalDate date;
 
-    @NotBlank(message = "Please choose any Year")
     @Column(name="published_year",nullable = false,length = 4)
     private String year;
-
-    @ManyToOne
-    @NotNull(message ="Choose proper subject name")
-    @JoinColumn(name="subject_department_id",nullable = false)
-    private SubjectDepartment subjectDepartment;
 
     //file handling
     @Column(name = "file_name", nullable = false)
@@ -44,4 +34,13 @@ public class Organizer
     @Lob
     @Column(name = "file_data", columnDefinition = "longblob", nullable = false, unique = true)
     private byte[] fileData;
+
+    //relationship
+    @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
+    @JoinColumn(name="user_id" ,nullable = false)
+    private Users user;
+
+    @ManyToOne(fetch=FetchType.LAZY,cascade = {CascadeType.PERSIST})
+    @JoinColumn(name="subject_department_id",nullable = false)
+    private SubjectDepartment subjectDepartment;
 }

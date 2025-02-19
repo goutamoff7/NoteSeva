@@ -18,23 +18,23 @@ import org.springframework.stereotype.Component;
 public class OrganizerDTO {
 
     @NotBlank(message = "Please choose any Year")
-    @Column(name="published_year",nullable = false,length = 4)
     private String year;
 
-    @ManyToOne
-    @NotNull(message ="Choose proper subject name")
-    @JoinColumn(name="subject_department_id",nullable = false)
-    private SubjectDepartment subjectDepartment;
+    //subject selection
+    @NotBlank(message = "Course name can't be blank.")
+    private String course;
+
+    @NotBlank(message = "Department can't be blank.")
+    private String department;
+
+    @NotBlank(message = "Subject can't be blank.")
+    private String subject;
 
     //file handling
-    @Column(name = "file_name", nullable = false)
     private String fileName;
 
-    @Column(name = "file_type", nullable = false)
     private String fileType;
 
-    @Lob
-    @Column(name = "file_data", columnDefinition = "longblob", nullable = false, unique = true)
     private byte[] fileData;
 
 }

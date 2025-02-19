@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
-@CrossOrigin
 @RestController
 @RequestMapping("public")
 @Tag(name = "User APIs", description = "Register and Login User")
@@ -42,7 +41,7 @@ public class UserController {
     public ResponseEntity<?> register(@RequestBody @Valid UsersDTO userDTO) {
         try {
             Users user = dtoService.getUser(userDTO);
-            String username = utilityService.extractUsernameFromEmail(user);
+            String username = utilityService.extractUsernameFromEmail(user.getEmail());
             if (userRepository.findByUsername(username)==null)
                 return new ResponseEntity<>(userService.register(user), HttpStatus.CREATED);
             return new ResponseEntity<>("User already exist",HttpStatus.BAD_REQUEST);
