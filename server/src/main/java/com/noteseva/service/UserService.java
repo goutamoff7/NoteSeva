@@ -33,10 +33,14 @@ public class UserService {
     @Autowired
     UtilityService utilityService;
 
+    @Autowired
+    EmailService emailService;
+
     public Users register(Users user) {
         user.setUsername(utilityService.extractUsernameFromEmail(user.getEmail())); // username = substring of email id, before @ symbol
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.ROLE_USER);
+        emailService.sendEmail(user.getEmail());
         return userRepository.save(user);
     }
 

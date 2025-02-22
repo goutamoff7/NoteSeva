@@ -1,5 +1,6 @@
 package com.noteseva.service;
 
+import com.noteseva.exception.EmailSendingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -12,18 +13,20 @@ public class EmailService {
     @Autowired
     private JavaMailSender javaMailSender;
 
+    private static final String fromMail = "noteseva1308@gmail.com";
+
     @Async
-    public void sendEmail(String to)
-    {
-        try{
-            SimpleMailMessage mail = new SimpleMailMessage();
-            mail.setTo(to);
-            mail.setSubject(getEmailSubject());
-            mail.setText(getEmailBody());
-            javaMailSender.send(mail);
-        }catch(Exception e)
-        {
-            System.out.println("Mail sending exception");
+    public void sendEmail(String mailTo) {
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo(mailTo);
+            message.setSubject(getEmailSubject());
+            message.setText(getEmailBody());
+            message.setFrom(fromMail);
+            javaMailSender.send(message);
+        }catch(Exception e) {
+            System.out.println(e.getMessage());
+            throw new EmailSendingException("Failed to send OTP email");
         }
     }
 
