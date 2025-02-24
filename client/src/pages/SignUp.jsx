@@ -108,15 +108,15 @@ const SignUpPage = () => {
             </button>
           </form>
 
-          <div className='flex justify-between'>
-            <button className="mt-4 w-[45%] flex justify-center items-center gap-2 bg-darkblack text-white p-3 rounded-lg hover:bg-gray-600 transition-colors">
+          <div className='flex justify-center'>
+            <button className="mt-4 w-full flex justify-center items-center gap-2 bg-darkblack text-white p-3 rounded-lg hover:bg-gray-600 transition-colors">
               <FcGoogle className='w-[30px] h-[30px]' />
               Google
             </button> 
-            <button className="mt-4 w-[45%] flex justify-center items-center gap-2 bg-darkblack text-white p-3 rounded-lg hover:bg-gray-600 transition-colors">
+            {/* <button className="mt-4 w-[45%] flex justify-center items-center gap-2 bg-darkblack text-white p-3 rounded-lg hover:bg-gray-600 transition-colors">
               <FaGithub className='w-[30px] h-[30px]' />
               GitHub
-            </button> 
+            </button>  */}
 
           </div>
 

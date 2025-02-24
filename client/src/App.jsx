@@ -14,6 +14,7 @@ import ProjectView from "./pages/ProjectView";
 import Contact from "./pages/contact";
 import MyProfile from "./pages/MyProfile";
 import MyContribution from "./pages/MyContribution";
+import MyFavourite from "./pages/MyFavourite";
 
 
 
@@ -35,6 +36,7 @@ function App() {
         <Route path="/contact" element={<Contact/>} />
         <Route path="/my-profile" element={<MyProfile/>} />
         <Route path="/my-contribution" element={<MyContribution/>} />
+        <Route path="/my-favourite" element={<MyFavourite/>} />
       </Routes>
     </div>
   );
