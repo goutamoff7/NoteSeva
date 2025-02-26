@@ -74,7 +74,7 @@ public class OrganizerController {
 
             // Process and save organizer and file
             Organizer organizer1 = organizerService.uploadOrganizer(organizer, file, username);
-            return new ResponseEntity<>(organizer1, HttpStatus.CREATED);
+            return new ResponseEntity<>(organizerDTO, HttpStatus.CREATED);
 
         } catch (ResponseStatusException e) {
             return new ResponseEntity<>(e.getReason(), e.getStatusCode());

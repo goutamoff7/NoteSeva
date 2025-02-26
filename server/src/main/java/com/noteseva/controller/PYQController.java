@@ -74,7 +74,7 @@ public class PYQController {
 
             // Process and save pyq and file
             PYQ pyq1 = pyqService.uploadPYQ(pyq, file, username);
-            return new ResponseEntity<>(pyq1, HttpStatus.CREATED);
+            return new ResponseEntity<>(pyqDTO, HttpStatus.CREATED);
 
         } catch (ResponseStatusException e) {
             return new ResponseEntity<>(e.getReason(), e.getStatusCode());

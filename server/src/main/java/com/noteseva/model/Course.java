@@ -5,8 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -24,6 +22,7 @@ public class Course {
     @Column(name="course",nullable = false,unique = true)
     private String course;
 
+    //relationship
     @OneToMany(mappedBy = "course",fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
     private Set<Department> department;
 }

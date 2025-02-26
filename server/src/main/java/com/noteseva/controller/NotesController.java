@@ -78,7 +78,7 @@ public class NotesController {
 
             // Process and save notes and file
             Notes notes1 = notesService.uploadNotes(notes, file, username);
-            return new ResponseEntity<>(notes1, HttpStatus.CREATED);
+            return new ResponseEntity<>(notesDTO, HttpStatus.CREATED);
 
         } catch (ResponseStatusException e) {
             return new ResponseEntity<>(e.getReason(), e.getStatusCode());

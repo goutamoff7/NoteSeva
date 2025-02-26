@@ -2,7 +2,6 @@ package com.noteseva.service;
 
 import com.noteseva.model.Notes;
 import com.noteseva.repository.NotesRepository;
-import com.noteseva.repository.SubjectDepartmentRepository;
 import com.noteseva.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

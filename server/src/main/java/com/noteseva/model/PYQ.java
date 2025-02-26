@@ -1,6 +1,5 @@
 package com.noteseva.model;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -39,6 +38,6 @@ public class PYQ {
     private Users user;
 
     @ManyToOne(fetch=FetchType.LAZY,cascade = {CascadeType.PERSIST})
-    @JoinColumn(name="subject_department_id",nullable = false)
-    private SubjectDepartment subjectDepartment;
+    @JoinColumn(name="subject_Assignment_id",nullable = false)
+    private SubjectAssignment subjectAssignment;
 }

@@ -1,4 +1,5 @@
 package com.noteseva.DTO;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,13 +10,9 @@ import org.springframework.stereotype.Component;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrganizerDTO {
+public class SubjectAssignmentDTO {
 
-    @NotBlank(message = "Please choose any Year")
-    private String year;
-
-    //subject selection
-    @NotBlank(message = "Course name can't be blank.")
+    @NotBlank(message = "Course can't be blank.")
     private String course;
 
     @NotBlank(message = "Department can't be blank.")
@@ -24,11 +21,7 @@ public class OrganizerDTO {
     @NotBlank(message = "Subject can't be blank.")
     private String subject;
 
-    //file handling
-    private String fileName;
-
-    private String fileType;
-
-    private byte[] fileData;
-
+    @NotBlank(message = "Subject code can't be blank.")
+    @Column(name="subject_code",nullable = false,unique = true)
+    private String subjectCode;
 }
