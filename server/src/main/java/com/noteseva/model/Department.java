@@ -5,8 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -24,10 +22,11 @@ public class Department {
     @Column(name="department",nullable = false,unique = true)
     private String department;
 
+    //relationship
     @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
     @JoinColumn(name="course_id",nullable = false)
     private Course course;
 
     @OneToMany(mappedBy = "department",fetch = FetchType.LAZY)
-    private Set<SubjectDepartment> subjectDepartment;
+    private Set<SubjectAssignment> subjectAssignment;
 }

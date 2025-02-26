@@ -11,14 +11,15 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="subject_department")
-public class SubjectDepartment {
+@Table(name="subject_Assignment")
+public class SubjectAssignment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "subject_department_id")
+    @Column(name = "subject_Assignment_id")
     private Integer id;
 
+    //relationship
     @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
     @JoinColumn(name="subject_id" ,nullable = false)
     private Subject subject;
@@ -27,12 +28,12 @@ public class SubjectDepartment {
     @JoinColumn(name="department_id" ,nullable = false)
     private Department department;
 
-    @OneToMany(mappedBy = "subjectDepartment",fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
+    @OneToMany(mappedBy = "subjectAssignment",fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
     private Set<Notes> notes;
 
-    @OneToMany(mappedBy = "subjectDepartment",fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
+    @OneToMany(mappedBy = "subjectAssignment",fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
     private Set<Organizer> organizer;
 
-    @OneToMany(mappedBy = "subjectDepartment",fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
+    @OneToMany(mappedBy = "subjectAssignment",fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
     private Set<PYQ> pyq;
 }

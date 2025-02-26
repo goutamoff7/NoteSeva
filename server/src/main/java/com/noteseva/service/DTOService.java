@@ -1,10 +1,11 @@
 package com.noteseva.service;
-import com.noteseva.DTO.NotesDTO;
-import com.noteseva.DTO.OrganizerDTO;
-import com.noteseva.DTO.PYQDTO;
-import com.noteseva.DTO.UsersDTO;
+
+import com.noteseva.DTO.*;
 import com.noteseva.model.*;
-import com.noteseva.repository.SubjectDepartmentRepository;
+import com.noteseva.repository.CourseRepository;
+import com.noteseva.repository.DepartmentRepository;
+import com.noteseva.repository.SubjectAssignmentRepository;
+import com.noteseva.repository.SubjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,25 +13,34 @@ import org.springframework.stereotype.Service;
 public class DTOService {
 
     @Autowired
-    SubjectDepartmentRepository subjectDepartmentRepository;
+    SubjectAssignmentRepository subjectAssignmentRepository;
 
-    public Users getUser(UsersDTO userDTO){
+    @Autowired
+    CourseRepository courseRepository;
+
+    @Autowired
+    DepartmentRepository departmentRepository;
+
+    @Autowired
+    SubjectRepository subjectRepository;
+
+    public Users getUser(UsersDTO userDTO) {
         Users user = new Users();
         user.setName(userDTO.getName());
-        user.setEmail(userDTO.getEmail());
+        user.setEmail(userDTO.getEmail().toLowerCase());
         user.setPassword(userDTO.getPassword());
         return user;
     }
 
-    public Notes getNotes(NotesDTO notesDTO){
+    public Notes getNotes(NotesDTO notesDTO) {
         Notes notes = new Notes();
-        SubjectDepartment subjectDepartment = subjectDepartmentRepository
-                .findSubjectDepartment(
-                notesDTO.getCourse(),
-                notesDTO.getDepartment(),
-                notesDTO.getSubject()
-        );
-        notes.setSubjectDepartment(subjectDepartment);
+        SubjectAssignment subjectDepartment = subjectAssignmentRepository
+                .findSubjectAssignment(
+                        notesDTO.getCourse(),
+                        notesDTO.getDepartment(),
+                        notesDTO.getSubject()
+                );
+        notes.setSubjectAssignment(subjectDepartment);
         notes.setTopic(notesDTO.getTopic());
         notes.setFileName(notesDTO.getFileName());
         notes.setFileType(notesDTO.getFileType());
@@ -38,15 +48,15 @@ public class DTOService {
         return notes;
     }
 
-    public Organizer getOrganizer(OrganizerDTO organizerDTO){
+    public Organizer getOrganizer(OrganizerDTO organizerDTO) {
         Organizer organizer = new Organizer();
-        SubjectDepartment subjectDepartment = subjectDepartmentRepository
-                .findSubjectDepartment(
-                organizerDTO.getCourse(),
-                organizerDTO.getDepartment(),
-                organizerDTO.getSubject()
-        );
-        organizer.setSubjectDepartment(subjectDepartment);
+        SubjectAssignment subjectDepartment = subjectAssignmentRepository
+                .findSubjectAssignment(
+                        organizerDTO.getCourse(),
+                        organizerDTO.getDepartment(),
+                        organizerDTO.getSubject()
+                );
+        organizer.setSubjectAssignment(subjectDepartment);
         organizer.setYear(organizerDTO.getYear());
         organizer.setFileName(organizerDTO.getFileName());
         organizer.setFileType(organizerDTO.getFileType());
@@ -54,19 +64,57 @@ public class DTOService {
         return organizer;
     }
 
-    public PYQ getPYQ(PYQDTO pyqDTO){
+    public PYQ getPYQ(PYQDTO pyqDTO) {
         PYQ pyq = new PYQ();
-        SubjectDepartment subjectDepartment = subjectDepartmentRepository
-                .findSubjectDepartment(
+        SubjectAssignment subjectDepartment = subjectAssignmentRepository
+                .findSubjectAssignment(
                         pyqDTO.getCourse(),
                         pyqDTO.getDepartment(),
                         pyqDTO.getSubject()
                 );
-        pyq.setSubjectDepartment(subjectDepartment);
+        pyq.setSubjectAssignment(subjectDepartment);
         pyq.setYear(pyqDTO.getYear());
         pyq.setFileName(pyqDTO.getFileName());
         pyq.setFileType(pyqDTO.getFileType());
         pyq.setFileData(pyqDTO.getFileData());
         return pyq;
     }
+
+
+    public Course getCourse(SubjectAssignmentDTO subjectAssignmentDTO) {
+        Course course = courseRepository.findByCourse(subjectAssignmentDTO.getCourse());
+        if (course != null)
+            return course;
+        else {
+            Course newCourse = new Course();
+            newCourse.setCourse(subjectAssignmentDTO.getCourse());
+            return newCourse;
+        }
+
+    }
+
+    public Department getDepartment(SubjectAssignmentDTO subjectAssignmentDTO) {
+        Department department = departmentRepository.findByDepartment(subjectAssignmentDTO.getDepartment());
+        if (department != null)
+            return department;
+        else {
+            Department newDepartment = new Department();
+            newDepartment.setDepartment(subjectAssignmentDTO.getDepartment());
+            newDepartment.setCourse(getCourse(subjectAssignmentDTO));
+            return newDepartment;
+        }
+    }
+
+    public Subject getSubject(SubjectAssignmentDTO subjectAssignmentDTO) {
+        Subject subject = subjectRepository.findBySubject(subjectAssignmentDTO.getSubject());
+        if (subject != null)
+            return subject;
+        else {
+            Subject newSubject = new Subject();
+            newSubject.setSubjectCode(subjectAssignmentDTO.getSubjectCode());
+            newSubject.setSubject(subjectAssignmentDTO.getSubject());
+            return newSubject;
+        }
+    }
+
 }

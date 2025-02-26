@@ -1,21 +1,24 @@
 package com.noteseva.controller;
 
-import com.noteseva.DTO.SubjectDTO;
+import com.noteseva.DTO.SubjectAssignmentDTO;
 import com.noteseva.model.*;
 import com.noteseva.service.DTOService;
 import com.noteseva.service.SubjectAssignmentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
 @RequestMapping("/subject")
-@Tag(name="Subject APIs",description = "View, Search, add Subject")
-public class SubjectController
+@Tag(name="SubjectAssignment APIs",description = "add, View and Search Subject")
+public class SubjectAssignmentController
 {
 
     @Autowired
@@ -25,6 +28,7 @@ public class SubjectController
     DTOService dtoService;
 
     @Operation(summary = "")
+    @Secured("ROLE_ADMIN")
     @GetMapping("/all")
     public ResponseEntity<?> getAllSubject()
     {
@@ -41,19 +45,17 @@ public class SubjectController
     }
 
     @Operation(summary = "")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/add")
-    public ResponseEntity<?> addSubject(SubjectDTO subjectDTO)
+    public ResponseEntity<?> addSubject(@RequestBody @Valid SubjectAssignmentDTO subjectAssignmentDTO)
     {
         try{
-            Course course = dtoService.getCourse(subjectDTO.getCourse());
-            Department department = dtoService.getDepartment(subjectDTO.getDepartment());
-            Subject subject = dtoService.getSubject(subjectDTO.getSubject());
             SubjectAssignment subjectAssignment =
-                    subjectAssignmentService.createAssignment(course,department,subject);
+                    subjectAssignmentService.createAssignment(subjectAssignmentDTO);
             if(subjectAssignment!=null)
                 return new ResponseEntity<>(subjectAssignment,HttpStatus.CREATED);
             else
-                return new ResponseEntity<>("List is not found!!",HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("Unable to add Subject",HttpStatus.BAD_REQUEST);
         }catch(Exception e){
             System.out.println(e.getMessage());
             return new ResponseEntity<>("Something is wrong!!",HttpStatus.INTERNAL_SERVER_ERROR);
