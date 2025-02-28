@@ -1,5 +1,7 @@
 package com.noteseva.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,6 +14,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="subject_Assignment")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class SubjectAssignment {
 
     @Id
@@ -20,20 +23,25 @@ public class SubjectAssignment {
     private Integer id;
 
     //relationship
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
     @JoinColumn(name="subject_id" ,nullable = false)
     private Subject subject;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
     @JoinColumn(name="department_id" ,nullable = false)
     private Department department;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "subjectAssignment",fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
     private Set<Notes> notes;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "subjectAssignment",fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
     private Set<Organizer> organizer;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "subjectAssignment",fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
     private Set<PYQ> pyq;
 }

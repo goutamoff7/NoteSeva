@@ -34,87 +34,130 @@ public class DTOService {
 
     public Notes getNotes(NotesDTO notesDTO) {
         Notes notes = new Notes();
-        SubjectAssignment subjectDepartment = subjectAssignmentRepository
+        SubjectAssignment subjectAssignment = subjectAssignmentRepository
                 .findSubjectAssignment(
-                        notesDTO.getCourse(),
-                        notesDTO.getDepartment(),
-                        notesDTO.getSubject()
+                        notesDTO.getCourseName(),
+                        notesDTO.getDepartmentName(),
+                        notesDTO.getSubjectName()
                 );
-        notes.setSubjectAssignment(subjectDepartment);
-        notes.setTopic(notesDTO.getTopic());
-        notes.setFileName(notesDTO.getFileName());
-        notes.setFileType(notesDTO.getFileType());
-        notes.setFileData(notesDTO.getFileData());
+        if (subjectAssignment == null) {
+            throw new RuntimeException("SubjectAssignment not found for given course/department/subject");
+        }
+        notes.setSubjectAssignment(subjectAssignment);
+        notes.setTopicName(notesDTO.getTopicName());
         return notes;
+    }
+
+    public NotesDTO convertToNotesDTO(Notes notes) {
+        return new NotesDTO(
+                notes.getSubjectAssignment().getDepartment().getCourse().getCourseName(),  // Extract Course Name
+                notes.getSubjectAssignment().getDepartment().getDepartmentName(),  // Extract Department Name
+                notes.getSubjectAssignment().getSubject().getSubjectName(),  // Extract Subject Name
+                notes.getTopicName(),
+                notes.getFileName(),
+                notes.getFileType()
+        );
     }
 
     public Organizer getOrganizer(OrganizerDTO organizerDTO) {
         Organizer organizer = new Organizer();
-        SubjectAssignment subjectDepartment = subjectAssignmentRepository
+        SubjectAssignment subjectAssignment = subjectAssignmentRepository
                 .findSubjectAssignment(
-                        organizerDTO.getCourse(),
-                        organizerDTO.getDepartment(),
-                        organizerDTO.getSubject()
+                        organizerDTO.getCourseName(),
+                        organizerDTO.getDepartmentName(),
+                        organizerDTO.getSubjectName()
                 );
-        organizer.setSubjectAssignment(subjectDepartment);
+        if (subjectAssignment == null) {
+            throw new RuntimeException("SubjectAssignment not found for given course/department/subject");
+        }
+        organizer.setSubjectAssignment(subjectAssignment);
         organizer.setYear(organizerDTO.getYear());
-        organizer.setFileName(organizerDTO.getFileName());
-        organizer.setFileType(organizerDTO.getFileType());
-        organizer.setFileData(organizerDTO.getFileData());
         return organizer;
+    }
+
+    public OrganizerDTO convertToOrganizerDTO(Organizer organizer) {
+        return new OrganizerDTO(
+                organizer.getYear(),
+                organizer.getSubjectAssignment().getDepartment().getCourse().getCourseName(),  // Extract Course Name
+                organizer.getSubjectAssignment().getDepartment().getDepartmentName(),  // Extract Department Name
+                organizer.getSubjectAssignment().getSubject().getSubjectName(),  // Extract Subject Name
+                organizer.getFileName(),
+                organizer.getFileType()
+        );
     }
 
     public PYQ getPYQ(PYQDTO pyqDTO) {
         PYQ pyq = new PYQ();
-        SubjectAssignment subjectDepartment = subjectAssignmentRepository
+        SubjectAssignment subjectAssignment = subjectAssignmentRepository
                 .findSubjectAssignment(
-                        pyqDTO.getCourse(),
-                        pyqDTO.getDepartment(),
-                        pyqDTO.getSubject()
+                        pyqDTO.getCourseName(),
+                        pyqDTO.getDepartmentName(),
+                        pyqDTO.getSubjectName()
                 );
-        pyq.setSubjectAssignment(subjectDepartment);
+        if (subjectAssignment == null) {
+            throw new RuntimeException("SubjectAssignment not found for given course/department/subject");
+        }
+        pyq.setSubjectAssignment(subjectAssignment);
         pyq.setYear(pyqDTO.getYear());
-        pyq.setFileName(pyqDTO.getFileName());
-        pyq.setFileType(pyqDTO.getFileType());
-        pyq.setFileData(pyqDTO.getFileData());
         return pyq;
+    }
+
+    public PYQDTO convertToPYQDTO(PYQ pyq) {
+        return new PYQDTO(
+                pyq.getYear(),
+                pyq.getSubjectAssignment().getDepartment().getCourse().getCourseName(),  // Extract Course Name
+                pyq.getSubjectAssignment().getDepartment().getDepartmentName(),  // Extract Department Name
+                pyq.getSubjectAssignment().getSubject().getSubjectName(),  // Extract Subject Name
+                pyq.getFileName(),
+                pyq.getFileType()
+        );
     }
 
 
     public Course getCourse(SubjectAssignmentDTO subjectAssignmentDTO) {
-        Course course = courseRepository.findByCourse(subjectAssignmentDTO.getCourse());
+        Course course = courseRepository.findByCourseName(subjectAssignmentDTO.getCourseName());
         if (course != null)
             return course;
         else {
             Course newCourse = new Course();
-            newCourse.setCourse(subjectAssignmentDTO.getCourse());
+            newCourse.setCourseName(subjectAssignmentDTO.getCourseName());
             return newCourse;
         }
 
     }
 
     public Department getDepartment(SubjectAssignmentDTO subjectAssignmentDTO) {
-        Department department = departmentRepository.findByDepartment(subjectAssignmentDTO.getDepartment());
+        Department department = departmentRepository.findByDepartmentName(subjectAssignmentDTO.getDepartmentName());
         if (department != null)
             return department;
         else {
             Department newDepartment = new Department();
-            newDepartment.setDepartment(subjectAssignmentDTO.getDepartment());
+            newDepartment.setDepartmentName(subjectAssignmentDTO.getDepartmentName());
             newDepartment.setCourse(getCourse(subjectAssignmentDTO));
             return newDepartment;
         }
     }
 
     public Subject getSubject(SubjectAssignmentDTO subjectAssignmentDTO) {
-        Subject subject = subjectRepository.findBySubject(subjectAssignmentDTO.getSubject());
+        Subject subject = subjectRepository.findBySubjectName(subjectAssignmentDTO.getSubjectName());
         if (subject != null)
             return subject;
         else {
             Subject newSubject = new Subject();
             newSubject.setSubjectCode(subjectAssignmentDTO.getSubjectCode());
-            newSubject.setSubject(subjectAssignmentDTO.getSubject());
+            newSubject.setSubjectName(subjectAssignmentDTO.getSubjectName());
             return newSubject;
         }
     }
 
+    public SubjectAssignment findSubjectAssignment(SubjectAssignmentDTO subjectAssignmentDTO) {
+        SubjectAssignment subjectAssignment =
+                subjectAssignmentRepository
+                        .findSubjectAssignment(
+                                subjectAssignmentDTO.getCourseName(),
+                                subjectAssignmentDTO.getDepartmentName(),
+                                subjectAssignmentDTO.getSubjectName()
+                        );
+        return subjectAssignment;
+    }
 }

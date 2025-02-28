@@ -16,19 +16,17 @@ public class OrganizerDTO {
 
     //subject selection
     @NotBlank(message = "Course name can't be blank.")
-    private String course;
+    private String courseName;
 
-    @NotBlank(message = "Department can't be blank.")
-    private String department;
+    @NotBlank(message = "Department name can't be blank.")
+    private String departmentName;
 
-    @NotBlank(message = "Subject can't be blank.")
-    private String subject;
+    @NotBlank(message = "Subject name can't be blank.")
+    private String subjectName;
 
     //file handling
     private String fileName;
 
     private String fileType;
-
-    private byte[] fileData;
 
 }

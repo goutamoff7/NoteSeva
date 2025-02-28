@@ -6,6 +6,8 @@ import com.noteseva.repository.UserRepository;
 import com.noteseva.service.DTOService;
 import com.noteseva.service.UserService;
 import com.noteseva.service.UtilityService;
+import com.noteseva.validation.LoginValidation;
+import com.noteseva.validation.RegisterValidation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -38,7 +41,7 @@ public class UserController {
     //localhost:8080/public/register
     @Operation(summary = "")
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody @Valid UsersDTO userDTO) {
+    public ResponseEntity<?> register(@Validated(RegisterValidation.class) @RequestBody UsersDTO userDTO) {
         try {
             Users user = dtoService.getUser(userDTO);
             String username = utilityService.extractUsernameFromEmail(user.getEmail());
@@ -55,7 +58,7 @@ public class UserController {
     //localhost:8080/public/login
     @Operation(summary = "")
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody @Valid UsersDTO userDTO) {
+    public ResponseEntity<?> login(@Validated(LoginValidation.class) @RequestBody UsersDTO userDTO) {
         try {
             Users user = dtoService.getUser(userDTO);
             return new ResponseEntity<>(userService.verify(user), HttpStatus.OK);

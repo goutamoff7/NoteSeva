@@ -1,5 +1,7 @@
 package com.noteseva.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,6 +13,7 @@ import java.time.LocalDate;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Notes {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,8 +23,8 @@ public class Notes {
     @Column(name="upload_date",nullable = false)
     private LocalDate date;
 
-    @Column(name = "topic", nullable = false)
-    private String topic;
+    @Column(name = "topic_name", nullable = false)
+    private String topicName;
 
     //file handling
     @Column(name = "file_name", nullable = false)
@@ -31,14 +34,19 @@ public class Notes {
     private String fileType;
 
     @Lob
-    @Column(name = "file_data", columnDefinition = "longblob", nullable = false, unique = true)
+    @Column(name = "file_data", columnDefinition = "longblob", nullable = false)
     private byte[] fileData;
 
+    @Column(name = "file_data_hash", nullable = false, unique = true)
+    private String fileDataHash;
+
     //relationship
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
     @JoinColumn(name="user_id" ,nullable = false)
     private Users user;
 
+    @JsonIgnore
     @ManyToOne(fetch=FetchType.LAZY,cascade = {CascadeType.PERSIST})
     @JoinColumn(name="subject_Assignment_id",nullable = false)
     private SubjectAssignment subjectAssignment;

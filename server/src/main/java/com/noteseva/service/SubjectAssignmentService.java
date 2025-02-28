@@ -11,8 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class SubjectAssignmentService
-{
+public class SubjectAssignmentService {
     @Autowired
     SubjectAssignmentRepository subjectAssignmentRepository;
 
@@ -27,13 +26,14 @@ public class SubjectAssignmentService
     public SubjectAssignment createAssignment(SubjectAssignmentDTO subjectAssignmentDTO) {
         Department department = dtoService.getDepartment(subjectAssignmentDTO);
         Subject subject = dtoService.getSubject(subjectAssignmentDTO);
-        SubjectAssignment subjectAssignment = getSubjectAssignment(department,subject);
+        SubjectAssignment subjectAssignment = getSubjectAssignment(department, subject);
         return subjectAssignmentRepository.save(subjectAssignment);
     }
 
     public SubjectAssignment getSubjectAssignment(Department department, Subject subject) {
         SubjectAssignment subjectAssignment =
-                subjectAssignmentRepository.findSubjectAssignment(department.getDepartment(), subject.getSubject());
+                subjectAssignmentRepository
+                        .findSubjectAssignment(department.getDepartmentName(), subject.getSubjectName());
         if (subjectAssignment != null)
             return subjectAssignment;
         else {

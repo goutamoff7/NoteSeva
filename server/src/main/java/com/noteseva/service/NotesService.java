@@ -36,4 +36,8 @@ public class NotesService {
     public Notes getNotes(Integer id) {
         return notesRepository.findById(id).orElse(null);
     }
+
+    public boolean isFileDataExist(String fileDataHash) {
+        return notesRepository.existsByFileDataHash(fileDataHash);
+    }
 }

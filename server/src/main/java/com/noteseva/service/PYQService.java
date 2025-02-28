@@ -35,4 +35,8 @@ public class PYQService {
         pyq.setDate(LocalDate.now());
         return pyqRepository.save(pyq);
     }
+
+    public boolean isFileDataExist(String fileDataHash) {
+        return pyqRepository.existsByFileDataHash(fileDataHash);
+    }
 }

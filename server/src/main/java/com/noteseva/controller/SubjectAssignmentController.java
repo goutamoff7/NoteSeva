@@ -50,6 +50,9 @@ public class SubjectAssignmentController
     public ResponseEntity<?> addSubject(@RequestBody @Valid SubjectAssignmentDTO subjectAssignmentDTO)
     {
         try{
+            SubjectAssignment Assignment = dtoService.findSubjectAssignment(subjectAssignmentDTO);
+            if(Assignment!=null)
+                return new ResponseEntity<>("Subject assignment already exist",HttpStatus.BAD_REQUEST);
             SubjectAssignment subjectAssignment =
                     subjectAssignmentService.createAssignment(subjectAssignmentDTO);
             if(subjectAssignment!=null)
