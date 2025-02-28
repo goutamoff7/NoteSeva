@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PYQRepository extends JpaRepository<PYQ,Integer> {
+    boolean existsByFileDataHash(String fileDataHash);
 }

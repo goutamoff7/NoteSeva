@@ -77,8 +77,18 @@ public class PYQController {
             // Validate the file
             utilityService.validateFile(file);
 
+            //Generate Hash of fileData
+            String fileDataHash = utilityService.generateFileHash(file.getBytes());
+
+            //Check for duplicate fileData
+            boolean fileExists = pyqService.isFileDataExist(fileDataHash);
+            if (fileExists) {
+                return new ResponseEntity<>( "This file has already been uploaded!",HttpStatus.BAD_REQUEST);
+            }
+
             // Converting pyqDTO to pyq
             PYQ pyq = dtoService.getPYQ(pyqDTO);
+            pyq.setFileDataHash(fileDataHash);
 
             //Getting uploader name
             String username = SecurityContextHolder.getContext().getAuthentication().getName();

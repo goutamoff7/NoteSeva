@@ -77,8 +77,18 @@ public class OrganizerController {
             // Validate the file
             utilityService.validateFile(file);
 
+            //Generate Hash of fileData
+            String fileDataHash = utilityService.generateFileHash(file.getBytes());
+
+            //Check for duplicate fileData
+            boolean fileExists = organizerService.isFileDataExist(fileDataHash);
+            if (fileExists) {
+                return new ResponseEntity<>( "This file has already been uploaded!",HttpStatus.BAD_REQUEST);
+            }
+
             // Converting organizerDTO to organizer
             Organizer organizer = dtoService.getOrganizer(organizerDTO);
+            organizer.setFileDataHash(fileDataHash);
 
             //Getting uploader name
             String username = SecurityContextHolder.getContext().getAuthentication().getName();

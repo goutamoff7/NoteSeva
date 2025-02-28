@@ -41,6 +41,9 @@ public class PYQ {
     @JoinColumn(name="user_id" ,nullable = false)
     private Users user;
 
+    @Column(name = "file_data_hash", nullable = false, unique = true)
+    private String fileDataHash;
+
     @JsonIgnore
     @ManyToOne(fetch=FetchType.LAZY,cascade = {CascadeType.PERSIST})
     @JoinColumn(name="subject_Assignment_id",nullable = false)

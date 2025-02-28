@@ -36,6 +36,9 @@ public class Organizer
     @Column(name = "file_data", columnDefinition = "longblob", nullable = false, unique = true)
     private byte[] fileData;
 
+    @Column(name = "file_data_hash", nullable = false, unique = true)
+    private String fileDataHash;
+
     //relationship
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})

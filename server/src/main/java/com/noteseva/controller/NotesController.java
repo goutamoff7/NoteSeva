@@ -10,10 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -80,8 +77,17 @@ public class NotesController {
             // Validate the file
             utilityService.validateFile(file);
 
+            //Generate Hash of fileData
+            String fileDataHash = utilityService.generateFileHash(file.getBytes());
+
+            //Check for duplicate fileData
+            boolean fileExists = notesService.isFileDataExist(fileDataHash);
+            if (fileExists) {
+                return new ResponseEntity<>( "This file has already been uploaded!",HttpStatus.BAD_REQUEST);
+            }
             // Converting notesDTO to Notes
             Notes notes = dtoService.getNotes(notesDTO);
+            notes.setFileDataHash(fileDataHash);
 
             //Getting uploader name
             String username = SecurityContextHolder.getContext().getAuthentication().getName();

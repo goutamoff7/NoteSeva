@@ -38,4 +38,8 @@ public class OrganizerService {
         }
         return organizerRepository.save(organizer);
     }
+
+    public boolean isFileDataExist(String fileDataHash) {
+        return organizerRepository.existsByFileDataHash(fileDataHash);
+    }
 }
