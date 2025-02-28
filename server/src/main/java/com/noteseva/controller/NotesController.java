@@ -94,8 +94,10 @@ public class NotesController {
 
             // Process and save notes and file
             Notes savedNotes = notesService.uploadNotes(notes, file, username);
-            return new ResponseEntity<>(dtoService.convertToNotesDTO(savedNotes), HttpStatus.CREATED);
-
+            if(savedNotes!=null)
+                return new ResponseEntity<>(dtoService.convertToNotesDTO(savedNotes), HttpStatus.CREATED);
+            else
+                return new ResponseEntity<>("Notes Upload Unsuccessful",HttpStatus.SERVICE_UNAVAILABLE) ;
         } catch (ResponseStatusException e) {
             return new ResponseEntity<>(e.getReason(), e.getStatusCode());
         } catch (Exception e) {

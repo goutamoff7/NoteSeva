@@ -95,8 +95,10 @@ public class OrganizerController {
 
             // Process and save notes and file
             Organizer savedOrganizer = organizerService.uploadOrganizer(organizer, file, username);
-            return new ResponseEntity<>(dtoService.convertToOrganizerDTO(savedOrganizer), HttpStatus.CREATED);
-
+            if(savedOrganizer!=null)
+                return new ResponseEntity<>(dtoService.convertToOrganizerDTO(savedOrganizer), HttpStatus.CREATED);
+            else
+                return new ResponseEntity<>("Organizer Upload Unsuccessful",HttpStatus.SERVICE_UNAVAILABLE) ;
         } catch (ResponseStatusException e) {
             return new ResponseEntity<>(e.getReason(), e.getStatusCode());
         } catch (Exception e) {
