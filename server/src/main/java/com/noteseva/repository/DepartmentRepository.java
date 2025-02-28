@@ -4,5 +4,5 @@ import com.noteseva.model.Department;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DepartmentRepository extends JpaRepository<Department,Integer> {
-    Department findByDepartment(String department);
+    Department findByDepartmentName(String departmentName);
 }

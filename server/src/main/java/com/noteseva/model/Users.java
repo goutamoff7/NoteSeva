@@ -1,5 +1,6 @@
 package com.noteseva.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -15,6 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="user")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Users{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,12 +41,15 @@ public class Users{
     private String password;
 
     //relationship
+    @JsonIgnore
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
     private Set<Notes> notes;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
     private Set<Organizer> organizer;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
     private Set<PYQ> pyq;
 

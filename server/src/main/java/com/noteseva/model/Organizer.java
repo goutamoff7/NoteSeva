@@ -1,4 +1,6 @@
 package com.noteseva.model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,6 +11,7 @@ import java.time.LocalDate;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Organizer
 {
     @Id
@@ -34,10 +37,12 @@ public class Organizer
     private byte[] fileData;
 
     //relationship
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
     @JoinColumn(name="user_id" ,nullable = false)
     private Users user;
 
+    @JsonIgnore
     @ManyToOne(fetch=FetchType.LAZY,cascade = {CascadeType.PERSIST})
     @JoinColumn(name="subject_Assignment_id",nullable = false)
     private SubjectAssignment subjectAssignment;

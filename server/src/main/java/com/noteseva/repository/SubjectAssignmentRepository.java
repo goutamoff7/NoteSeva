@@ -13,17 +13,17 @@ public interface SubjectAssignmentRepository extends JpaRepository<SubjectAssign
             "JOIN sa.department d " +
             "JOIN d.course c " +
             "JOIN sa.subject s " +
-            "WHERE c.course = :course AND " +
-            "d.department = :department " +
-            "AND s.subject = :subject")
-    SubjectAssignment findSubjectAssignment(String course,
-                                            String department,
-                                            String subject);
+            "WHERE c.courseName = :courseName AND " +
+            "d.departmentName = :departmentName " +
+            "AND s.subjectName = :subjectName")
+    SubjectAssignment findSubjectAssignment(String courseName,
+                                            String departmentName,
+                                            String subjectName);
 
     @Query("SELECT sa FROM SubjectAssignment sa " +
             "JOIN sa.department d " +
             "JOIN sa.subject s " +
-            "WHERE d.department = :department " +
-            "AND s.subject = :subject")
-    SubjectAssignment findSubjectAssignment(String department, String subject);
+            "WHERE d.departmentName = :departmentName " +
+            "AND s.subjectName = :subjectName")
+    SubjectAssignment findSubjectAssignment(String departmentName, String subjectName);
 }

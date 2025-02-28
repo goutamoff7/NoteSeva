@@ -13,23 +13,21 @@ import org.springframework.stereotype.Component;
 public class NotesDTO {
 
     //subject selection
-    @NotBlank(message = "Course can't be blank.")
-    private String course;
+    @NotBlank(message = "Course name can't be blank.")
+    private String courseName;
 
-    @NotBlank(message = "Department can't be blank.")
-    private String department;
+    @NotBlank(message = "Department name can't be blank.")
+    private String departmentName;
 
-    @NotBlank(message = "Subject can't be blank.")
-    private String subject;
+    @NotBlank(message = "Subject name can't be blank.")
+    private String subjectName;
 
-    @NotBlank(message = "Topic can't be blank.")
+    @NotBlank(message = "Topic name can't be blank.")
     @Size(min = 5, max = 50, message = "Topic must be within 5 to 50 characters.")
-    private String topic;
+    private String topicName;
 
     //file handling
     private String fileName;
 
     private String fileType;
-
-    private byte[] fileData;
 }
