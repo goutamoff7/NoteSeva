@@ -34,7 +34,7 @@ public class PYQController {
     DTOService dtoService;
 
     //localhost:8080/pyq/all
-    @Operation(summary = "Fetch all Organizer")
+    @Operation(summary = "Fetch all PYQ")
     @GetMapping("/all")
     public ResponseEntity<?> getAllOrganizer() {
         try {
@@ -53,7 +53,7 @@ public class PYQController {
     }
 
     //localhost:8080/pyq/1
-    @Operation(summary = "Fetch organizer by ID")
+    @Operation(summary = "Fetch PYQ by ID")
     @GetMapping("/{id}")
     public ResponseEntity<?> getOrganizer(@PathVariable Integer id) {
         try {
@@ -95,8 +95,10 @@ public class PYQController {
 
             // Process and save notes and file
             PYQ savedPYQ = pyqService.uploadPYQ(pyq, file, username);
-            return new ResponseEntity<>(dtoService.convertToPYQDTO(savedPYQ), HttpStatus.CREATED);
-
+            if(savedPYQ!=null)
+                return new ResponseEntity<>(dtoService.convertToPYQDTO(savedPYQ), HttpStatus.CREATED);
+            else
+                return new ResponseEntity<>("PYQ Upload Unsuccessful",HttpStatus.SERVICE_UNAVAILABLE) ;
         } catch (ResponseStatusException e) {
             return new ResponseEntity<>(e.getReason(), e.getStatusCode());
         } catch (Exception e) {

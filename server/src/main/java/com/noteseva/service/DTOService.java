@@ -49,14 +49,14 @@ public class DTOService {
     }
 
     public NotesDTO convertToNotesDTO(Notes notes) {
-        return new NotesDTO(
-                notes.getSubjectAssignment().getDepartment().getCourse().getCourseName(),  // Extract Course Name
-                notes.getSubjectAssignment().getDepartment().getDepartmentName(),  // Extract Department Name
-                notes.getSubjectAssignment().getSubject().getSubjectName(),  // Extract Subject Name
-                notes.getTopicName(),
-                notes.getFileName(),
-                notes.getFileType()
-        );
+        NotesDTO notesDTO = new NotesDTO();
+        notesDTO.setCourseName(notes.getSubjectAssignment().getDepartment().getCourse().getCourseName());  // Extract Course Name
+        notesDTO.setDepartmentName(notes.getSubjectAssignment().getDepartment().getDepartmentName());  // Extract Department Name
+        notesDTO.setSubjectName(notes.getSubjectAssignment().getSubject().getSubjectName());  // Extract Subject Name
+        notesDTO.setTopicName(notes.getTopicName());
+        notesDTO.setFileName(notes.getFileName());
+        notesDTO.setFileType(notes.getFileType());
+        return notesDTO;
     }
 
     public Organizer getOrganizer(OrganizerDTO organizerDTO) {
@@ -76,14 +76,14 @@ public class DTOService {
     }
 
     public OrganizerDTO convertToOrganizerDTO(Organizer organizer) {
-        return new OrganizerDTO(
-                organizer.getYear(),
-                organizer.getSubjectAssignment().getDepartment().getCourse().getCourseName(),  // Extract Course Name
-                organizer.getSubjectAssignment().getDepartment().getDepartmentName(),  // Extract Department Name
-                organizer.getSubjectAssignment().getSubject().getSubjectName(),  // Extract Subject Name
-                organizer.getFileName(),
-                organizer.getFileType()
-        );
+        OrganizerDTO organizerDTO = new OrganizerDTO();
+        organizerDTO.setYear(organizer.getYear());
+        organizerDTO.setCourseName(organizer.getSubjectAssignment().getDepartment().getCourse().getCourseName());  // Extract Course Name
+        organizerDTO.setDepartmentName(organizer.getSubjectAssignment().getDepartment().getDepartmentName());  // Extract Department Name
+        organizerDTO.setSubjectName(organizer.getSubjectAssignment().getSubject().getSubjectName());  // Extract Subject Name
+        organizerDTO.setFileName(organizer.getFileName());
+        organizerDTO.setFileType(organizer.getFileType());
+        return organizerDTO;
     }
 
     public PYQ getPYQ(PYQDTO pyqDTO) {
@@ -103,16 +103,15 @@ public class DTOService {
     }
 
     public PYQDTO convertToPYQDTO(PYQ pyq) {
-        return new PYQDTO(
-                pyq.getYear(),
-                pyq.getSubjectAssignment().getDepartment().getCourse().getCourseName(),  // Extract Course Name
-                pyq.getSubjectAssignment().getDepartment().getDepartmentName(),  // Extract Department Name
-                pyq.getSubjectAssignment().getSubject().getSubjectName(),  // Extract Subject Name
-                pyq.getFileName(),
-                pyq.getFileType()
-        );
+        PYQDTO pyqDTO = new PYQDTO();
+        pyqDTO.setYear(pyq.getYear());
+        pyqDTO.setCourseName(pyq.getSubjectAssignment().getDepartment().getCourse().getCourseName());  // Extract Course Name
+        pyqDTO.setDepartmentName(pyq.getSubjectAssignment().getDepartment().getDepartmentName());  // Extract Department Name
+        pyqDTO.setSubjectName(pyq.getSubjectAssignment().getSubject().getSubjectName());  // Extract Subject Name
+        pyqDTO.setFileName(pyq.getFileName());
+        pyqDTO.setFileType(pyq.getFileType());
+        return pyqDTO;
     }
-
 
     public Course getCourse(SubjectAssignmentDTO subjectAssignmentDTO) {
         Course course = courseRepository.findByCourseName(subjectAssignmentDTO.getCourseName());
@@ -150,14 +149,14 @@ public class DTOService {
         }
     }
 
-    public SubjectAssignment findSubjectAssignment(SubjectAssignmentDTO subjectAssignmentDTO) {
-        SubjectAssignment subjectAssignment =
-                subjectAssignmentRepository
-                        .findSubjectAssignment(
-                                subjectAssignmentDTO.getCourseName(),
-                                subjectAssignmentDTO.getDepartmentName(),
-                                subjectAssignmentDTO.getSubjectName()
-                        );
-        return subjectAssignment;
+    public SubjectAssignmentDTO convertToSubjectAssignmentDTO(SubjectAssignment subjectAssignment) {
+        SubjectAssignmentDTO subjectAssignmentDTO = new SubjectAssignmentDTO();
+        subjectAssignmentDTO.setCourseName(subjectAssignment.getDepartment().getCourse().getCourseName());  // Extract Course Name
+        subjectAssignmentDTO.setDepartmentName(subjectAssignment.getDepartment().getDepartmentName());  // Extract Department Name
+        subjectAssignmentDTO.setSubjectName(subjectAssignment.getSubject().getSubjectName()); // Extract Subject Name
+        subjectAssignmentDTO.setSubjectCode(subjectAssignment.getSubject().getSubjectCode()); // Extract Subject Code
+        return subjectAssignmentDTO;
     }
 }
+
+

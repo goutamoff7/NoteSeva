@@ -43,4 +43,13 @@ public class SubjectAssignmentService {
             return subjectAssignmentRepository.save(newSubjectAssignment);
         }
     }
+
+    public SubjectAssignment findSubjectAssignment(SubjectAssignmentDTO subjectAssignmentDTO) {
+        return subjectAssignmentRepository
+                .findSubjectAssignment(
+                        subjectAssignmentDTO.getCourseName(),
+                        subjectAssignmentDTO.getDepartmentName(),
+                        subjectAssignmentDTO.getSubjectName()
+                );
+    }
 }

@@ -50,15 +50,15 @@ public class SubjectAssignmentController
     public ResponseEntity<?> addSubject(@RequestBody @Valid SubjectAssignmentDTO subjectAssignmentDTO)
     {
         try{
-            SubjectAssignment Assignment = dtoService.findSubjectAssignment(subjectAssignmentDTO);
+            SubjectAssignment Assignment = subjectAssignmentService.findSubjectAssignment(subjectAssignmentDTO);
             if(Assignment!=null)
                 return new ResponseEntity<>("Subject assignment already exist",HttpStatus.BAD_REQUEST);
             SubjectAssignment subjectAssignment =
                     subjectAssignmentService.createAssignment(subjectAssignmentDTO);
             if(subjectAssignment!=null)
-                return new ResponseEntity<>(subjectAssignment,HttpStatus.CREATED);
+                return new ResponseEntity<>(dtoService.convertToSubjectAssignmentDTO(subjectAssignment),HttpStatus.CREATED);
             else
-                return new ResponseEntity<>("Unable to add Subject",HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Unable to add Subject",HttpStatus.SERVICE_UNAVAILABLE);
         }catch(Exception e){
             System.out.println(e.getMessage());
             return new ResponseEntity<>("Something is wrong!!",HttpStatus.INTERNAL_SERVER_ERROR);

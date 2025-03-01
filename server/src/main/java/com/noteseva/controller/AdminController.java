@@ -5,13 +5,16 @@ import com.noteseva.model.Users;
 import com.noteseva.repository.UserRepository;
 import com.noteseva.service.AdminService;
 import com.noteseva.service.DTOService;
+import com.noteseva.service.EmailService;
 import com.noteseva.service.UtilityService;
+import com.noteseva.validation.RegisterValidation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,19 +34,29 @@ public class AdminController {
     @Autowired
     DTOService dtoService;
 
+    @Autowired
+    EmailService emailService;
+
     //localhost:8080/admin/register
     @Operation(summary = "")
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody @Valid UsersDTO userDTO) {
+    public ResponseEntity<?> register(@Validated(RegisterValidation.class) @RequestBody UsersDTO userDTO) {
         try {
             Users user = dtoService.getUser(userDTO);
             String username = utilityService.extractUsernameFromEmail(user.getEmail());
-            if (userRepository.findByUsername(username) == null)
-                return new ResponseEntity<>(adminService.registerAdmin(user), HttpStatus.CREATED);
-            return new ResponseEntity<>("Admin already exist", HttpStatus.BAD_REQUEST);
+            if (userRepository.findByUsername(username)==null) {
+                Users registeredAdmin = adminService.registerAdmin(user);
+                if(registeredAdmin!=null) {
+                    emailService.sendEmail(registeredAdmin.getEmail());
+                    return new ResponseEntity<>(registeredAdmin, HttpStatus.CREATED);
+                }
+                else
+                    return new ResponseEntity<>("Admin Registration Unsuccessful",HttpStatus.SERVICE_UNAVAILABLE);
+            }
+            return new ResponseEntity<>("Admin already exist",HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return new ResponseEntity<>("Admin Registration Unsuccessful", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Something went wrong!!", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
