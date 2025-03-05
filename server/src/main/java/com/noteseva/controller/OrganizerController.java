@@ -33,22 +33,29 @@ public class OrganizerController {
     @Autowired
     DTOService dtoService;
 
-    //localhost:8080/organizer/all
+    //localhost:8080/organizer/all?courseName=BTECH &
+    // departmentName=CSE &
+    // subjectName=Basic Electrical Engineering
     @Operation(summary = "Fetch all Organizer")
     @GetMapping("/all")
-    public ResponseEntity<?> getAllOrganizer() {
+    public ResponseEntity<?> getAllOrganizer(@RequestParam String courseName,
+                                         @RequestParam(required = false) String departmentName,
+                                         @RequestParam(required = false) String subjectName ) {
         try {
-            List<OrganizerDTO> organizerDTOList = organizerService.getAllOrganizer()
+            List<OrganizerDTO> organizerDTOList = organizerService
+                    .getAllOrganizer(courseName,departmentName,subjectName)
                     .stream()
                     .map(dtoService::convertToOrganizerDTO) // Convert Notes -> OrganizerDTO
                     .toList();
             if (organizerDTOList.isEmpty()) {
-                return new ResponseEntity<>("May be Organizers are not available",HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("May be Organizers are not available",
+                        HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<>(organizerDTOList, HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return new ResponseEntity<>("Something went wrong!!",HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Something went wrong!!",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -59,12 +66,15 @@ public class OrganizerController {
         try {
             Organizer organizer = organizerService.getOrganizer(id);
             if (organizer != null)
-                return new ResponseEntity<>(dtoService.convertToOrganizerDTO(organizer), HttpStatus.OK);
+                return new ResponseEntity<>(dtoService.convertToOrganizerDTO(organizer),
+                        HttpStatus.OK);
             else
-                return new ResponseEntity<>("May be this Organizer is not available!!", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("May be this Organizer is not available!!",
+                        HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return new ResponseEntity<>("Something went wrong!!",HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Something went wrong!!",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -83,7 +93,8 @@ public class OrganizerController {
             //Check for duplicate fileData
             boolean fileExists = organizerService.isFileDataExist(fileDataHash);
             if (fileExists) {
-                return new ResponseEntity<>( "This file has already been uploaded!",HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>( "This file has already been uploaded!",
+                        HttpStatus.BAD_REQUEST);
             }
 
             // Converting organizerDTO to organizer
@@ -96,14 +107,17 @@ public class OrganizerController {
             // Process and save notes and file
             Organizer savedOrganizer = organizerService.uploadOrganizer(organizer, file, username);
             if(savedOrganizer!=null)
-                return new ResponseEntity<>(dtoService.convertToOrganizerDTO(savedOrganizer), HttpStatus.CREATED);
+                return new ResponseEntity<>(dtoService.convertToOrganizerDTO(savedOrganizer),
+                        HttpStatus.CREATED);
             else
-                return new ResponseEntity<>("Organizer Upload Unsuccessful",HttpStatus.SERVICE_UNAVAILABLE) ;
+                return new ResponseEntity<>("Organizer Upload Unsuccessful",
+                        HttpStatus.SERVICE_UNAVAILABLE) ;
         } catch (ResponseStatusException e) {
             return new ResponseEntity<>(e.getReason(), e.getStatusCode());
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return new ResponseEntity<>("Something went wrong!!", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Something went wrong!!",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -122,7 +136,8 @@ public class OrganizerController {
                 headers.setContentDispositionFormData("attachment",fileName);
                 return new ResponseEntity<>(fileData, headers, HttpStatus.OK);
             } else
-                return new ResponseEntity<>("May be this Organizer is not available!!", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("May be this Organizer is not available!!",
+                        HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

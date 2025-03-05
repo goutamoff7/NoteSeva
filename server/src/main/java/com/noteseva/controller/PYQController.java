@@ -33,19 +33,25 @@ public class PYQController {
     @Autowired
     DTOService dtoService;
 
-    //localhost:8080/pyq/all
+    //localhost:8080/pyq/all?courseName=BTECH &
+    // departmentName=CSE &
+    // subjectName=Basic Electrical Engineering
     @Operation(summary = "Fetch all PYQ")
     @GetMapping("/all")
-    public ResponseEntity<?> getAllOrganizer() {
+    public ResponseEntity<?> getAllPYQ(@RequestParam String courseName,
+                                         @RequestParam(required = false) String departmentName,
+                                         @RequestParam(required = false) String subjectName ) {
         try {
-            List<PYQDTO> organizerDTOList = pyqService.getAllPYQ()
+            List<PYQDTO> pyqDTOList = pyqService
+                    .getAllPYQ(courseName,departmentName,subjectName)
                     .stream()
                     .map(dtoService::convertToPYQDTO) // Convert Notes -> OrganizerDTO
                     .toList();
-            if (organizerDTOList.isEmpty()) {
-                return new ResponseEntity<>("May be PYQ are not available",HttpStatus.NOT_FOUND);
+            if (pyqDTOList.isEmpty()) {
+                return new ResponseEntity<>("May be PYQs are not available",
+                        HttpStatus.NOT_FOUND);
             }
-            return new ResponseEntity<>(organizerDTOList, HttpStatus.OK);
+            return new ResponseEntity<>(pyqDTOList, HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return new ResponseEntity<>("Something went wrong!!",HttpStatus.INTERNAL_SERVER_ERROR);
