@@ -11,16 +11,11 @@ import com.noteseva.validation.LoginValidation;
 import com.noteseva.validation.RegisterValidation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("public")
@@ -43,7 +38,7 @@ public class UserController {
     EmailService emailService;
 
     //localhost:8080/public/register
-    @Operation(summary = "")
+    @Operation(summary = "Register User")
     @PostMapping("/register")
     public ResponseEntity<?> register(@Validated(RegisterValidation.class) @RequestBody UsersDTO usersDTO) {
         try {
@@ -67,7 +62,7 @@ public class UserController {
     }
 
     //localhost:8080/public/login
-    @Operation(summary = "")
+    @Operation(summary = "Login User")
     @PostMapping("/login")
     public ResponseEntity<?> login(@Validated(LoginValidation.class) @RequestBody UsersDTO usersDTO) {
         try {

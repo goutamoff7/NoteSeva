@@ -7,7 +7,6 @@ import com.noteseva.model.SubjectAssignment;
 import com.noteseva.repository.SubjectAssignmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -19,7 +18,7 @@ public class SubjectAssignmentService {
     DTOService dtoService;
 
 
-    public List<SubjectAssignment> getAllSubjects() {
+    public List<SubjectAssignment> getAllSubjectAssignment() {
         return subjectAssignmentRepository.findAll();
     }
 

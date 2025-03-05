@@ -27,24 +27,27 @@ public class SubjectAssignmentController
     @Autowired
     DTOService dtoService;
 
-    @Operation(summary = "")
+    @Operation(summary = "Get all Subject Assignment")
     @Secured("ROLE_ADMIN")
     @GetMapping("/all")
-    public ResponseEntity<?> getAllSubject()
+    public ResponseEntity<?> getAllSubjectAssignment()
     {
         try{
-            List<SubjectAssignment> subjectList = subjectAssignmentService.getAllSubjects();
-            if(subjectList!=null)
-                return new ResponseEntity<>(subjectList,HttpStatus.OK);
-            else
-                return new ResponseEntity<>("List is not found!!",HttpStatus.NOT_FOUND);
+            List<SubjectAssignmentDTO> SubjectAssignmentDTOList = subjectAssignmentService.getAllSubjectAssignment()
+                    .stream()
+                    .map(dtoService::convertToSubjectAssignmentDTO) // Convert Notes -> NotesDTO
+                    .toList();
+            if (SubjectAssignmentDTOList.isEmpty()) {
+                return new ResponseEntity<>("May be Subject Assignments are not available",HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(SubjectAssignmentDTOList, HttpStatus.OK);
         }catch(Exception e){
             System.out.println(e.getMessage());
             return new ResponseEntity<>("Something is wrong!!",HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @Operation(summary = "")
+    @Operation(summary = "Add Subject Assignment")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/add")
     public ResponseEntity<?> addSubject(@RequestBody @Valid SubjectAssignmentDTO subjectAssignmentDTO)

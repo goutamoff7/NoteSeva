@@ -1,7 +1,5 @@
 package com.noteseva.repository;
 
-import com.noteseva.model.Department;
-import com.noteseva.model.Subject;
 import com.noteseva.model.SubjectAssignment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
