@@ -6,7 +6,6 @@ import com.noteseva.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -17,14 +16,6 @@ public class OrganizerService {
 
     @Autowired
     UserRepository userRepository;
-
-    public List<Organizer> getAllOrganizer() {
-        return organizerRepository.findAll();
-    }
-
-    public Organizer getOrganizer(Integer id) {
-        return organizerRepository.findById(id).orElse(null);
-    }
 
     public Organizer uploadOrganizer(Organizer organizer, MultipartFile file, String username) {
         try {
@@ -37,6 +28,16 @@ public class OrganizerService {
             System.out.println(e.getMessage() + "from service class.");
         }
         return organizerRepository.save(organizer);
+    }
+
+    public Organizer getOrganizer(Integer id) {
+        return organizerRepository.findById(id).orElse(null);
+    }
+
+    public List<Organizer> getAllOrganizer(String courseName,
+                                           String departmentName,
+                                           String subjectName) {
+        return organizerRepository.getAllOrganizer(courseName,departmentName,subjectName);
     }
 
     public boolean isFileDataExist(String fileDataHash) {

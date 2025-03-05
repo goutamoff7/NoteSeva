@@ -10,7 +10,6 @@ import com.noteseva.service.UtilityService;
 import com.noteseva.validation.RegisterValidation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +37,7 @@ public class AdminController {
     EmailService emailService;
 
     //localhost:8080/admin/register
-    @Operation(summary = "")
+    @Operation(summary = "Admin Registration")
     @PostMapping("/register")
     public ResponseEntity<?> register(@Validated(RegisterValidation.class) @RequestBody UsersDTO userDTO) {
         try {
@@ -61,7 +60,7 @@ public class AdminController {
     }
 
     //localhost:8080/admin/get-all-user
-    @Operation(summary = "")
+    @Operation(summary = "Get all User information")
     @GetMapping("/get-all-user")
     public ResponseEntity<?> getAllUser() {
         try {

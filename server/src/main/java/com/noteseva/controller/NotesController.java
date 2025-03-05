@@ -2,7 +2,6 @@ package com.noteseva.controller;
 
 import com.noteseva.DTO.NotesDTO;
 import com.noteseva.model.Notes;
-import com.noteseva.model.Organizer;
 import com.noteseva.service.DTOService;
 import com.noteseva.service.NotesService;
 import com.noteseva.service.UtilityService;
@@ -15,9 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("notes")
@@ -33,22 +30,29 @@ public class NotesController {
     @Autowired
     DTOService dtoService;
 
-    //localhost:8080/notes/all
+    //localhost:8080/notes/all?courseName=BTECH &
+    // departmentName=CSE &
+    // subjectName=Basic Electrical Engineering
     @Operation(summary = "Fetch all notes")
     @GetMapping("/all")
-    public ResponseEntity<?> getAllNotes() {
+    public ResponseEntity<?> getAllNotes(@RequestParam String courseName,
+                                         @RequestParam(required = false) String departmentName,
+                                         @RequestParam(required = false) String subjectName ) {
         try {
-            List<NotesDTO> notesDTOList = notesService.getAllNotes()
+            List<NotesDTO> notesDTOList = notesService
+                    .getAllNotes(courseName,departmentName,subjectName)
                     .stream()
                     .map(dtoService::convertToNotesDTO) // Convert Notes -> NotesDTO
                     .toList();
             if (notesDTOList.isEmpty()) {
-                return new ResponseEntity<>("May be Notes are not available",HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("May be Notes are not available",
+                        HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<>(notesDTOList, HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return new ResponseEntity<>("Something went wrong!!",HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Something went wrong!!",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -59,12 +63,15 @@ public class NotesController {
         try {
             Notes notes = notesService.getNotes(id);
             if (notes != null)
-                return new ResponseEntity<>(dtoService.convertToNotesDTO(notes), HttpStatus.OK);
+                return new ResponseEntity<>(dtoService.convertToNotesDTO(notes),
+                        HttpStatus.OK);
             else
-                return new ResponseEntity<>("May be this notes is not available!!", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("May be this notes is not available!!",
+                        HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return new ResponseEntity<>("Something went wrong!!",HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Something went wrong!!",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -83,7 +90,8 @@ public class NotesController {
             //Check for duplicate fileData
             boolean fileExists = notesService.isFileDataExist(fileDataHash);
             if (fileExists) {
-                return new ResponseEntity<>( "This file has already been uploaded!",HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>( "This file has already been uploaded!",
+                        HttpStatus.BAD_REQUEST);
             }
             // Converting notesDTO to Notes
             Notes notes = dtoService.getNotes(notesDTO);
@@ -95,14 +103,17 @@ public class NotesController {
             // Process and save notes and file
             Notes savedNotes = notesService.uploadNotes(notes, file, username);
             if(savedNotes!=null)
-                return new ResponseEntity<>(dtoService.convertToNotesDTO(savedNotes), HttpStatus.CREATED);
+                return new ResponseEntity<>(dtoService.convertToNotesDTO(savedNotes),
+                        HttpStatus.CREATED);
             else
-                return new ResponseEntity<>("Notes Upload Unsuccessful",HttpStatus.SERVICE_UNAVAILABLE) ;
+                return new ResponseEntity<>("Notes Upload Unsuccessful",
+                        HttpStatus.SERVICE_UNAVAILABLE) ;
         } catch (ResponseStatusException e) {
             return new ResponseEntity<>(e.getReason(), e.getStatusCode());
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return new ResponseEntity<>("Something went wrong!!", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Something went wrong!!",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -121,7 +132,8 @@ public class NotesController {
                 headers.setContentDispositionFormData("attachment",fileName);
                 return new ResponseEntity<>(fileData, headers, HttpStatus.OK);
             } else
-                return new ResponseEntity<>("May be this notes is not available!!", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("May be this notes is not available!!",
+                        HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
