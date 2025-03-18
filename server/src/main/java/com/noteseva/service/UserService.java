@@ -36,12 +36,23 @@ public class UserService {
     @Autowired
     EmailService emailService;
 
+    @Autowired
+    OTPService otpService;
+
     public Users register(Users user) {
+        String email = user.getEmail();
+        if (!otpService.verifiedEmails.contains(email))
+            throw new RuntimeException("Email verification required.");
         user.setUsername(utilityService.extractUsernameFromEmail(user.getEmail())); // username = substring of email id, before @ symbol
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.ROLE_USER);
         emailService.sendEmail(user.getEmail());
-        return userRepository.save(user);
+        Users users=userRepository.save(user);
+        if(users!=null) {
+            emailService.sendEmail(email);
+            return users;
+        }
+        throw  new RuntimeException("User Registration failed!!");
     }
 
     public Users registerOauth2(OAuth2User oAuth2User) {
