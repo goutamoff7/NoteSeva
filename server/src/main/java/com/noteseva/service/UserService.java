@@ -31,15 +31,12 @@ public class UserService {
     @Autowired
     UtilityService utilityService;
 
-<<<<<<< HEAD
     @Autowired
     EmailService emailService;
 
     @Autowired
     OTPService otpService;
 
-=======
->>>>>>> 932b2fb83a54a1b9f8a55132a21be9bfc8a4e346
     public Users register(Users user) {
         String email = user.getEmail();
         if (!otpService.verifiedEmails.contains(email))
@@ -47,17 +44,7 @@ public class UserService {
         user.setUsername(utilityService.extractUsernameFromEmail(user.getEmail())); // username = substring of email id, before @ symbol
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.ROLE_USER);
-<<<<<<< HEAD
-        emailService.sendEmail(user.getEmail());
-        Users users=userRepository.save(user);
-        if(users!=null) {
-            emailService.sendEmail(email);
-            return users;
-        }
-        throw  new RuntimeException("User Registration failed!!");
-=======
         return userRepository.save(user);
->>>>>>> 932b2fb83a54a1b9f8a55132a21be9bfc8a4e346
     }
 
     public Users registerOauth2(OAuth2User oAuth2User) {
