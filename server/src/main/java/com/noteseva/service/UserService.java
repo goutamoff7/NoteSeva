@@ -31,7 +31,16 @@ public class UserService {
     @Autowired
     UtilityService utilityService;
 
+    @Autowired
+    EmailService emailService;
+
+    @Autowired
+    OTPService otpService;
+
     public Users register(Users user) {
+        String email = user.getEmail();
+        if (!otpService.verifiedEmails.contains(email))
+            throw new RuntimeException("Email verification required.");
         user.setUsername(utilityService.extractUsernameFromEmail(user.getEmail())); // username = substring of email id, before @ symbol
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.ROLE_USER);
