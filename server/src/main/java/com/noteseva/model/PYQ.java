@@ -1,6 +1,8 @@
 package com.noteseva.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +12,7 @@ import java.time.LocalDate;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class PYQ {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -34,11 +37,16 @@ public class PYQ {
     private byte[] fileData;
 
     //relationship
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
     @JoinColumn(name="user_id" ,nullable = false)
     private Users user;
 
+    @Column(name = "file_data_hash", nullable = false, unique = true)
+    private String fileDataHash;
+
+    @JsonIgnore
     @ManyToOne(fetch=FetchType.LAZY,cascade = {CascadeType.PERSIST})
-    @JoinColumn(name="subject_department_id",nullable = false)
-    private SubjectDepartment subjectDepartment;
+    @JoinColumn(name="subject_Assignment_id",nullable = false)
+    private SubjectAssignment subjectAssignment;
 }

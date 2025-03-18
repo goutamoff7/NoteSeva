@@ -18,7 +18,7 @@ const Navbar = () => {
         <NavLink to="/course" className={({ isActive }) => (isActive ? "active" : "hover:underline")}>Courses</NavLink>
         <NavLink to="/project" className={({ isActive }) => (isActive ? "active" : "hover:underline")}>Projects</NavLink>
         <NavLink to="/contribute" className={({ isActive }) => (isActive ? "active" : "hover:underline")}>Contribute</NavLink>
-        <NavLink to="/contact" className={({ isActive }) => (isActive ? "active" : "hover:underline")}>Contact</NavLink>
+        <NavLink to="/contact" className={({ isActive }) => (isActive ? "active" : "hover:underline")}>Contact Us</NavLink>
       </div>
 
       <div className="flex space-x-6 mr-10">
@@ -26,9 +26,9 @@ const Navbar = () => {
         {!isLoggedIn ? (
           <button
             onClick={() => navigate('/signup')}
-            className="w-fit h-[40px] py-1 px-2 bg-btngreen text-white text-xl font-semibold rounded-sm"
+            className="w-fit h-[40px] py-1 px-2 bg-btngreen text-white text-xl font-semibold rounded-md"
           >
-            Register/Login
+            Register
           </button>
         ) : (
           <div className="flex items-center gap-2 cursor-pointer group relative">
@@ -41,6 +41,9 @@ const Navbar = () => {
                 </p>
                 <p onClick={() => navigate("/my-contribution")} className="hover:text-black cursor-pointer">
                   My Contribution
+                </p>
+                <p onClick={() => navigate("/my-favourite")} className="hover:text-black cursor-pointer">
+                  My Favourite
                 </p>
                 <p
                   onClick={() => setIsLoggedIn(false)}

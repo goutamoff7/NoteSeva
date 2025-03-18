@@ -1,7 +1,8 @@
 package com.noteseva.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Organizer
 {
     @Id
@@ -35,12 +37,17 @@ public class Organizer
     @Column(name = "file_data", columnDefinition = "longblob", nullable = false, unique = true)
     private byte[] fileData;
 
+    @Column(name = "file_data_hash", nullable = false, unique = true)
+    private String fileDataHash;
+
     //relationship
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
     @JoinColumn(name="user_id" ,nullable = false)
     private Users user;
 
+    @JsonIgnore
     @ManyToOne(fetch=FetchType.LAZY,cascade = {CascadeType.PERSIST})
-    @JoinColumn(name="subject_department_id",nullable = false)
-    private SubjectDepartment subjectDepartment;
+    @JoinColumn(name="subject_Assignment_id",nullable = false)
+    private SubjectAssignment subjectAssignment;
 }

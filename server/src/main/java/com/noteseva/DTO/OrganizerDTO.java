@@ -1,11 +1,5 @@
 package com.noteseva.DTO;
-import com.noteseva.model.SubjectDepartment;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,19 +16,17 @@ public class OrganizerDTO {
 
     //subject selection
     @NotBlank(message = "Course name can't be blank.")
-    private String course;
+    private String courseName;
 
-    @NotBlank(message = "Department can't be blank.")
-    private String department;
+    @NotBlank(message = "Department name can't be blank.")
+    private String departmentName;
 
-    @NotBlank(message = "Subject can't be blank.")
-    private String subject;
+    @NotBlank(message = "Subject name can't be blank.")
+    private String subjectName;
 
     //file handling
     private String fileName;
 
     private String fileType;
-
-    private byte[] fileData;
 
 }

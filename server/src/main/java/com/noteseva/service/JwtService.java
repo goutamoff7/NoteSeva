@@ -2,17 +2,33 @@ package com.noteseva.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-
+import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.Date;
 import java.util.function.Function;
 
 @Service
 public class JwtService {
+    private String secretKey;
+
+    public JwtService() {
+        try{
+            KeyGenerator keyGenerator = KeyGenerator.getInstance("HmacSHA256");
+            keyGenerator.init(256);
+            SecretKey sk = keyGenerator.generateKey();
+            secretKey= Base64.getUrlEncoder().encodeToString(sk.getEncoded());
+        }catch(NoSuchAlgorithmException e)
+        {
+            throw new RuntimeException(e);
+        }
+
+    }
+
     public String extractUsername(String token) {
         // extract the username from jwt token
         return extractClaims(token, Claims::getSubject);
@@ -29,8 +45,8 @@ public class JwtService {
     }
 
     private SecretKey getKey() {
-        String secretKey = "72a630567bab86634535f5bc4495c4736ee9bfd73c52b8a5a28563760779774d";
-        byte[] keyBytes = Decoders.BASE64URL.decode(secretKey);
+//        byte[] keyBytes = Decoders.BASE64URL.decode(secretKey);
+        byte[] keyBytes = Base64.getUrlDecoder().decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 

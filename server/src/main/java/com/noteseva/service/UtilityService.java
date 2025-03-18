@@ -1,10 +1,12 @@
 package com.noteseva.service;
 
-import com.noteseva.model.Users;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 @Service
 public class UtilityService {
@@ -16,7 +18,14 @@ public class UtilityService {
     }
 
     public String extractUsernameFromEmail(String email) {
-        return email.split("@")[0];
+        return email.split("@")[0].toLowerCase();
+    }
+
+    public String generateFileHash(byte[] fileData) throws NoSuchAlgorithmException {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] fileDataHash = digest.digest(fileData);
+        // Convert to a Base64 encoded string (easier to store in DB)
+        return Base64.getEncoder().encodeToString(fileDataHash);
     }
 
 
