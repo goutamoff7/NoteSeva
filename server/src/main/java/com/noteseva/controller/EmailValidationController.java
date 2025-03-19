@@ -41,7 +41,7 @@ public class EmailValidationController {
     @PostMapping("/verify-otp")
     public ResponseEntity<?> verifyOTP(@RequestBody OTP request){
         try {
-            if(otpService.verifyOTP(request))
+            if(otpService.verifyqOTP(request))
                 return new ResponseEntity<>("OTP is Valid , Email Validation successful!",HttpStatus.OK);
             return new ResponseEntity<>("Invalid OTP!!",HttpStatus.BAD_REQUEST);
         }catch(Exception e) {
