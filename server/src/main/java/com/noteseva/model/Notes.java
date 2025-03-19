@@ -49,4 +49,5 @@ public class Notes {
     @ManyToOne(fetch=FetchType.LAZY,cascade = {CascadeType.PERSIST})
     @JoinColumn(name="subject_Assignment_id",nullable = false)
     private SubjectAssignment subjectAssignment;
+
 }
