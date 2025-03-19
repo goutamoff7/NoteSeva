@@ -61,7 +61,8 @@ public class SecurityConfiguration {
                         .requestMatchers(
                                 "/notes/**",
                                 "/organizer/**",
-                                "/pyq/**")
+                                "/pyq/**",
+                                "/logged-user/**")
                         .hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
