@@ -1,5 +1,6 @@
 package com.noteseva.service;
 
+import com.noteseva.model.Notes;
 import com.noteseva.model.Role;
 import com.noteseva.model.Users;
 import com.noteseva.repository.UserRepository;
