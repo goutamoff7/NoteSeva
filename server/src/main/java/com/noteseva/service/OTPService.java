@@ -27,7 +27,7 @@ public class OTPService {
             Random random = new Random();
             String otp = String.valueOf(random.nextInt(99999)+100000);
             otpMap.put(toEmail,otp);
-            otpExpiryMap.put(toEmail, System.currentTimeMillis() + (5 * 60 * 1000)); //1 min valid.
+            otpExpiryMap.put(toEmail, System.currentTimeMillis() + (10 * 60 * 1000)); //1 min valid.
             return otp;
         }catch(Exception e) {
             System.out.println(e.getMessage());
@@ -59,7 +59,7 @@ public class OTPService {
         }
     }
 
-    @Scheduled(fixedRate = 10*60000)
+    @Scheduled(fixedRate = 15*60*1000)
     public void removeExpiredOTPs() {
         System.out.println("Running OTP cleanup at: " + new java.util.Date());
         long currentTime = System.currentTimeMillis();
