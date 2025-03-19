@@ -7,7 +7,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
 @EnableAsync
-@EnableCaching
 public class NoteSevaApplication {
 
 	public static void main(String[] args) {
