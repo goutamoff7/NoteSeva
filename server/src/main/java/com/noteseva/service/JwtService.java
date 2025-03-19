@@ -1,13 +1,17 @@
 package com.noteseva.service;
 
+import com.noteseva.model.Users;
+import com.noteseva.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
 import java.util.Base64;
 import java.util.Date;
 import java.util.function.Function;
@@ -15,6 +19,9 @@ import java.util.function.Function;
 @Service
 public class JwtService {
     private String secretKey;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public JwtService() {
         try{
@@ -64,7 +71,17 @@ public class JwtService {
     }
 
     public boolean validateToken(String token, UserDetails userDetails) {
-        String username = extractUsername(token);
+        final String username = extractUsername(token);
+        Users user = userRepository.findByUsername(username);
+        if(user==null)
+            throw new RuntimeException("User not found!!");
+        Date tokenIssuedAt = extractIssuedAt(token);
+
+        if (user.getTokenIssueTime() != null &&
+                tokenIssuedAt.before(Timestamp.valueOf(user.getTokenIssueTime()))) {
+            return false; // Token is invalid
+        }
+
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
@@ -74,5 +91,9 @@ public class JwtService {
 
     private Date extractExpiration(String token) {
         return extractClaims(token, Claims::getExpiration);
+    }
+
+    private Date extractIssuedAt(String token) {
+        return extractClaims(token, Claims::getIssuedAt);
     }
 }
