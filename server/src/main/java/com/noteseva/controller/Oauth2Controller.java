@@ -25,7 +25,7 @@ public class Oauth2Controller {
     PasswordEncoder passwordEncoder;
 
     @Autowired
-    UserService userService;
+    PublicService publicService;
 
     @Autowired
     JwtService jwtService;
@@ -49,7 +49,7 @@ public class Oauth2Controller {
         try {
             userDetailsService.loadUserByUsername(username);
         } catch (Exception e) {
-            Users newUser = userService.registerOauth2(user);
+            Users newUser = publicService.registerOauth2(user);
             if (newUser != null)
                 emailService.sendEmail(email);
         }
