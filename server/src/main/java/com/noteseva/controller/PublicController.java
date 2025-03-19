@@ -5,7 +5,7 @@ import com.noteseva.model.Users;
 import com.noteseva.repository.UserRepository;
 import com.noteseva.service.DTOService;
 import com.noteseva.service.EmailService;
-import com.noteseva.service.UserService;
+import com.noteseva.service.PublicService;
 import com.noteseva.service.UtilityService;
 import com.noteseva.validation.LoginValidation;
 import com.noteseva.validation.RegisterValidation;
@@ -19,11 +19,11 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("public")
-@Tag(name = "User APIs", description = "Register and Login User")
-public class UserController {
+@Tag(name = "Public APIs", description = "Register and Login User")
+public class PublicController {
 
     @Autowired
-    UserService userService;
+    PublicService publicService;
 
     @Autowired
     UserRepository userRepository;
@@ -45,7 +45,7 @@ public class UserController {
             Users user = dtoService.getUser(usersDTO);
             String username = utilityService.extractUsernameFromEmail(user.getEmail());
             if (userRepository.findByUsername(username)==null) {
-                Users registeredUser = userService.register(user);
+                Users registeredUser = publicService.register(user);
                 if(registeredUser!=null) {
                     emailService.sendEmail(registeredUser.getEmail());
                     return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
@@ -67,7 +67,7 @@ public class UserController {
     public ResponseEntity<?> login(@Validated(LoginValidation.class) @RequestBody UsersDTO usersDTO) {
         try {
             Users user = dtoService.getUser(usersDTO);
-            return new ResponseEntity<>(userService.verify(user), HttpStatus.OK);
+            return new ResponseEntity<>(publicService.verify(user), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Login Failed", HttpStatus.INTERNAL_SERVER_ERROR);
         }
