@@ -11,10 +11,10 @@ import SignUp from "./pages/SignUp";
 import NotesUpload from "./pages/NotesUpload";
 import ProjectUpload from "./pages/ProjectUpload";
 import ProjectView from "./pages/ProjectView";
-import Contact from "./pages/contact";
+import Contact from "./pages/ContactUs";
 import MyProfile from "./pages/MyProfile";
 import MyContribution from "./pages/MyContribution";
-import MyFavourite from "./pages/MyFavourite";
+import Bookmarked from "./pages/Bookmarked ";
 
 
 
@@ -33,10 +33,10 @@ function App() {
         <Route path="/contribute/notesUpload" element={<NotesUpload />} />
         <Route path="/contribute/projectUpload" element={<ProjectUpload />} />
         <Route path="/project/:projectId" element={<ProjectView />} />
-        <Route path="/contact" element={<Contact/>} />
+        <Route path="/contactUs" element={<Contact/>} />
         <Route path="/my-profile" element={<MyProfile/>} />
         <Route path="/my-contribution" element={<MyContribution/>} />
-        <Route path="/my-favourite" element={<MyFavourite/>} />
+        <Route path="/bookmarked" element={<Bookmarked/>} />
       </Routes>
     </div>
   );
