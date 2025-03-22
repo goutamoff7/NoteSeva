@@ -14,25 +14,27 @@ const ProjectUpload = () => {
     { value: 'others', label: 'Others' },
   ];
 
-  // State for the form fields
   const [selectedTechnology, setSelectedTechnology] = useState(null);
   const [teamMembers, setTeamMembers] = useState([{ name: '' }]);
 
-  // Function to handle adding a new input field for team members
+  // Add members
   const addNewMember = () => {
+    if (teamMembers.length >= 4) {
+      toast.warn("You can add up to 4 team members only!");
+      return;
+    }
     setTeamMembers([...teamMembers, { name: '' }]);
     toast.success("New team member added!");
   };
-
-  // Function to handle removing an input field
+  
+  // Delete Member
   const removeMember = (index) => {
     const newTeamMembers = [...teamMembers];
-    newTeamMembers.splice(index, 1); // Remove the member at the specific index
+    newTeamMembers.splice(index, 1); 
     setTeamMembers(newTeamMembers);
     toast.error("One team member deleted");
   };
 
-  // Function to handle changes in team member inputs
   const handleTeamMemberChange = (index, event) => {
     const newTeamMembers = [...teamMembers];
     newTeamMembers[index].name = event.target.value;

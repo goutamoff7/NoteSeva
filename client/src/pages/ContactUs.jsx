@@ -8,6 +8,7 @@ import {
 } from "react-icons/fa6";
 import { MdEmail } from "react-icons/md";
 import { useForm } from "react-hook-form";
+import Footer from '../components/Footer'
 
 const ContactUs = () => {
   const {
@@ -194,6 +195,8 @@ const ContactUs = () => {
           </form>
         </div>
       </div>
+
+      <Footer/>
 
     </div>
   );
