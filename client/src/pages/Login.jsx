@@ -96,10 +96,6 @@ const LoginPage = () => {
               <FcGoogle className="w-[30px] h-[30px]" />
               Google
             </button>
-            {/* <button className="mt-4 w-[45%] flex justify-center items-center gap-2 bg-darkblack text-white p-3 rounded-lg hover:bg-gray-600 transition-colors">
-                        <FaGithub className='w-[30px] h-[30px]' />
-                        GitHub
-                      </button>  */}
           </div>
 
           <p className="mt-6 text-gray-400">
