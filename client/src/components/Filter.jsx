@@ -1,8 +1,7 @@
 import React from "react";
+import { techFilters } from "../../data/data";
 
 const Filter = ({ selectedTech, setSelectedTech }) => {
-  const techFilters = ["All", "WebDev", "Android", "AI/ML", "Blockchain", "Cyber Security", "Data Science"];
-
   return (
     <div className="w-full flex flex-wrap justify-center mx-auto max-w-max space-x-6">
       {techFilters.map((tech) => (

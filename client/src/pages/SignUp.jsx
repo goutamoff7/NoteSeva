@@ -1,32 +1,47 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
-import { FaEye,FaEyeSlash ,FaGithub} from "react-icons/fa";
-
-
+import { FaEye, FaEyeSlash, FaGithub } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 const SignUpPage = () => {
-
-  const [showPassword, setShowPassword] = useState(false);  // State to toggle password visibility
-  const [accountType,setAccountType] = useState('student');
-
+  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [showOtpInput, setShowOtpInput] = useState(false);
+  const [otp, setOtp] = useState("");
 
   const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);  // Toggles the visibility
+    setShowPassword(!showPassword);
+  };
+
+  const handleVerifyEmail = () => {
+    // Here you would typically send an OTP to the email
+    // For this example, we'll just show the OTP input
+      setShowOtpInput(true);
+      
+  };
+
+  const handleVerifyOtp = () => {
+    // Here you would typically verify the OTP with your backend
+    // For this example, we'll assume any OTP is valid
+    setIsEmailVerified(true);
+    setShowOtpInput(false);
   };
 
   return (
     <div className="min-h-screen bg-whitee flex items-center justify-center w-full pt-[40px]">
       <div className="w-[60%] bg-gray-800 p-10 rounded-xl shadow-lg flex flex-col md:flex-row space-x-0 md:space-x-10 space-y-10 md:space-y-0">
-
         {/* Form Section */}
         <div className="w-full md:w-1/2">
-            
-          <h2 className="text-3xl text-white font-bold mb-6 text-center">Create Your Free Account</h2>
+          <h2 className="text-3xl text-white font-bold mb-6 text-center">
+            Create Your Free Account
+          </h2>
 
           <form className="space-y-4">
-          <div>
-              <label className="block text-gray-400 mb-2" htmlFor="email"> Full Name</label>
+            <div>
+              <label className="block text-gray-400 mb-2" htmlFor="name">
+                Full Name
+              </label>
               <input
                 className="w-full p-3 rounded-lg bg-gray-700 text-white outline-none focus:ring-2 focus:ring-green-500"
                 type="text"
@@ -36,101 +51,136 @@ const SignUpPage = () => {
               />
             </div>
 
-            {/* <div>
-              <label className="block text-gray-400 mb-2" htmlFor="email"> University Roll No.</label>
-              <input
-                className="w-full p-3 rounded-lg bg-gray-700 text-white outline-none focus:ring-2 focus:ring-green-500"
-                type="text"
-                id="roll"
-                placeholder="2780012029"
-                required
-              />
-            </div> */}
-
-
-            <div>
-              <label className="block text-gray-400 mb-2" htmlFor="email">Email</label>
-              <input
-                className="w-full p-3 rounded-lg bg-gray-700 text-white outline-none focus:ring-2 focus:ring-green-500"
-                type="email"
-                id="email"
-                placeholder="example@gmail.com"
-                required
-              />
-            </div>
-
-            <div className='relative w-full'>
-              <label className="block text-gray-400 mb-2" htmlFor="password">Password</label>
-
-              {/* Password Input Field */}
-              <input
-                className="w-full p-3 rounded-lg bg-gray-700 text-white outline-none focus:ring-2 focus:ring-green-500"
-                type={showPassword ? "text" : "password"}  // Toggles between "text" and "password"
-                id="password"
-                placeholder="********"
-                required
-              />
-
-              {/* Eye Icon for toggling password visibility */}
-              <div className="absolute inset-y-0 top-8 right-4 flex items-center">
-                {showPassword ? (
-                  <FaEyeSlash
-                    className="text-gray-400 cursor-pointer"
-                    onClick={togglePasswordVisibility}  // Switches to hidden password
-                  />
-                ) : (
-                  <FaEye
-                    className="text-gray-400 cursor-pointer"
-                    onClick={togglePasswordVisibility}  // Switches to visible password
-                  />
-                )}
-              </div>
-            </div>
-
-
-            <div className="flex justify-between items-center">
-              <div className="flex items-center">
+            <div className="flex items-end gap-2">
+              <div className="flex-1">
+                <label className="block text-gray-400 mb-2" htmlFor="email">
+                  Email
+                </label>
                 <input
-                  type="checkbox"
-                  id="remember-me"
-                  className="text-green-500 focus:ring-green-500 cursor-pointer"
+                  className="w-full p-3 rounded-lg bg-gray-700 text-white outline-none focus:ring-2 focus:ring-green-500"
+                  type="email"
+                  id="email"
+                  placeholder="example@gmail.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  disabled={isEmailVerified} // Disable email input after verification
                 />
-                <label htmlFor="remember-me" className="text-gray-400 ml-2 cursor-pointer">Remember me</label>
               </div>
-              {/* <a href="#" className="text-gray-400 hover:text-white">Admin</a> */}
+              {!isEmailVerified && !showOtpInput && (
+                <button
+                  type="button"
+                  onClick={handleVerifyEmail}
+                  className="bg-btngreen text-white p-3 rounded-lg hover:bg-green-600 transition-colors"
+                  disabled={!email} // Disable if email is empty
+                >
+                  Verify Email
+                </button>
+              )}
             </div>
 
-            <button
-              type="submit"
-              className="w-full bg-btngreen text-white p-3 rounded-lg hover:bg-green-600 transition-colors"
-            >
-              Create Account
-            </button>
+            {showOtpInput && (
+              <div className="flex items-end gap-2">
+                <div className="flex-1">
+                  <label className="block text-gray-400 mb-2" htmlFor="otp">
+                    Enter OTP
+                  </label>
+                  <input
+                    className="w-full p-3 rounded-lg bg-gray-700 text-white outline-none focus:ring-2 focus:ring-green-500"
+                    type="text"
+                    id="otp"
+                    placeholder="Enter OTP"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                    required
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={handleVerifyOtp}
+                  className="bg-btngreen text-white p-3 rounded-lg hover:bg-green-600 transition-colors"
+                  disabled={!otp} // Disable if OTP is empty
+                >
+                  Submit OTP
+                </button>
+              </div>
+            )}
+
+            {isEmailVerified && (
+              <div className="relative w-full">
+                <label className="block text-gray-400 mb-2" htmlFor="password">
+                  Password
+                </label>
+                <input
+                  className="w-full p-3 rounded-lg bg-gray-700 text-white outline-none focus:ring-2 focus:ring-green-500"
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  placeholder="********"
+                  required
+                />
+                <div className="absolute inset-y-0 top-8 right-4 flex items-center">
+                  {showPassword ? (
+                    <FaEyeSlash
+                      className="text-gray-400 cursor-pointer"
+                      onClick={togglePasswordVisibility}
+                    />
+                  ) : (
+                    <FaEye
+                      className="text-gray-400 cursor-pointer"
+                      onClick={togglePasswordVisibility}
+                    />
+                  )}
+                </div>
+              </div>
+            )}
+
+            {isEmailVerified && (
+              <>
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="remember-me"
+                      className="text-green-500 focus:ring-green-500 cursor-pointer"
+                    />
+                    <label
+                      htmlFor="remember-me"
+                      className="text-gray-400 ml-2 cursor-pointer"
+                    >
+                      Remember me
+                    </label>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full bg-btngreen text-white p-3 rounded-lg hover:bg-green-600 transition-colors"
+                >
+                  Create Account
+                </button>
+              </>
+            )}
           </form>
 
-          <div className='flex justify-center'>
+          <div className="flex justify-center">
             <button className="mt-4 w-full flex justify-center items-center gap-2 bg-darkblack text-white p-3 rounded-lg hover:bg-gray-600 transition-colors">
-              <FcGoogle className='w-[30px] h-[30px]' />
+              <FcGoogle className="w-[30px] h-[30px]" />
               Google
-            </button> 
-            {/* <button className="mt-4 w-[45%] flex justify-center items-center gap-2 bg-darkblack text-white p-3 rounded-lg hover:bg-gray-600 transition-colors">
-              <FaGithub className='w-[30px] h-[30px]' />
-              GitHub
-            </button>  */}
-
+            </button>
           </div>
 
-
           <p className="mt-6 text-gray-400">
-            Already have an account? 
-            <a href="./login" className="text-green-500 hover:text-green-600"> Login</a>
+            Already have an account?{" "}
+            <a href="./login" className="text-green-500 hover:text-green-600">
+              Login
+            </a>
           </p>
         </div>
 
         {/* Illustration Section */}
         <div className="hidden md:block w-full md:w-1/2">
           <img
-            src="login.png" 
+            src="login.png"
             alt="Login Illustration"
             className="w-[350px] h-[350px] object-cover mt-[40%]"
           />

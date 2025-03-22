@@ -1,14 +1,7 @@
 import React from 'react';
 import CourseCard from './CourseCard';
+import { courses } from '../../../data/data';
 
-const courses = [
-  { title: 'PHARMACY', image: 'bpharm.png' },
-  { title: 'ENGINEERING', image: 'btech.png' },
-  { title: 'MBBS', image: 'mbbs.png' },
-  { title: 'Nursing', image: 'bnurs.png' },
-  { title: 'ARCHITECTURE', image: 'barch.png' },
-  { title: 'DIPLOMA', image: 'diploma.png' },
-];
 
 const Courses = () => {
   return (
@@ -17,7 +10,7 @@ const Courses = () => {
         <h2 className="text-3xl font-bold text-whitee text-center mb-10">Our Courses</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {courses.map((course, index) => (
-            <CourseCard key={index} title={course.title} image={course.image} />
+            <CourseCard key={index} title={course.fullTitle} image={course.fullImage} />
           ))}
         </div>
       </div>

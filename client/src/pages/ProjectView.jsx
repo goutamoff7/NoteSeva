@@ -30,6 +30,7 @@ const relatedProjects = [
     isVerified: "true",
   },
 ];
+
 const ProjectView = ({ id, title, para, image, userName, rating, isVerified }) => {
   return (
     <section className="bg-darkbg">
