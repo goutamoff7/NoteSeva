@@ -1,24 +1,7 @@
 // src/components/Features.js
 import React from 'react';
 import FeatureCard from './FeatureCard';
-
-const features = [
-  {
-    title: 'Previous Year Questions',
-    description: 'Simple and secure control of your organization’s financial and legal transactions. Send customized invoices and contracts.',
-    icon: 'pyq.png',
-  },
-  {
-    title: 'College Notes by Professors & Students',
-    description: 'Schedule and reserve classrooms at one campus or multiple campuses. Keep detailed records of student attendance.',
-    icon: 'notes.png',
-  },
-  {
-    title: 'University Organisers',
-    description: 'Automate and track emails to individuals or groups. Skilline’s built-in system helps organize your organization.',
-    icon: 'organizer.png',
-  },
-];
+import { features } from '../../../data/data';
 
 const Features = () => {
   return (

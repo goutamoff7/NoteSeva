@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaGithub,
   FaLinkedin,
@@ -9,85 +9,61 @@ import {
   FaTimes,
 } from "react-icons/fa";
 import { FaShare, FaXTwitter } from "react-icons/fa6";
+import { students } from "../../../data/data";
 
 const ProfileCard = () => {
-  // Array of student profiles
-  const students = [
-    {
-      id: 1,
-      name: "Manojit Das",
-      image: "Manojit.jpg",
-      dev: "Full Stack Web Developer",
-      Linkedin: "https://www.linkedin.com/in/manojit-das-10-/",
-      GitHub: "https://github.com/Manojit-Das-10",
-      X: "https://twitter.com/Manojit_Das_10",
-      Facebook: "https://www.facebook.com/manojit.das.9083",
-      Instagram: "https://www.instagram.com/code_with_manojit/",
-    },
-    {
-      id: 2,
-      name: "Md Ramij Zamadar",
-      image: "ramij.jpeg",
-      dev: "Full Stack Developer",
-      Linkedin: "https://www.linkedin.com/in/md-ramij-zamadar/",
-      GitHub: "https://github.com/mdramijzamadar",
-      X: "https://x.com/RamijZamadar",
-      Facebook: "https://www.facebook.com/profile.php?id=61566764977591",
-      Instagram: "https://www.instagram.com/webdev.ramij/",
-    },
-    {
-      id: 3,
-      name: "Goutam Dam",
-      image: "Goutam.jpeg",
-      dev: "Java Backend Developer",
-      Linkedin: "https://linkedin.com/in/goutamoff7",
-      GitHub: "https://github.com/goutamoff7",
-      X: "#",
-      Facebook: "#",
-      Instagram: "#",
-    },
-    {
-      id: 4,
-      name: "Arpan Kundu",
-      image: "Arpan.jpg",
-      dev: "Java Backend Developer",
-      Linkedin: " https://www.linkedin.com/in/kunduarpan",
-      GitHub: "https://github.com/kundu-A ",
-      X: "#",
-      Facebook: "https://www.facebook.com/arpan.kundu.52459",
-      Instagram: "https://www.instagram.com/arpan.kundu.52459/",
-    },
-  ];
-
-  const [currentIndex, setCurrentIndex] = useState(0); // Manage current displayed student
-  const [showShareOptions, setShowShareOptions] = useState(false); // Manage share options display
-  const [fade, setFade] = useState(false); // Add fade state
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [showShareOptions, setShowShareOptions] = useState(false);
+  const [fade, setFade] = useState(false);
+  const [isHovered, setIsHovered] = useState(false); // New state for hover
 
   const toggleShareOptions = () => {
     setShowShareOptions(!showShareOptions);
   };
 
-  // Function to go to the previous student
-  const handlePrevious = () => {
-    setFade(true); // Start fade-out
-    setTimeout(() => {
-      setCurrentIndex((prevIndex) =>
-        prevIndex === 0 ? students.length - 1 : prevIndex - 1
-      );
-      setFade(false); // Fade back in
-    }, 400); // Delay to match the transition duration
-  };
-
   // Function to go to the next student
-  const handleNext = () => {
-    setFade(true); // Start fade-out
+  const goToNext = () => {
+    setFade(true);
     setTimeout(() => {
       setCurrentIndex((prevIndex) =>
         prevIndex === students.length - 1 ? 0 : prevIndex + 1
       );
-      setFade(false); // Fade back in
-    }, 400); // Delay to match the transition duration
+      setFade(false);
+    }, 400);
   };
+
+  const handlePrevious = () => {
+    setFade(true);
+    setTimeout(() => {
+      setCurrentIndex((prevIndex) =>
+        prevIndex === 0 ? students.length - 1 : prevIndex - 1
+      );
+      setFade(false);
+    }, 400);
+  };
+
+  const handleNext = () => {
+    goToNext();
+  };
+
+  // Auto-rotation effect with pause on hover or share options visible
+  useEffect(() => {
+    let interval;
+    
+    // Only run interval if not hovered and share options are not visible
+    if (!isHovered && !showShareOptions) {
+      interval = setInterval(() => {
+        goToNext();
+      }, 4000);
+    }
+
+    // Cleanup interval on unmount or when conditions change
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [isHovered, showShareOptions]);
 
   return (
     <div className="relative flex flex-col items-center justify-center my-[60px] space-y-[40px]">
@@ -97,7 +73,9 @@ const ProfileCard = () => {
       <div
         className={`bg-[#ffffff1a] text-white p-6 rounded-lg shadow-lg w-[500px] h-[350px] relative transition-opacity duration-500 ${
           fade ? "opacity-0" : "opacity-100"
-        }`} // Add transition and conditional class
+        }`}
+        onMouseEnter={() => setIsHovered(true)}  // Pause on hover
+        onMouseLeave={() => setIsHovered(false)} // Resume on hover out
       >
         {/* Left Arrow */}
         <button
@@ -144,25 +122,25 @@ const ProfileCard = () => {
               <FaTimes className="text-darkblack text-xl" />
             </button>
             <a
-              href={students[currentIndex].Linkedin}
+              href={students[currentIndex].linkedin}
               className="text-[#0A66C2]"
             >
               <FaLinkedin size={30} />
             </a>
-            <a href={students[currentIndex].GitHub} className="text-[#171515]">
+            <a href={students[currentIndex].github} className="text-[#171515]">
               <FaGithub size={30} />
             </a>
-            <a href={students[currentIndex].X} className="text-[#171515]">
+            <a href={students[currentIndex].x} className="text-[#171515]">
               <FaXTwitter size={30} />
             </a>
             <a
-              href={students[currentIndex].Facebook}
+              href={students[currentIndex].facebook}
               className="text-[#1877F2]"
             >
               <FaFacebook size={30} />
             </a>
             <a
-              href={students[currentIndex].Instagram}
+              href={students[currentIndex].instagram}
               className="text-pink-600"
             >
               <FaInstagram size={30} />

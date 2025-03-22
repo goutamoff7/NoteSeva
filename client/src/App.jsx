@@ -15,6 +15,7 @@ import Contact from "./pages/ContactUs";
 import MyProfile from "./pages/MyProfile";
 import MyContribution from "./pages/MyContribution";
 import Bookmarked from "./pages/Bookmarked ";
+import Features from "./pages/Features";
 
 
 
@@ -37,6 +38,8 @@ function App() {
         <Route path="/my-profile" element={<MyProfile/>} />
         <Route path="/my-contribution" element={<MyContribution/>} />
         <Route path="/bookmarked" element={<Bookmarked/>} />
+        <Route path="/course/:courseName/features" element={<Features />} />
+
       </Routes>
     </div>
   );
