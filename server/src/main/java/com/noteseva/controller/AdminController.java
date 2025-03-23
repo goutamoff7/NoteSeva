@@ -46,7 +46,7 @@ public class AdminController {
             if (userRepository.findByUsername(username)==null) {
                 Users registeredAdmin = adminService.registerAdmin(user);
                 if(registeredAdmin!=null) {
-                    emailService.sendEmail(registeredAdmin.getEmail());
+                    emailService.sendSuccessEmail(registeredAdmin.getEmail());
                     return new ResponseEntity<>(registeredAdmin, HttpStatus.CREATED);
                 }
                 else

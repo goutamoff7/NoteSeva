@@ -32,13 +32,14 @@ public class SwaggerConfiguration {
                 )
                 .tags(Arrays.asList(
                                 new Tag().name("Admin APIs"),
+                                new Tag().name("Public APIs"),
                                 new Tag().name("HealthCheck API"),
                                 new Tag().name("Notes APIs"),
                                 new Tag().name("Organizer APIs"),
                                 new Tag().name("Previous Year Question APIs"),
                                 new Tag().name("SubjectAssignment APIs"),
                                 new Tag().name("Oauth2.0 Login API"),
-                                new Tag().name("Email Validation APIs")
+                                new Tag().name("User APIs")
                         )
                 )
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))

@@ -52,5 +52,4 @@ public class Users{
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
     private Set<PYQ> pyq;
 
-    private LocalDateTime tokenIssueTime;
 }

@@ -8,6 +8,7 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.security.NoSuchAlgorithmException;
@@ -24,13 +25,12 @@ public class JwtService {
     private UserRepository userRepository;
 
     public JwtService() {
-        try{
+        try {
             KeyGenerator keyGenerator = KeyGenerator.getInstance("HmacSHA256");
             keyGenerator.init(256);
             SecretKey sk = keyGenerator.generateKey();
-            secretKey= Base64.getUrlEncoder().encodeToString(sk.getEncoded());
-        }catch(NoSuchAlgorithmException e)
-        {
+            secretKey = Base64.getUrlEncoder().encodeToString(sk.getEncoded());
+        } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
 
@@ -71,18 +71,8 @@ public class JwtService {
     }
 
     public boolean validateToken(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        Users user = userRepository.findByUsername(username);
-        if(user==null)
-            throw new RuntimeException("User not found!!");
-        Date tokenIssuedAt = extractIssuedAt(token);
-
-        if (user.getTokenIssueTime() != null &&
-                tokenIssuedAt.before(Timestamp.valueOf(user.getTokenIssueTime()))) {
-            return false; // Token is invalid
-        }
-
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        final String userName = extractUsername(token);
+        return (userName.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
     private boolean isTokenExpired(String token) {
@@ -93,7 +83,4 @@ public class JwtService {
         return extractClaims(token, Claims::getExpiration);
     }
 
-    private Date extractIssuedAt(String token) {
-        return extractClaims(token, Claims::getIssuedAt);
-    }
 }
