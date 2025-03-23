@@ -1,8 +1,6 @@
 package com.noteseva.service;
 
-import com.noteseva.components.ForgotPassword;
-import com.noteseva.components.PasswordChange;
-import com.noteseva.model.Notes;
+import com.noteseva.DTO.PasswordDTO;
 import com.noteseva.model.Role;
 import com.noteseva.model.Users;
 import com.noteseva.repository.UserRepository;
@@ -36,16 +34,7 @@ public class PublicService {
     @Autowired
     UtilityService utilityService;
 
-    @Autowired
-    EmailService emailService;
-
-    @Autowired
-    OTPService otpService;
-
     public Users register(Users user) {
-        String email = user.getEmail();
-        if (!otpService.verifiedEmails.contains(email))
-            throw new RuntimeException("Email verification required.");
         user.setUsername(utilityService.extractUsernameFromEmail(user.getEmail())); // username = substring of email id, before @ symbol
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.ROLE_USER);
@@ -76,36 +65,9 @@ public class PublicService {
         return "Login Failed";
     }
 
-    public boolean changePassword(PasswordChange request) {
-        String newPassword=passwordEncoder.encode(request.getNewPassword());
-        String username= SecurityContextHolder.getContext().getAuthentication().getName();
-        Users user=userRepository.findByUsername(username);
-        if(!passwordEncoder.matches(request.getOlderPassword(), user.getPassword()))
-            return false;
-        if(!request.getNewPassword().equals(request.getConfirmPassword()))
-            return false;
-        try {
-            user.setPassword(newPassword);
-            user.setTokenIssueTime(LocalDateTime.now());
-            userRepository.save(user);
-            return true;
-        }catch(Exception e) {
-            System.out.println(e.getMessage());
-            return false;
-        }
-    }
 
-    public boolean resetPassword(ForgotPassword request) {
-        if(!request.getPassword().equals(request.getConfirmPassword()))
-            return false;
-        if(otpService.verifiedEmails.contains(request.getEmail())){
-            Users user=userRepository.findUsersByEmail(request.getEmail());
-            user.setPassword(passwordEncoder.encode(request.getPassword()));
-            user.setTokenIssueTime(LocalDateTime.now());
-            userRepository.save(user);
-            return true;
-        }
-        return false;
+    public Users resetPassword(Users user, String newPassword) {
+        user.setPassword(passwordEncoder.encode(newPassword));
+        return userRepository.save(user);
     }
-
 }

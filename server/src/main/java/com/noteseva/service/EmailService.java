@@ -1,6 +1,7 @@
 package com.noteseva.service;
 
 import com.noteseva.exception.EmailSendingException;
+import com.noteseva.model.Users;
 import com.noteseva.repository.UserRepository;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +25,12 @@ public class EmailService {
     private static final String fromMail = "noteseva1308@gmail.com";
 
     @Async
-    public void sendOTP(String email) {
+    public void sendOTP(String email, String otp) {
 
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-
-            String otp = otpService.generateOTP(email);
-
+            MimeMessageHelper helper =
+                    new MimeMessageHelper(message, true, "UTF-8");
             helper.setTo(email);
             helper.setSubject("One-Time Password (OTP) Verification");
             helper.setText(getEmailBody(Integer.parseInt(otp)), true);
@@ -45,16 +44,16 @@ public class EmailService {
     }
 
     @Async
-    public void sendEmail(String email) {
+    public void sendSuccessEmail(String email) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-            String name = userRepo.findUsersByEmail(email).getName();
+            String name = userRepo.findByEmail(email).getName();
 
             helper.setTo(email);
             helper.setSubject("Registration Successful - NoteSeva");
-            helper.setText(getEmailBody(name),true);
+            helper.setText(getEmailBody(name), true);
             helper.setFrom(fromMail);
             javaMailSender.send(message);
         } catch (Exception e) {
@@ -88,23 +87,21 @@ public class EmailService {
     }
 
     @Async
-    public void successfullPasswordChangingMail(String email) {
+    public void successfulPasswordChangingMail(String email, String name) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-            String name=userRepo.findUsersByEmail(email).getName();
-
             String htmlContent = "<div style='font-family: Arial, sans-serif; padding: 15px; border: 1px solid #ddd; border-radius: 10px;'>"
                     + "<h2 style='color: #2c3e50;'>Password Changed Successfully</h2>"
-                    + "<p style='font-size: 16px;'>Dear "+name+",</p>"
+                    + "<p style='font-size: 16px;'>Dear " + name + ",</p>"
                     + "<p style='font-size: 16px;'>You have successfully changed your password. If this was you, no further action is needed.</p>"
                     + "<p style='font-size: 14px; color: #7f8c8d;'>If you did not request this change, please reset your password immediately or contact support.</p>"
                     + "<p style='margin-top: 20px;'>Regards,<br><strong>NoteSeva Team</strong></p>"
                     + "</div>";
 
             helper.setTo(email);
-            helper.setSubject("Your Request is fullfilled now!!");
+            helper.setSubject("Your Request is fulfilled now!!");
             helper.setText(htmlContent, true);
             helper.setFrom(fromMail);
 
@@ -122,11 +119,11 @@ public class EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
             String otp = otpService.generateOTP(email);
-            String name=userRepo.findUsersByEmail(email).getName();
+            String name = userRepo.findByEmail(email).getName();
 
             helper.setTo(email);
             helper.setSubject(alterEmailSubject());
-            helper.setText(alterEmailBody(otp,name), true);  // 'true' enables HTML rendering
+            helper.setText(alterEmailBody(otp, name), true);  // 'true' enables HTML rendering
             helper.setFrom(fromMail);
 
             javaMailSender.send(message);
@@ -136,10 +133,10 @@ public class EmailService {
         }
     }
 
-    public String alterEmailBody(String otp,String name) {
+    public String alterEmailBody(String otp, String name) {
         return "<div style='font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;'>"
                 + "<h2 style='color: #d63031;'>⚠ Password Reset Attempt ⚠</h2>"
-                + "<p style='font-size: 16px; color: #2c3e50;'>Dear "+name+",</p>"
+                + "<p style='font-size: 16px; color: #2c3e50;'>Dear " + name + ",</p>"
                 + "<p style='font-size: 16px;'>We noticed a request to reset your password using the <strong>Forgot Password</strong> option.</p>"
                 + "<p style='font-size: 16px;'>If this was you, please proceed with the next steps.</p>"
                 + "<p style='color: #e74c3c; font-size: 14px;'>🚨 If you did not request this, please ignore this email and ensure your account security.</p>"

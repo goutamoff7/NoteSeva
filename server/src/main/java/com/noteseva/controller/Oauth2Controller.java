@@ -51,7 +51,7 @@ public class Oauth2Controller {
         } catch (Exception e) {
             Users newUser = publicService.registerOauth2(user);
             if (newUser != null)
-                emailService.sendEmail(email);
+                emailService.sendSuccessEmail(email);
         }
         String jwtToken = jwtService.generateToken(username);
         Map<String, Object> response = new HashMap<>();
