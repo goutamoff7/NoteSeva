@@ -10,7 +10,7 @@ const Course = () => {
         {courses.map((courses, index) => (
           <Card
             key={index} 
-            title={courses.shortTitle}
+            title={courses.Title}
             image={courses.shortImage}
             para={courses.description}
           />

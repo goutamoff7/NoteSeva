@@ -1,12 +1,6 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
 
 const Card = ({ title, para, image }) => {
-  const navigate = useNavigate();
-
-  const handleContinue = () => {
-    navigate(`/course/${title}/features`);
-  };
 
   return (
     <div className="bg-[#dbe1e3] w-[250px] flex flex-col justify-center items-center gap-5 rounded-2xl py-10 px-5">
@@ -20,7 +14,6 @@ const Card = ({ title, para, image }) => {
         🎓
       </p>
       <button
-        onClick={handleContinue}
         className="bg-btngreen text-white font-semibold px-4 py-1 text-center rounded-3xl hover:bg-green-500"
       >
         Continue

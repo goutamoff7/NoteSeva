@@ -1,25 +1,9 @@
 import React, { useState } from 'react';
 import Select from 'react-select';
+import { notesUploadOptions } from '../../data/data.js';
 
 const NotesUpload = () => {
-  // Mock data for the dropdowns
-  const coursesOptions = [
-    { value: 'btech', label: 'B.Tech' },
-    { value: 'bpharm', label: 'B.Pharm' },
-    { value: 'nurshing', label: 'Nurshing' }
-  ];
-
-  const departmentOptions = [
-    { value: 'cse', label: 'Computer Science' },
-    { value: 'ee', label: 'Electrical Engineering' },
-    { value: 'me', label: 'Mechanical Engineering' }
-  ];
-
-  const subjectOptions = [
-    { value: 'os', label: 'Operating System' },
-    { value: 'se', label: 'Software Engineering' },
-    { value: 'cn', label: 'Computer Network' }
-  ];
+  const { courses, departments, subjects } = notesUploadOptions;
 
   // State for the form fields
   const [selectedCourse, setSelectedCourse] = useState(null);
@@ -29,7 +13,7 @@ const NotesUpload = () => {
   return (
     <div className="min-h-screen flex items-center justify-evenly bg-gray-900 text-white">
       <div className='max-w-[400px] space-y-[30px]'>
-        <img src="/notesupload.png" alt=""  className='h-[300px] w-[380px]'/>
+        <img src="/notesupload.png" alt="" className='h-[300px] w-[380px]'/>
         <h2 className='font-bold text-whitee text-2xl leading-[40px] text-center'>
           <span className='text-btngreen'>Notes</span> are chits created by your brain for exam
         </h2>
@@ -39,7 +23,7 @@ const NotesUpload = () => {
         {/* Courses dropdown */}
         <div className="">
           <Select
-            options={coursesOptions}
+            options={courses}
             value={selectedCourse}
             onChange={setSelectedCourse}
             placeholder="Select Course"
@@ -50,7 +34,7 @@ const NotesUpload = () => {
         {/* Department dropdown */}
         <div className="">
           <Select
-            options={departmentOptions}
+            options={departments}
             value={selectedDepartment}
             onChange={setSelectedDepartment}
             placeholder="Select Department"
@@ -60,7 +44,7 @@ const NotesUpload = () => {
         {/* Subject dropdown */}
         <div className="">
           <Select
-            options={subjectOptions}
+            options={subjects}
             value={selectedSubject}
             onChange={setSelectedSubject}
             placeholder="Select Subject"
@@ -88,11 +72,10 @@ const NotesUpload = () => {
 
         {/* Submit Button */}
         <div className="">
-            <button className="w-full bg-btngreen custom-shadow text-white font-semibold text-2xl p-3 rounded-[12px] hover:bg-green-700 transition-all">
-              Submit
-            </button>
-          </div>
-
+          <button className="w-full bg-btngreen custom-shadow text-white font-semibold text-2xl p-3 rounded-[12px] hover:bg-green-700 transition-all">
+            Submit
+          </button>
+        </div>
       </div>
     </div>
   );
