@@ -38,8 +38,8 @@ const ResetPassword = () => {
 
   return (
     <div className="bg-darkbg w-full h-screen flex justify-center items-center">
-      <div className="max-w-md min-w-[30%] shadow-xl border bg-gray-100 border-zinc-200 rounded-2xl overflow-hidden p-8">
-        <h2 className="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text">
+      <div className="max-w-md min-w-[30%] shadow-xl border bg-[#475569] rounded-2xl overflow-hidden p-8">
+        <h2 className="text-3xl font-bold mb-6 text-center text-btngreen">
           Reset Password
         </h2>
 
@@ -52,7 +52,7 @@ const ResetPassword = () => {
               value={oldPassword}
               onChange={(e) => setOldPassword(e.target.value)}
               required
-              className="w-full p-3 bg-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 pr-12"
+              className="w-full p-3 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 pr-12"
             />
             <button
               type="button"
@@ -71,7 +71,7 @@ const ResetPassword = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full p-3 bg-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 pr-12"
+              className="w-full p-3 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 pr-12"
             />
             <button
               type="button"
@@ -90,7 +90,7 @@ const ResetPassword = () => {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
-              className="w-full p-3 bg-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 pr-12"
+              className="w-full p-3 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 pr-12"
             />
             <button
               type="button"
