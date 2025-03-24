@@ -78,9 +78,10 @@ const Project = () => {
   };
 
   // Filter projects based on selected tech
-  const filteredProjects = selectedTech === "All"
-    ? projects
-    : projects.filter((project) => project.tech === selectedTech);
+  const filteredProjects =
+    selectedTech === "All"
+      ? projects
+      : projects.filter((project) => project.tech === selectedTech);
 
   return (
     <section className="w-full flex flex-col justify-center items-center ">
@@ -96,7 +97,7 @@ const Project = () => {
             possibilities.
           </p>
           <div className="flex items-center gap-10">
-            <button 
+            <button
               className="w-40 h-10 text-xl font-semibold rounded-lg bg-btngreen text-whitee custom-shadow"
               onClick={handleExploreClick} // Scroll down to the explore section
             >
@@ -112,7 +113,7 @@ const Project = () => {
         </div>
       </div>
 
-      <main 
+      <main
         className="bg-darkbg w-full max-h-full flex flex-col justify-center items-center gap-8 px-20 pb-[100px]"
         ref={exploreRef} // Attach the reference to this section
       >
@@ -152,7 +153,7 @@ const Project = () => {
           ))}
         </div>
       </main>
-      
+
       <Footer />
     </section>
   );
