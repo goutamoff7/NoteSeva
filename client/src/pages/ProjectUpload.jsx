@@ -1,18 +1,10 @@
 import React, { useState } from 'react';
 import Select from 'react-select';
 import { ToastContainer, toast } from 'react-toastify';
+import { projectUploadOptions } from '../../data/data';
 
 const ProjectUpload = () => {
-  // Mock data for the dropdowns
-  const technologyOptions = [
-    { value: 'ai/ml', label: 'AI/ML' },
-    { value: 'web', label: 'Web' },
-    { value: 'android', label: 'Android' },
-    { value: 'blockchain', label: 'Blockchain' },
-    { value: 'cybersecurity', label: 'Cyber Security' },
-    { value: 'datascience', label: 'Data Science' },
-    { value: 'others', label: 'Others' },
-  ];
+  const { technologies } = projectUploadOptions;
 
   const [selectedTechnology, setSelectedTechnology] = useState(null);
   const [teamMembers, setTeamMembers] = useState([{ name: '' }]);
@@ -55,14 +47,12 @@ const ProjectUpload = () => {
 
       {/* Right Part */}
       <div className="w-full max-w-md space-y-[20px] my-[40px]">
-
-        {/* <form action=""> */}
-          <h2 className="text-2xl font-semibold mb-6 text-white">Projects Upload</h2>
+        <h2 className="text-2xl font-semibold mb-6 text-white">Projects Upload</h2>
 
           {/* Technology dropdown */}
           <div className="">
             <Select
-              options={technologyOptions}
+              options={technologies}
               value={selectedTechnology}
               onChange={setSelectedTechnology}
               placeholder="Choose Your Technology"
@@ -147,8 +137,6 @@ const ProjectUpload = () => {
               Submit
             </button>
           </div>
-
-        {/* </form> */}
       </div>
     </div>
   );

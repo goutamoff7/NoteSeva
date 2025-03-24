@@ -29,21 +29,21 @@ const SignUpPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-whitee flex items-center justify-center w-full pt-[40px]">
-      <div className="w-[60%] bg-gray-800 p-10 rounded-xl shadow-lg flex flex-col md:flex-row space-x-0 md:space-x-10 space-y-10 md:space-y-0">
+    <div className="min-h-screen bg-darkbg flex items-center justify-center w-full">
+      <div className="min-w-[35%] w-fit bg-[#475569] border-gray-200 p-10 rounded-xl shadow-lg flex flex-col space-x-0 md:space-x-10 space-y-10 md:space-y-0">
         {/* Form Section */}
-        <div className="w-full md:w-1/2">
+        <div className="w-full">
           <h2 className="text-3xl text-white font-bold mb-6 text-center">
             Create Your Free Account
           </h2>
 
           <form className="space-y-4">
             <div>
-              <label className="block text-gray-400 mb-2" htmlFor="name">
+              <label className="block text-whitee mb-2" htmlFor="name">
                 Full Name
               </label>
               <input
-                className="w-full p-3 rounded-lg bg-gray-700 text-white outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full p-3 rounded-lg bg-gray-800 text-white outline-none focus:ring-2 focus:ring-green-500"
                 type="text"
                 id="name"
                 placeholder="John Doe"
@@ -53,11 +53,11 @@ const SignUpPage = () => {
 
             <div className="flex items-end gap-2">
               <div className="flex-1">
-                <label className="block text-gray-400 mb-2" htmlFor="email">
+                <label className="block text-whitee mb-2" htmlFor="email">
                   Email
                 </label>
                 <input
-                  className="w-full p-3 rounded-lg bg-gray-700 text-white outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full p-3 rounded-lg bg-gray-800 text-white outline-none focus:ring-2 focus:ring-green-500"
                   type="email"
                   id="email"
                   placeholder="example@gmail.com"
@@ -82,11 +82,11 @@ const SignUpPage = () => {
             {showOtpInput && (
               <div className="flex items-end gap-2">
                 <div className="flex-1">
-                  <label className="block text-gray-400 mb-2" htmlFor="otp">
+                  <label className="block text-whitee mb-2" htmlFor="otp">
                     Enter OTP
                   </label>
                   <input
-                    className="w-full p-3 rounded-lg bg-gray-700 text-white outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full p-3 rounded-lg bg-gray-800 text-white outline-none focus:ring-2 focus:ring-green-500"
                     type="text"
                     id="otp"
                     placeholder="Enter OTP"
@@ -108,11 +108,11 @@ const SignUpPage = () => {
 
             {isEmailVerified && (
               <div className="relative w-full">
-                <label className="block text-gray-400 mb-2" htmlFor="password">
+                <label className="block text-whitee mb-2" htmlFor="password">
                   Password
                 </label>
                 <input
-                  className="w-full p-3 rounded-lg bg-gray-700 text-white outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full p-3 rounded-lg bg-gray-800 text-white outline-none focus:ring-2 focus:ring-green-500"
                   type={showPassword ? "text" : "password"}
                   id="password"
                   placeholder="********"
@@ -145,7 +145,7 @@ const SignUpPage = () => {
                     />
                     <label
                       htmlFor="remember-me"
-                      className="text-gray-400 ml-2 cursor-pointer"
+                      className="text-whitee ml-2 cursor-pointer"
                     >
                       Remember me
                     </label>
@@ -163,7 +163,7 @@ const SignUpPage = () => {
           </form>
 
           <div className="flex justify-center">
-            <button className="mt-4 w-full flex justify-center items-center gap-2 bg-darkblack text-white p-3 rounded-lg hover:bg-gray-600 transition-colors">
+            <button className="mt-4 w-full flex justify-center items-center gap-2 bg-darkblack text-white p-3 rounded-lg">
               <FcGoogle className="w-[30px] h-[30px]" />
               Google
             </button>
@@ -177,14 +177,6 @@ const SignUpPage = () => {
           </p>
         </div>
 
-        {/* Illustration Section */}
-        <div className="hidden md:block w-full md:w-1/2">
-          <img
-            src="login.png"
-            alt="Login Illustration"
-            className="w-[350px] h-[350px] object-cover mt-[40%]"
-          />
-        </div>
       </div>
     </div>
   );

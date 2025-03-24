@@ -15,7 +15,7 @@ const Navbar = () => {
       {/* Navigation Links */}
       <div className="md:flex gap-12 hidden text-xl font-semibold">
         <NavLink to="/" className={({ isActive }) => (isActive ? "active" : "hover:underline")}>Home</NavLink>
-        <NavLink to="/course" className={({ isActive }) => (isActive ? "active" : "hover:underline")}>Courses</NavLink>
+        <NavLink to="/features" className={({ isActive }) => (isActive ? "active" : "hover:underline")}>Features</NavLink>
         <NavLink to="/project" className={({ isActive }) => (isActive ? "active" : "hover:underline")}>Projects</NavLink>
         <NavLink to="/contribute" className={({ isActive }) => (isActive ? "active" : "hover:underline")}>Contribute</NavLink>
         <NavLink to="/contactUs" className={({ isActive }) => (isActive ? "active" : "hover:underline")}>Contact Us</NavLink>
@@ -39,14 +39,17 @@ const Navbar = () => {
                 <p onClick={() => navigate("/my-profile")} className="hover:text-black cursor-pointer">
                   My Profile
                 </p>
-                <p onClick={() => navigate("/my-contribution")} className="hover:text-black cursor-pointer">
-                  My Contribution
+                <p onClick={() => navigate("/dashboard")} className="hover:text-black cursor-pointer">
+                  Dashboard
                 </p>
                 <p onClick={() => navigate("/bookmarked")} className="hover:text-black cursor-pointer">
                   Bookmarked 
                 </p>
+                <p onClick={() => navigate("/reset-password")} className="hover:text-black cursor-pointer">
+                  Reset Password 
+                </p>
                 <p
-                  onClick={() => setIsLoggedIn(false)}
+                  onClick={() => setIsLoggedIn(false) && navigate('/signup')}
                   className="hover:text-black cursor-pointer"
                 >
                   Logout

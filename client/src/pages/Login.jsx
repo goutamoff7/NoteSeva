@@ -11,24 +11,26 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-whitee flex items-center justify-center w-full">
-      <div className="w-[60%] bg-gray-800 p-10 rounded-xl shadow-lg flex flex-col md:flex-row space-x-0 md:space-x-10 space-y-10 md:space-y-0">
+    <div className="min-h-screen bg-darkbg flex items-center justify-center w-full">
+
+      <div className="min-w-[35%] w-fit bg-[#475569] border-gray-200 p-10 rounded-xl shadow-lg flex flex-col space-x-0 md:space-x-10 space-y-10 md:space-y-0">
+      
         {/* Form Section */}
-        <div className="w-full md:w-1/2">
-          <h2 className="text-3xl text-white font-bold mb-6 text-center">
+        <div className="w-full">
+          <h2 className="text-3xl text-whitee font-bold mb-6 text-center">
             WELCOME BACK
           </h2>
-          <p className="text-gray-400 mb-4">
+          <p className="text-whitee text-center mb-4">
             Welcome back! Please enter your details.
           </p>
 
           <form className="space-y-6">
             <div>
-              <label className="block text-gray-400 mb-2" htmlFor="email">
+              <label className="block text-whitee mb-2" htmlFor="email">
                 Email
               </label>
               <input
-                className="w-full p-3 rounded-lg bg-gray-700 text-white outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full p-3 rounded-lg bg-gray-800 text-white outline-none focus:ring-2 focus:ring-green-500"
                 type="email"
                 id="email"
                 placeholder="Enter your email"
@@ -36,14 +38,14 @@ const LoginPage = () => {
             </div>
 
             <div className="relative w-full">
-              <label className="block text-gray-400 mb-2" htmlFor="password">
+              <label className="block text-whitee mb-2" htmlFor="password">
                 Password
               </label>
 
               {/* Password Input Field */}
               <input
-                className="w-full p-3 rounded-lg bg-gray-700 text-white outline-none focus:ring-2 focus:ring-green-500"
-                type={showPassword ? "text" : "password"} // Toggles between "text" and "password"
+                className="w-full p-3 rounded-lg bg-gray-800 text-white outline-none focus:ring-2 focus:ring-green-500"
+                type={showPassword ? "text" : "password"}
                 id="password"
                 placeholder="********"
               />
@@ -53,12 +55,12 @@ const LoginPage = () => {
                 {showPassword ? (
                   <FaEyeSlash
                     className="text-gray-400 cursor-pointer"
-                    onClick={togglePasswordVisibility} // Switches to hidden password
+                    onClick={togglePasswordVisibility} 
                   />
                 ) : (
                   <FaEye
                     className="text-gray-400 cursor-pointer"
-                    onClick={togglePasswordVisibility} // Switches to visible password
+                    onClick={togglePasswordVisibility} 
                   />
                 )}
               </div>
@@ -73,12 +75,12 @@ const LoginPage = () => {
                 />
                 <label
                   htmlFor="remember-me"
-                  className="text-gray-400 ml-2 cursor-pointer"
+                  className="text-whitee ml-2 cursor-pointer"
                 >
                   Remember me
                 </label>
               </div>
-              <a href="#" className="text-gray-400 hover:text-white">
+              <a href="forgot-password" className="text-whitee hover:text-btngreen">
                 Forgot password
               </a>
             </div>
@@ -92,7 +94,7 @@ const LoginPage = () => {
           </form>
 
           <div className="flex justify-center">
-            <button className="mt-4 w-full flex justify-center items-center gap-2 bg-darkblack text-white p-3 rounded-lg hover:bg-gray-600 transition-colors">
+            <button className="mt-4 w-full flex justify-center items-center gap-2 bg-darkblack text-white p-3 rounded-lg">
               <FcGoogle className="w-[30px] h-[30px]" />
               Google
             </button>
@@ -107,14 +109,6 @@ const LoginPage = () => {
           </p>
         </div>
 
-        {/* Illustration Section */}
-        <div className="hidden md:block w-full md:w-1/2">
-          <img
-            src="login.png"
-            alt="Login Illustration"
-            className="w-[350px] h-[350px] object-cover mt-[90px]"
-          />
-        </div>
       </div>
     </div>
   );

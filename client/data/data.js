@@ -48,43 +48,37 @@
   
   export const courses = [
     {
-      shortTitle: "B.Tech",
-      fullTitle: "ENGINEERING",
+      Title: "B.Tech",
       description: "Technological innovation starts here",
       shortImage: "btech icon.png",
       fullImage: "btech.png",
     },
     {
-      shortTitle: "B.Pharm",
-      fullTitle: "PHARMACY",
+      Title: "B.Pharm",
       description: "Gateway to pharmaceutical innovation.",
       shortImage: "bpharm icon.png",
       fullImage: "bpharm.png",
     },
     {
-      shortTitle: "MBBS",
-      fullTitle: "MBBS",
+      Title: "MBBS",
       description: "Medicine's future starts here.",
       shortImage: "mbbs icon.png",
       fullImage: "mbbs.png",
     },
     {
-      shortTitle: "Diploma",
-      fullTitle: "DIPLOMA",
+      Title: "Diploma",
       description: "Gateway to specialized skills & opportunities.",
       shortImage: "diploma icon.png",
       fullImage: "diploma.png",
     },
     {
-      shortTitle: "Nursing",
-      fullTitle: "Nursing",
+      Title: "Nursing",
       description: "Compassionate care begins here.",
       shortImage: "nursing icon.png",
       fullImage: "bnurs.png",
     },
     {
-      shortTitle: "B.Arch",
-      fullTitle: "ARCHITECTURE",
+      Title: "B.Arch",
       description: "Creativity shapes spaces here.",
       shortImage: "barch icon.png",
       fullImage: "barch.png",
@@ -121,7 +115,6 @@
     "Cyber Security",
     "Data Science",
   ];
-  
   
   export const notesUploadOptions = {
     courses: [
@@ -259,3 +252,4 @@
       instagram: "https://www.instagram.com/code_with_manojit/",
     },
   };
+
