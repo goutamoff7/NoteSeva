@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
-import { FaEye, FaEyeSlash, FaGithub } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 
 const SignUpPage = () => {
@@ -15,23 +15,47 @@ const SignUpPage = () => {
   };
 
   const handleVerifyEmail = () => {
-    // Here you would typically send an OTP to the email
-    // For this example, we'll just show the OTP input
-      setShowOtpInput(true);
-      
+    setShowOtpInput(true);
   };
 
   const handleVerifyOtp = () => {
-    // Here you would typically verify the OTP with your backend
-    // For this example, we'll assume any OTP is valid
     setIsEmailVerified(true);
     setShowOtpInput(false);
+  };
+
+  const handleGoogleSignUp = async () => {
+    try {
+      // Using VITE_BACKEND_URL from environment variables
+      const backendUrl = import.meta.env.VITE_BACKEND_URL;
+      
+      // Make POST request to OAuth2 endpoint
+      const response = await fetch(`${backendUrl}/oauth2`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // You might need to add credentials or other data depending on your backend requirements
+        credentials: 'include', // if you need to include cookies
+      });
+
+      if (!response.ok) {
+        throw new Error('Google authentication failed');
+      }
+
+      const data = await response.json();
+      // Handle successful Google authentication here
+      toast.success('Successfully authenticated with Google');
+      // You might want to redirect or update state based on the response
+      
+    } catch (error) {
+      console.error('Google Sign Up Error:', error);
+      toast.error('Failed to authenticate with Google');
+    }
   };
 
   return (
     <div className="min-h-screen bg-darkbg flex items-center justify-center w-full">
       <div className="min-w-[35%] w-fit bg-[#475569] border-gray-200 p-10 rounded-xl shadow-lg flex flex-col space-x-0 md:space-x-10 space-y-10 md:space-y-0">
-        {/* Form Section */}
         <div className="w-full">
           <h2 className="text-3xl text-white font-bold mb-6 text-center">
             Create Your Free Account
@@ -64,7 +88,7 @@ const SignUpPage = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  disabled={isEmailVerified} // Disable email input after verification
+                  disabled={isEmailVerified}
                 />
               </div>
               {!isEmailVerified && !showOtpInput && (
@@ -72,7 +96,7 @@ const SignUpPage = () => {
                   type="button"
                   onClick={handleVerifyEmail}
                   className="bg-btngreen text-white p-3 rounded-lg hover:bg-green-600 transition-colors"
-                  disabled={!email} // Disable if email is empty
+                  disabled={!email}
                 >
                   Verify Email
                 </button>
@@ -99,7 +123,7 @@ const SignUpPage = () => {
                   type="button"
                   onClick={handleVerifyOtp}
                   className="bg-btngreen text-white p-3 rounded-lg hover:bg-green-600 transition-colors"
-                  disabled={!otp} // Disable if OTP is empty
+                  disabled={!otp}
                 >
                   Submit OTP
                 </button>
@@ -163,7 +187,10 @@ const SignUpPage = () => {
           </form>
 
           <div className="flex justify-center">
-            <button className="mt-4 w-full flex justify-center items-center gap-2 bg-darkblack text-white p-3 rounded-lg">
+            <button 
+              onClick={handleGoogleSignUp}
+              className="mt-4 w-full flex justify-center items-center gap-2 bg-darkblack text-white p-3 rounded-lg hover:bg-gray-800 transition-colors"
+            >
               <FcGoogle className="w-[30px] h-[30px]" />
               Google
             </button>
@@ -176,7 +203,6 @@ const SignUpPage = () => {
             </a>
           </p>
         </div>
-
       </div>
     </div>
   );
