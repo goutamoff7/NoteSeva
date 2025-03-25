@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import NoteCard from "../components/NoteCard";
+import { userNoteData } from "../../data/data";
 
 const Bookmarked = () => {
   const [activeItem, setActiveItem] = useState("all");
@@ -17,23 +19,31 @@ const Bookmarked = () => {
   };
 
   return (
-    <div className="w-full min-h-screen flex">
-      <ul className="w-[20%] bg-[#343E4F] flex flex-col space-y-10 pt-32 text-white px-6">
-        <li 
-          className={`h-2 flex items-center gap-4 px-4 cursor-pointer ${activeItem === "all" ? "bg-btngreen h-6 rounded-full text-center" : ""}`}
+    <div className="w-full min-h-screen flex flex-row">
+      <ul className=" w-[20%] bg-[#343E4F] flex flex-col h-screen gap-6 pt-16 text-white px-6 ">
+        <li
+          className={` flex items-center gap-4 px-4  cursor-pointer ${
+            activeItem === "all"
+              ? "bg-btngreen h-8 rounded-full text-center"
+              : ""
+          }`}
           onClick={() => handleClick("all")}
           onDoubleClick={handleDoubleClick}
         >
           <p className="">All</p>
         </li>
 
-        <li 
-          className={`h-2 flex items-center gap-4 px-4 py-6 cursor-pointer ${activeItem === "notes" ? "bg-btngreen h-6 rounded-full text-center" : ""}`}
+        <li
+          className={` flex items-center gap-4 px-4  cursor-pointer ${
+            activeItem === "notes"
+              ? "bg-btngreen h-8 rounded-full text-center"
+              : ""
+          }`}
           onClick={() => handleClick("notes")}
           onDoubleClick={handleDoubleClick}
         >
           <svg
-            className='w-6 h-6'
+            className="w-6 h-6"
             xmlns="http://www.w3.org/2000/svg"
             width="98.47"
             height="120"
@@ -47,8 +57,12 @@ const Bookmarked = () => {
           <p className="cursor-pointer">Notes</p>
         </li>
 
-        <li 
-          className={`h-2 flex items-center gap-4 px-4 cursor-pointer ${activeItem === "pyq" ? "bg-btngreen h-6 rounded-full text-center" : ""}`}
+        <li
+          className={` flex items-center gap-4 px-4  cursor-pointer ${
+            activeItem === "pyq"
+              ? "bg-btngreen h-8 w-full rounded-full text-center"
+              : ""
+          }`}
           onClick={() => handleClick("pyq")}
           onDoubleClick={handleDoubleClick}
         >
@@ -72,8 +86,12 @@ const Bookmarked = () => {
           <p className="cursor-pointer">PYQ</p>
         </li>
 
-        <li 
-          className={`h-2 flex items-center gap-4 px-4 cursor-pointer ${activeItem === "organiser" ? "bg-btngreen h-6 rounded-full text-center" : ""}`}
+        <li
+          className={` flex items-center gap-4 px-4 cursor-pointer ${
+            activeItem === "organiser"
+              ? "bg-btngreen h-8 w-full rounded-full text-center"
+              : ""
+          }`}
           onClick={() => handleClick("organiser")}
           onDoubleClick={handleDoubleClick}
         >
@@ -99,7 +117,18 @@ const Bookmarked = () => {
         </li>
       </ul>
 
-      <div className="bg-darkbg w-full"></div>
+      <div className="bg-darkbg w-[80%] p-6 grid grid-cols-3 gap-5 2xl:grid-cols-4">
+        {userNoteData.map((note) => (
+          <NoteCard
+            id={note.index}
+            title={note.title}
+            subject={note.subject}
+            userName={note.userName}
+            noteImage={note.noteImage}
+            userImage={note.userImage}
+          />
+        ))}
+      </div>
     </div>
   );
 };
