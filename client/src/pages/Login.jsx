@@ -51,7 +51,7 @@ const LoginPage = () => {
               />
 
               {/* Eye Icon for toggling password visibility */}
-              <div className="absolute inset-y-0 top-8 right-4 flex items-center">
+              <div className="absolute inset-y-0 top-12 right-4">
                 {showPassword ? (
                   <FaEyeSlash
                     className="text-gray-400 cursor-pointer"

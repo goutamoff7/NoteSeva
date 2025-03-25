@@ -1,9 +1,15 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useUser } from "../api/authApi";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(true);
+
+  const { data, isLoading, isError } = useUser();
+
+  // Console log the user data
+  console.log("User data:", data);
 
   return (
     <div className="max-h-20 flex justify-between items-center h-[100px] shadow-md bg-navcol">
@@ -33,7 +39,7 @@ const Navbar = () => {
         ) : (
           <div className="flex items-center gap-2 cursor-pointer group relative">
             <img className="w-4  rounded-full" src="./dropdown_icon.svg" alt="Dropdown Icon" />
-            <img className="w-10 h-10 rounded-full" src="./Manojit.jpg" alt="User Profile" />
+            <img className="w-10 h-10 rounded-full" src="/Manojit.jpg" alt="User Profile" />
             <div className="absolute top-0 right-0 pt-14 text-base font-medium text-gray-600 z-20 hidden group-hover:block">
               <div className="min-w-48 bg-stone-100 rounded flex flex-col gap-4 p-4">
                 <p onClick={() => navigate("/my-profile")} className="hover:text-black cursor-pointer">

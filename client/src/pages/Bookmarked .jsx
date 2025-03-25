@@ -20,7 +20,9 @@ const Bookmarked = () => {
 
   return (
     <div className="w-full min-h-screen flex flex-row">
-      <ul className=" w-[20%] bg-[#343E4F] flex flex-col h-screen gap-6 pt-16 text-white px-6 ">
+
+      {/* Left SideBar */}
+      <ul className=" w-[20%] min-h-screen bg-[#343E4F] flex flex-col gap-6 pt-16 text-white px-6 ">
         <li
           className={` flex items-center gap-4 px-4  cursor-pointer ${
             activeItem === "all"

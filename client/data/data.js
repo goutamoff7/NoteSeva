@@ -256,7 +256,7 @@ export const userNoteData = [
   {
     title: "Topic Name",
     subject: "Subject Name",
-    noteImage: "/image.png",
+    noteImage: "/pyq.pdf",
     userName: "Manojit Das",
     userImage: "./Manojit.jpg",
   },
