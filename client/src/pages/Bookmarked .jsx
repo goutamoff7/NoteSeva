@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import NoteCard from "../components/NoteCard";
 import { userNoteData } from "../../data/data";
+import { IoBookmark, IoSearchOutline } from "react-icons/io5";
 
 const Bookmarked = () => {
   const [activeItem, setActiveItem] = useState("all");
@@ -20,9 +21,8 @@ const Bookmarked = () => {
 
   return (
     <div className="w-full min-h-screen flex flex-row">
-
       {/* Left SideBar */}
-      <ul className=" w-[20%] min-h-screen bg-[#343E4F] flex flex-col gap-6 pt-16 text-white px-6 ">
+      <ul className="fixed w-[20%] min-h-screen bg-[#343E4F] flex flex-col gap-6 pt-16 text-white px-6 ">
         <li
           className={` flex items-center gap-4 px-4  cursor-pointer ${
             activeItem === "all"
@@ -119,17 +119,39 @@ const Bookmarked = () => {
         </li>
       </ul>
 
-      <div className="bg-darkbg w-[80%] p-6 grid grid-cols-3 gap-5 2xl:grid-cols-4">
-        {userNoteData.map((note) => (
-          <NoteCard
-            id={note.index}
-            title={note.title}
-            subject={note.subject}
-            userName={note.userName}
-            noteImage={note.noteImage}
-            userImage={note.userImage}
+      <div className="bg-darkbg w-[80%] p-6 ml-[20%] flex flex-col items-center gap-3 ">
+        <div className="flex items-center  border border-white rounded-lg overflow-hidden  w-2/3">
+          {/* Bookmark Button */}
+          <button className="bg-green-500 text-white px-4 py-2 flex items-center">
+            <IoBookmark />
+            Bookmark
+          </button>
+
+          {/* Input Field */}
+          <input
+            type="text"
+            placeholder="Search..."
+            className="flex-1 px-4 py-2 outline-none"
           />
-        ))}
+
+          {/* Search Button */}
+          <button className="bg-gray-800 text-white px-4 py-2">
+            <IoSearchOutline />
+          </button>
+        </div>
+        <span className="h-1 border-b border-gray-300 w-full" />
+        <div className="grid grid-cols-3 gap-5 2xl:grid-cols-4 ">
+          {userNoteData.map((note) => (
+            <NoteCard
+              id={note.index}
+              title={note.title}
+              subject={note.subject}
+              userName={note.userName}
+              noteImage={note.noteImage}
+              userImage={note.userImage}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
