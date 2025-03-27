@@ -2,8 +2,21 @@ import React, { useState, useEffect } from "react";
 import NoteCard from "../components/NoteCard";
 import { userNoteData } from "../../data/data";
 import { IoBookmark, IoSearchOutline } from "react-icons/io5";
+import Pagination from "../components/Pagination";
 
 const Bookmarked = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 9;
+
+  // Calculate total pages
+  const totalPages = Math.ceil(userNoteData.length / itemsPerPage);
+
+  // Get current page data using slice()
+  const currentData = userNoteData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   const [activeItem, setActiveItem] = useState("all");
 
   // Set "all" as default active item when component mounts
@@ -141,7 +154,7 @@ const Bookmarked = () => {
         </div>
         <span className="h-1 border-b border-gray-300 w-full" />
         <div className="grid grid-cols-3 gap-5 2xl:grid-cols-4 ">
-          {userNoteData.map((note) => (
+          {currentData.map((note) => (
             <NoteCard
               id={note.index}
               title={note.title}
@@ -152,6 +165,11 @@ const Bookmarked = () => {
             />
           ))}
         </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       </div>
     </div>
   );
