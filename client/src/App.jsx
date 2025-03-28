@@ -1,7 +1,6 @@
 // src/App.jsx
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
-import Course from "./pages/Course";
 import Project from "./pages/Project";
 import Contribute from "./pages/Contribute";
 import Navbar from "./components/Navbar";
@@ -17,7 +16,7 @@ import Features from "./pages/Features";
 import Dashboard from "./pages/Dashboard";
 import Resources from "./pages/Resources";
 import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
+import ChangePassword from "./pages/ChangePassword";
 
 function App() {
   return (
@@ -25,24 +24,24 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/project" element={<Project />} />
-        <Route path="/project/:projectId" element={<ProjectView />} />
-        <Route path="/contribute" element={<Contribute />} />
-        <Route path="/contribute/notesUpload" element={<NotesUpload />} />
-        <Route path="/contribute/projectUpload" element={<ProjectUpload />} />
         <Route path="/contactUs" element={<Contact />} />
         <Route path="/features" element={<Features />} />
-        <Route path="/features/:feature" element={<Resources />} />
+        <Route path="/contribute" element={<Contribute />} />
+        <Route path="/project" element={<Project />} />
 
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
 
+        <Route path="/project/:projectId" element={<ProjectView />} />
+        <Route path="/contribute/notesUpload" element={<NotesUpload />} />
+        <Route path="/contribute/projectUpload" element={<ProjectUpload />} />
+        <Route path="/features/:feature" element={<Resources />} />
 
         <Route path="/my-profile" element={<MyProfile />} />
         <Route path="/bookmarked" element={<Bookmarked />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/change-password" element={<ChangePassword />} />
 
 
       </Routes>

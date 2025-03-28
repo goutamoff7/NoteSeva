@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { toast } from "react-toastify";
 
-const ResetPassword = () => {
+const ChangePassword = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -40,7 +40,7 @@ const ResetPassword = () => {
     <div className="bg-darkbg w-full h-screen flex justify-center items-center">
       <div className="max-w-md min-w-[30%] shadow-xl border bg-[#475569] rounded-2xl overflow-hidden p-8">
         <h2 className="text-3xl font-bold mb-6 text-center text-btngreen">
-          Reset Password
+          Change Password
         </h2>
 
         <form onSubmit={handleSubmit}>
@@ -114,4 +114,4 @@ const ResetPassword = () => {
   );
 };
 
-export default ResetPassword;
+export default ChangePassword;

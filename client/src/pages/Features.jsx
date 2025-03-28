@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import Footer from "../components/Footer";
 
 const Features = () => {
   const navigate = useNavigate();
@@ -76,25 +77,29 @@ const Features = () => {
   };
 
   return (
-    <div className="w-full h-[80vh] xl:h-[87.5vh] bg-darkbg grid place-items-center px-20">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-10 p-5">
-        {items.map((item, index) => (
-          <div
-            key={index}
-            className="bg-white px-4 py-10 rounded-lg shadow-lg flex flex-col items-center text-center mx-3"
-          >
-            <div className="mb-4">{item.icon}</div>
-            <h3 className="text-2xl font-bold mb-2">{item.title}</h3>
-            <p className="text-gray-400 mb-12">{item.description}</p>
-            <button
-              className="bg-[#1E293B] text-white px-6 py-2 rounded-3xl hover:bg-[#1E293B]/80"
-              onClick={() => handleContinue(item.title)}
+    <div>
+      <div className="w-full min-h-[80vh] bg-darkbg grid place-items-center px-20">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 p-5">
+          {items.map((item, index) => (
+            <div
+              key={index}
+              className="bg-white px-4 py-10 rounded-lg shadow-lg flex flex-col items-center text-center mx-3"
             >
-              Continue
-            </button>
-          </div>
-        ))}
+              <div className="mb-4">{item.icon}</div>
+              <h3 className="text-2xl font-bold mb-2">{item.title}</h3>
+              <p className="text-gray-400 mb-12">{item.description}</p>
+              <button
+                className="bg-[#1E293B] text-white px-6 py-2 rounded-3xl hover:bg-[#1E293B]/80"
+                onClick={() => handleContinue(item.title)}
+              >
+                Continue
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
+      
+      <Footer/>
     </div>
   );
 };
