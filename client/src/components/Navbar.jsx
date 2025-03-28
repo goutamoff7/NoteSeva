@@ -104,10 +104,10 @@ const Navbar = () => {
                   Bookmarked
                 </p>
                 <p
-                  onClick={() => navigate("/reset-password")}
+                  onClick={() => navigate("/change-password")}
                   className="hover:text-black cursor-pointer"
                 >
-                  Reset Password
+                  Change Password
                 </p>
                 <p
                   onClick={() => setIsLoggedIn(false) && navigate("/signup")}
