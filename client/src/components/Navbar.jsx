@@ -6,10 +6,6 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(true);
 
-  const { data, isLoading, isError } = useUser();
-
-  // Console log the user data
-  console.log("User data:", data);
 
   return (
     <div className="sticky top-0 max-h-20 flex justify-between items-center h-[100px] shadow-md bg-navcol z-10">
@@ -80,7 +76,7 @@ const Navbar = () => {
             />
             <img
               className="w-10 h-10 rounded-full"
-              src="/Manojit.jpg"
+              src="./upload_area.png"
               alt="User Profile"
             />
             <div className="absolute top-0 right-0 pt-14 text-base font-medium text-gray-600 z-20 hidden group-hover:block">

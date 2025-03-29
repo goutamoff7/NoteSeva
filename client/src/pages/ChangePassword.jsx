@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { toast } from "react-toastify";
+import axios from "axios";
+import {useAppContext } from "../context/AppContext";
 
 const ChangePassword = () => {
   const [oldPassword, setOldPassword] = useState("");
@@ -10,7 +12,9 @@ const ChangePassword = () => {
   const [isOldPasswordVisible, setIsOldPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
 
-  const handleSubmit = (e) => {
+  const {backendUrl} = useAppContext()
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (password.length < 8) {
@@ -28,12 +32,20 @@ const ChangePassword = () => {
       return;
     }
 
-    toast.success("Password updated successfully!");
+    try {
+      const response = await axios.post(`${backendUrl}/change-password`, {
+        oldPassword,
+        password,
+        confirmPassword,
+      });
 
-    // Reset form after successful submission
-    setOldPassword("");
-    setPassword("");
-    setConfirmPassword("");
+      toast.success(response.data.message);
+      setOldPassword("");
+      setPassword("");
+      setConfirmPassword("");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to change password");
+    }
   };
 
   return (
