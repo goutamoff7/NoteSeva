@@ -1,50 +1,40 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { toast } from "react-toastify";
 import axios from "axios";
-import {useAppContext } from "../context/AppContext";
+import { useAppContext } from "../context/AppContext";
 
 const ChangePassword = () => {
   const [oldPassword, setOldPassword] = useState("");
-  const [password, setPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isOldPasswordVisible, setIsOldPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
 
-  const {backendUrl} = useAppContext()
+  const { backendUrl,token} = useAppContext();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (password.length < 8) {
-      toast.error("Password must be at least 8 characters long!");
-      return;
-    }
-
-    if (oldPassword === password) {
-      toast.error("New password cannot be the same as the old password!");
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      toast.error("New password and confirm password do not match!");
-      return;
-    }
-
+  
     try {
-      const response = await axios.post(`${backendUrl}/change-password`, {
-        oldPassword,
-        password,
-        confirmPassword,
-      });
-
-      toast.success(response.data.message);
+      const response = await axios.put(`${backendUrl}/user/change-password`,
+        {oldPassword, newPassword, confirmPassword },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+         },
+        }
+      );
+  
+      toast.success(response.data.message || "Password changed successfully!");
       setOldPassword("");
-      setPassword("");
+      setNewPassword("");
       setConfirmPassword("");
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to change password");
+      const errorMsg =
+        error.message || "Something went wrong. Please try again!";
+      toast.error(errorMsg);
     }
   };
 
@@ -80,8 +70,8 @@ const ChangePassword = () => {
             <input
               type={isPasswordVisible ? "text" : "password"}
               placeholder="New Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
               required
               className="w-full p-3 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 pr-12"
             />

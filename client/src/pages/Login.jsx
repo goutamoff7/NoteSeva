@@ -13,7 +13,7 @@ const LoginPage = () => {
 
   const navigate = useNavigate()
 
-  const { backendUrl } = useAppContext();
+  const { backendUrl,setToken } = useAppContext();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -22,9 +22,10 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${backendUrl}/public/login`, { email, password });
+      const {data} = await axios.post(`${backendUrl}/public/login`, { email, password });
       toast.success("Login successful");
-      console.log("Response:", response.data);
+      localStorage.setItem('token', data.token);
+      setToken(data.token);
       navigate('/dashboard')
     } catch (error) {
       toast.error("Login failed. Please check your credentials.");
