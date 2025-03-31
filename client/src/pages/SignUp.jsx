@@ -1,10 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useAppContext } from "../context/AppContext";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -16,10 +16,11 @@ const SignUpPage = () => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [resendTimer, setResendTimer] = useState(0);
 
   const { backendUrl } = useAppContext();
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -29,12 +30,21 @@ const SignUpPage = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
+  // Start resend timer
+  useEffect(() => {
+    if (resendTimer > 0) {
+      const timer = setTimeout(() => setResendTimer(resendTimer - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [resendTimer]);
+
   // API for Verify Email
   const handleVerifyEmail = async () => {
     try {
       await axios.post(`${backendUrl}/public/generate-otp`, { email });
       toast.success("OTP sent to your email");
       setShowOtpInput(true);
+      setResendTimer(30);
     } catch (error) {
       toast.error("Failed to send OTP");
     }
@@ -52,6 +62,13 @@ const SignUpPage = () => {
     }
   };
 
+  // Resend OTP
+  const handleResendOtp = async () => {
+    if (resendTimer === 0) {
+      await handleVerifyEmail();
+    }
+  };
+
   // API for signup
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -60,9 +77,14 @@ const SignUpPage = () => {
       return;
     }
     try {
-      await axios.post(`${backendUrl}/public/register`, { name, email, password, confirmPassword });
+      await axios.post(`${backendUrl}/public/register`, {
+        name,
+        email,
+        password,
+        confirmPassword,
+      });
       toast.success("Account created successfully");
-      navigate('/login');
+      navigate("/login");
     } catch (error) {
       toast.error("Signup failed");
     }
@@ -79,6 +101,7 @@ const SignUpPage = () => {
           Create Your Free Account
         </h2>
 
+        {/* Crediential Sign up */}
         <form className="space-y-4" onSubmit={handleSignUp}>
           {!isEmailVerified && (
             <>
@@ -123,6 +146,26 @@ const SignUpPage = () => {
                     Submit OTP
                   </button>
                 </div>
+              )}
+              {showOtpInput && (
+                <button
+                  type="button"
+                  onClick={handleResendOtp}
+                  className="mt-2 "
+                  disabled={resendTimer > 0}
+                >
+                  <span
+                    className={
+                      resendTimer > 0
+                        ? "text-gray-400"
+                        : "text-white cursor-pointer"
+                    }
+                  >
+                    {resendTimer > 0
+                      ? `Resend OTP in ${resendTimer}s`
+                      : `Resend OTP`}
+                  </span>
+                </button>
               )}
             </>
           )}
@@ -189,19 +232,25 @@ const SignUpPage = () => {
                 </div>
               </div>
 
-              <button type="submit" className="w-full bg-btngreen text-white p-3 rounded-lg">
+              <button
+                type="submit"
+                className="w-full bg-btngreen text-white p-3 rounded-lg"
+              >
                 Create Account
               </button>
             </>
           )}
         </form>
 
+        {/* Google Sign Up Part */}
         <button
           onClick={handleGoogleSignUp}
           className="mt-4 w-full flex justify-center items-center gap-2 bg-darkblack text-white p-3 rounded-lg"
         >
           <FcGoogle className="w-[30px] h-[30px]" /> Google
         </button>
+
+        {/* Login Part */}
         <p className="mt-6 text-white">
           Already have an account?{" "}
           <a href="./login" className="text-green-500 hover:text-green-600">

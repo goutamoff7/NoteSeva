@@ -70,13 +70,17 @@ const ContactUs = () => {
           {/* social media */}
           <div className="flex gap-8 mt-4 pb-8 flex-row justify-center">
             <span className="flex items-center justify-center rounded-full border w-10 h-10 bg-[#21B573] ">
-              <FaWhatsapp className="w-[28px] h-[28px] text-white " />
+              <a href="https://whatsapp.com/channel/0029VaynHjm7IUYU5Sx5w63H">
+                <FaWhatsapp className="w-[28px] h-[28px] text-white " />  
+              </a>
             </span>
             <span className="flex items-center justify-center rounded-full border w-10 h-10 bg-[#21B573] ">
               <FaDiscord className="w-[28px] h-[28px] text-white " />
             </span>
             <span className="flex items-center justify-center rounded-full border w-10 h-10 bg-[#21B573] ">
-              <FaTelegramPlane className="w-[28px] h-[28px] text-white " />
+              <a href="https://t.me/NoteSeva">
+                <FaTelegramPlane className="w-[28px] h-[28px] text-white " />
+              </a>
             </span>
           </div>
         </div>
