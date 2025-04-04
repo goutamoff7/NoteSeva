@@ -1,10 +1,13 @@
 package com.noteseva.service;
 
-import com.noteseva.model.Users;
+import com.noteseva.model.TokenExpiration;
+import com.noteseva.model.TokenResponse;
 import com.noteseva.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -12,7 +15,6 @@ import org.springframework.stereotype.Service;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Timestamp;
 import java.util.Base64;
 import java.util.Date;
 import java.util.function.Function;
@@ -22,7 +24,13 @@ public class JwtService {
     private String secretKey;
 
     @Autowired
+    private TokenResponse tokenResponse;
+
+    @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    TokenExpiration tokenExpiration;
 
     public JwtService() {
         try {
@@ -41,12 +49,22 @@ public class JwtService {
         return extractClaims(token, Claims::getSubject);
     }
 
-    public String generateToken(String username) {
+    public String generateAccessToken(String username){
+        return buildToken(username,tokenExpiration.getAccessTokenExpiration());
+    }
+
+
+    public String generateRefreshToken(String username){
+        return buildToken(username,tokenExpiration.getRefreshTokenExpiration());
+    }
+
+
+    public String buildToken(String username,long expiration) {
         return Jwts
                 .builder()
                 .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 1 * 60 * 60 * 1000)) // 1 hr
+                .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getKey())
                 .compact();
     }
@@ -71,8 +89,8 @@ public class JwtService {
     }
 
     public boolean validateToken(String token, UserDetails userDetails) {
-        final String userName = extractUsername(token);
-        return (userName.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        final String username = extractUsername(token);
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
     private boolean isTokenExpired(String token) {
@@ -83,4 +101,21 @@ public class JwtService {
         return extractClaims(token, Claims::getExpiration);
     }
 
+     public String extractToken(HttpServletRequest request,String tokenName) {
+
+//        Check Authorization Header First
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer "))
+            return authHeader.substring(7);
+
+//         If No Header, Check Cookie
+        else if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if (cookie.getName().equals(tokenName)){
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
+    }
 }
