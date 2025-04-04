@@ -11,6 +11,9 @@ public class OTPService {
     private RedisService redisService;
     // 6 Digit otp
     public String generateOTP(String email) {
+        String storedOtp = redisService.getOTP(email);
+        if(storedOtp!=null)
+            return storedOtp;
         String otp = String.valueOf(new Random().nextInt(900000) + 100000);
         redisService.saveOTP(email, otp);
         return otp;
