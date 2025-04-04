@@ -1,6 +1,7 @@
 package com.noteseva.controller;
 
 import com.noteseva.DTO.PYQDTO;
+import com.noteseva.Pagination.PageResponse;
 import com.noteseva.model.PYQ;
 import com.noteseva.service.DTOService;
 import com.noteseva.service.PYQService;
@@ -8,6 +9,7 @@ import com.noteseva.service.UtilityService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,11 +19,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("pyq")
-@Tag(name="Previous Year Question APIs",description = "View, Search, Upload and Download Previous Year Question")
+@Tag(name = "Previous Year Question APIs", description = "View, Search, Upload and Download Previous Year Question")
 public class PYQController {
 
     @Autowired
@@ -38,23 +40,26 @@ public class PYQController {
     // subjectName=Basic Electrical Engineering
     @Operation(summary = "Fetch all PYQ")
     @GetMapping("/all")
-    public ResponseEntity<?> getAllPYQ(@RequestParam String courseName,
-                                         @RequestParam(required = false) String departmentName,
-                                         @RequestParam(required = false) String subjectName ) {
+    public ResponseEntity<?> getAllPYQ(
+            @RequestParam String courseName,
+            @RequestParam(required = false) String departmentName,
+            @RequestParam(required = false) String subjectName,
+            @RequestParam(required = false, defaultValue = "0") int pageNumber,
+            @RequestParam(required = false, defaultValue = "12") int pageSize,
+            @RequestParam(required = false, defaultValue = "id") String sortBy,
+            @RequestParam(required = false, defaultValue = "ASC") String sortingOrder) {
         try {
-            List<PYQDTO> pyqDTOList = pyqService
-                    .getAllPYQ(courseName,departmentName,subjectName)
-                    .stream()
-                    .map(dtoService::convertToPYQDTO) // Convert Notes -> OrganizerDTO
-                    .toList();
-            if (pyqDTOList.isEmpty()) {
+            PageResponse<PYQDTO> organizerDTOPageResponse = pyqService
+                    .getAllPYQ(courseName,departmentName,subjectName,
+                            pageNumber,pageSize,sortBy,sortingOrder);
+            if (organizerDTOPageResponse==null)
                 return new ResponseEntity<>("May be PYQs are not available",
                         HttpStatus.NOT_FOUND);
-            }
-            return new ResponseEntity<>(pyqDTOList, HttpStatus.OK);
+            return new ResponseEntity<>(organizerDTOPageResponse, HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new ResponseEntity<>("Something went wrong!!",HttpStatus.INTERNAL_SERVER_ERROR);
+            log.error(e.toString());
+            return new ResponseEntity<>("Something Went Wrong!!",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -69,8 +74,9 @@ public class PYQController {
             else
                 return new ResponseEntity<>("May be this PYQ is not available!!", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new ResponseEntity<>("Something went wrong!!",HttpStatus.INTERNAL_SERVER_ERROR);
+            log.error(e.toString());
+            return new ResponseEntity<>("Something Went Wrong!!",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -89,7 +95,7 @@ public class PYQController {
             //Check for duplicate fileData
             boolean fileExists = pyqService.isFileDataExist(fileDataHash);
             if (fileExists) {
-                return new ResponseEntity<>( "This file has already been uploaded!",HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("This file has already been uploaded!", HttpStatus.BAD_REQUEST);
             }
 
             // Converting pyqDTO to pyq
@@ -101,15 +107,16 @@ public class PYQController {
 
             // Process and save notes and file
             PYQ savedPYQ = pyqService.uploadPYQ(pyq, file, username);
-            if(savedPYQ!=null)
+            if (savedPYQ != null)
                 return new ResponseEntity<>(dtoService.convertToPYQDTO(savedPYQ), HttpStatus.CREATED);
             else
-                return new ResponseEntity<>("PYQ Upload Unsuccessful",HttpStatus.SERVICE_UNAVAILABLE) ;
+                return new ResponseEntity<>("PYQ Upload Unsuccessful", HttpStatus.SERVICE_UNAVAILABLE);
         } catch (ResponseStatusException e) {
             return new ResponseEntity<>(e.getReason(), e.getStatusCode());
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new ResponseEntity<>("Something went wrong!!", HttpStatus.INTERNAL_SERVER_ERROR);
+            log.error(e.toString());
+            return new ResponseEntity<>("Something Went Wrong!!",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -125,13 +132,14 @@ public class PYQController {
                 byte[] fileData = pyq.getFileData();
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.valueOf(fileType));
-                headers.setContentDispositionFormData("attachment",fileName);
+                headers.setContentDispositionFormData("attachment", fileName);
                 return new ResponseEntity<>(fileData, headers, HttpStatus.OK);
             } else
                 return new ResponseEntity<>("May be this pyq is not available!!", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            log.error(e.toString());
+            return new ResponseEntity<>("Something Went Wrong!!",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

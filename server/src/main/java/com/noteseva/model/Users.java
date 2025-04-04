@@ -39,6 +39,10 @@ public class Users{
     @Column(name="password",nullable = false)
     private String password;
 
+    @JsonIgnore
+    @Column(name="refresh_token")
+    private String refreshToken;
+
     //relationship
     @JsonIgnore
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})

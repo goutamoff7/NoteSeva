@@ -1,6 +1,7 @@
 package com.noteseva.controller;
 
 import com.noteseva.DTO.NotesDTO;
+import com.noteseva.Pagination.PageResponse;
 import com.noteseva.model.Notes;
 import com.noteseva.service.DTOService;
 import com.noteseva.service.NotesService;
@@ -8,14 +9,15 @@ import com.noteseva.service.UtilityService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("notes")
 @Tag(name="Notes APIs",description = "View, Search, Upload and Download Notes")
@@ -30,28 +32,35 @@ public class NotesController {
     @Autowired
     DTOService dtoService;
 
-    //localhost:8080/notes/all?courseName=BTECH &
-    // departmentName=CSE &
-    // subjectName=Basic Electrical Engineering
+    //localhost:8080/notes/all?
+    //courseName=BTECH &
+    //departmentName=CSE &
+    //subjectName=Basic Electrical Engineering
+    //pageNumber=0&
+    //pageSize=12&
+    //sortBy=id&
+    //sortingOrder=ASC
     @Operation(summary = "Fetch all notes")
     @GetMapping("/all")
-    public ResponseEntity<?> getAllNotes(@RequestParam String courseName,
-                                         @RequestParam(required = false) String departmentName,
-                                         @RequestParam(required = false) String subjectName ) {
+    public ResponseEntity<?> getAllNotes(
+            @RequestParam String courseName,
+            @RequestParam(required = false) String departmentName,
+            @RequestParam(required = false) String subjectName,
+            @RequestParam(required = false,defaultValue = "0") int pageNumber,
+            @RequestParam(required = false,defaultValue = "12") int pageSize,
+            @RequestParam(required = false,defaultValue = "id") String sortBy,
+            @RequestParam(required = false,defaultValue = "ASC") String sortingOrder) {
         try {
-            List<NotesDTO> notesDTOList = notesService
-                    .getAllNotes(courseName,departmentName,subjectName)
-                    .stream()
-                    .map(dtoService::convertToNotesDTO) // Convert Notes -> NotesDTO
-                    .toList();
-            if (notesDTOList.isEmpty()) {
+            PageResponse<NotesDTO> notesDTOPageResponse = notesService
+                    .getAllNotes(courseName,departmentName,subjectName,
+                            pageNumber,pageSize,sortBy,sortingOrder);
+            if (notesDTOPageResponse==null)
                 return new ResponseEntity<>("May be Notes are not available",
                         HttpStatus.NOT_FOUND);
-            }
-            return new ResponseEntity<>(notesDTOList, HttpStatus.OK);
+            return new ResponseEntity<>(notesDTOPageResponse, HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new ResponseEntity<>("Something went wrong!!",
+            log.error(e.toString());
+            return new ResponseEntity<>("Something Went Wrong!!",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -69,8 +78,8 @@ public class NotesController {
                 return new ResponseEntity<>("May be this notes is not available!!",
                         HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new ResponseEntity<>("Something went wrong!!",
+            log.error(e.toString());
+            return new ResponseEntity<>("Something Went Wrong!!",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -111,8 +120,8 @@ public class NotesController {
         } catch (ResponseStatusException e) {
             return new ResponseEntity<>(e.getReason(), e.getStatusCode());
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new ResponseEntity<>("Something went wrong!!",
+            log.error(e.toString());
+            return new ResponseEntity<>("Something Went Wrong!!",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -135,8 +144,9 @@ public class NotesController {
                 return new ResponseEntity<>("May be this notes is not available!!",
                         HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            log.error(e.toString());
+            return new ResponseEntity<>("Something Went Wrong!!",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

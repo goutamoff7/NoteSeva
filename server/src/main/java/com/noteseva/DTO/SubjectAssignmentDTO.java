@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 public class SubjectAssignmentDTO {
 
+    private Integer id;
+
     @NotBlank(message = "Course name can't be blank.")
     private String courseName;
 

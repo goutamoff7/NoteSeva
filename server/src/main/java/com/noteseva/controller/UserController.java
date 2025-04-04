@@ -8,15 +8,18 @@ import com.noteseva.service.UserService;
 import com.noteseva.service.UtilityService;
 import com.noteseva.validation.ChangePasswordValidation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("user")
+@RequestMapping("/user")
 @Tag(name = "User APIs", description = "Manage and Modify User")
 public class UserController {
 
@@ -60,7 +63,22 @@ public class UserController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }catch (Exception e) {
             System.out.println(e.getMessage());
-            return new ResponseEntity<>("Some internal issues!!", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Something Went Wrong!!",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+        ResponseCookie jwtCookie = ResponseCookie.from("jwt", "")
+                .httpOnly(true)
+                .secure(false)  // Change to true in production
+                .path("/")
+                .maxAge(0) // Expire immediately
+                .build();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                .body("Logged out successfully");
     }
 }

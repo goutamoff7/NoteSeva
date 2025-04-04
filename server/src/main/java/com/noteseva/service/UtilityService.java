@@ -22,8 +22,8 @@ public class UtilityService {
     }
 
     public String generateFileHash(byte[] fileData) throws NoSuchAlgorithmException {
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        byte[] fileDataHash = digest.digest(fileData);
+        MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+        byte[] fileDataHash = messageDigest.digest(fileData);
         // Convert to a Base64 encoded string (easier to store in DB)
         return Base64.getEncoder().encodeToString(fileDataHash);
     }

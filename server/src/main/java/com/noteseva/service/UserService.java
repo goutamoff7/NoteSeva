@@ -36,4 +36,8 @@ public class UserService {
     public boolean passwordMatch(String givenPassword, String savedPassword){
         return passwordEncoder.matches(givenPassword,savedPassword);
     }
+
+    public Users findByUsername(String username){
+        return userRepository.findByUsername(username);
+    }
 }

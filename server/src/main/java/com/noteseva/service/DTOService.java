@@ -24,9 +24,13 @@ public class DTOService {
     @Autowired
     SubjectRepository subjectRepository;
 
+    @Autowired
+    UtilityService utilityService;
+
     public Users getUser(UsersDTO userDTO) {
         Users user = new Users();
         user.setName(userDTO.getName());
+        user.setUsername(utilityService.extractUsernameFromEmail(userDTO.getEmail())); // username = substring of email id, before @ symbol
         user.setEmail(userDTO.getEmail().toLowerCase());
         user.setPassword(userDTO.getPassword());
         return user;
@@ -50,6 +54,7 @@ public class DTOService {
 
     public NotesDTO convertToNotesDTO(Notes notes) {
         NotesDTO notesDTO = new NotesDTO();
+        notesDTO.setId(notes.getId());
         notesDTO.setCourseName(notes.getSubjectAssignment().getDepartment().getCourse().getCourseName());  // Extract Course Name
         notesDTO.setDepartmentName(notes.getSubjectAssignment().getDepartment().getDepartmentName());  // Extract Department Name
         notesDTO.setSubjectName(notes.getSubjectAssignment().getSubject().getSubjectName());  // Extract Subject Name
@@ -77,6 +82,7 @@ public class DTOService {
 
     public OrganizerDTO convertToOrganizerDTO(Organizer organizer) {
         OrganizerDTO organizerDTO = new OrganizerDTO();
+        organizerDTO.setId(organizer.getId());
         organizerDTO.setYear(organizer.getYear());
         organizerDTO.setCourseName(organizer.getSubjectAssignment().getDepartment().getCourse().getCourseName());  // Extract Course Name
         organizerDTO.setDepartmentName(organizer.getSubjectAssignment().getDepartment().getDepartmentName());  // Extract Department Name
@@ -104,6 +110,7 @@ public class DTOService {
 
     public PYQDTO convertToPYQDTO(PYQ pyq) {
         PYQDTO pyqDTO = new PYQDTO();
+        pyqDTO.setId(pyq.getId());
         pyqDTO.setYear(pyq.getYear());
         pyqDTO.setCourseName(pyq.getSubjectAssignment().getDepartment().getCourse().getCourseName());  // Extract Course Name
         pyqDTO.setDepartmentName(pyq.getSubjectAssignment().getDepartment().getDepartmentName());  // Extract Department Name
@@ -151,6 +158,7 @@ public class DTOService {
 
     public SubjectAssignmentDTO convertToSubjectAssignmentDTO(SubjectAssignment subjectAssignment) {
         SubjectAssignmentDTO subjectAssignmentDTO = new SubjectAssignmentDTO();
+        subjectAssignmentDTO.setId(subjectAssignment.getId());  // Extract Course Name
         subjectAssignmentDTO.setCourseName(subjectAssignment.getDepartment().getCourse().getCourseName());  // Extract Course Name
         subjectAssignmentDTO.setDepartmentName(subjectAssignment.getDepartment().getDepartmentName());  // Extract Department Name
         subjectAssignmentDTO.setSubjectName(subjectAssignment.getSubject().getSubjectName()); // Extract Subject Name

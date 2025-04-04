@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 public class PYQDTO {
 
+    private Integer id;
+
     @NotBlank(message = "Please choose any Year")
     private String year;
 
