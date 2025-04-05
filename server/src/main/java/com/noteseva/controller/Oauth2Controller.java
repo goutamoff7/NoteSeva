@@ -1,6 +1,5 @@
 package com.noteseva.controller;
 
-import com.noteseva.model.TokenExpiration;
 import com.noteseva.model.TokenResponse;
 import com.noteseva.model.Users;
 import com.noteseva.service.*;
@@ -13,7 +12,6 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,10 +27,7 @@ public class Oauth2Controller {
     UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
-
-    @Autowired
-    PublicService publicService;
+    UserService userService;
 
     @Autowired
     JwtService jwtService;
@@ -45,9 +40,6 @@ public class Oauth2Controller {
 
     @Autowired
     RedisService redisService;
-
-    @Autowired
-    TokenExpiration tokenExpiration;
 
     @GetMapping("/oauth2")
     public ResponseEntity<?> oauthLogin(@AuthenticationPrincipal OAuth2User oAuth2User) {
@@ -63,7 +55,7 @@ public class Oauth2Controller {
             userDetailsService.loadUserByUsername(username);
         } catch (UsernameNotFoundException u) {
             try{
-                Users newUser = publicService.registerOauth2(oAuth2User);
+                Users newUser = userService.registerOauth2(oAuth2User);
                 if (newUser != null) {
                     redisService.markEmailAsVerified(newUser.getEmail());
                     emailService.sendSuccessEmail(newUser.getEmail(),
@@ -83,7 +75,7 @@ public class Oauth2Controller {
             String refreshToken = jwtService
                     .generateRefreshToken(username);
 
-            Users user = publicService.saveRefreshToken(username, refreshToken);
+            Users user = userService.saveRefreshToken(username, refreshToken);
             if(user!=null)
                 return new ResponseEntity<>("Login Failed",
                         HttpStatus.SERVICE_UNAVAILABLE) ;
@@ -94,9 +86,9 @@ public class Oauth2Controller {
 
 //         Set JWT in HttpOnly cookie
             ResponseCookie accessTokenCookie =
-                    publicService.getAccessTokenCookie(tokenResponse.getAccessToken());
+                    utilityService.getAccessTokenCookie(tokenResponse.getAccessToken());
             ResponseCookie refreshTokenCookie =
-                    publicService.getRefreshTokenCookie(tokenResponse.getRefreshToken());
+                    utilityService.getRefreshTokenCookie(tokenResponse.getRefreshToken());
 
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.SET_COOKIE, accessTokenCookie.toString());
