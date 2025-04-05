@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 public class NotesDTO {
 
+    private Integer id;
+
     //subject selection
     @NotBlank(message = "Course name can't be blank.")
     private String courseName;

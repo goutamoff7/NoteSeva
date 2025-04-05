@@ -52,7 +52,6 @@ public class SecurityConfiguration {
         return http
                 .securityMatcher("/**")
                 .csrf(AbstractHttpConfigurer::disable)
-                .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(
                                 "/public/**",

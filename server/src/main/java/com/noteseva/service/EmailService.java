@@ -1,7 +1,6 @@
 package com.noteseva.service;
 
 import com.noteseva.exception.EmailSendingException;
-import com.noteseva.model.Users;
 import com.noteseva.repository.UserRepository;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,12 +43,10 @@ public class EmailService {
     }
 
     @Async
-    public void sendSuccessEmail(String email) {
+    public void sendSuccessEmail(String email,String name) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-
-            String name = userRepo.findByEmail(email).getName();
 
             helper.setTo(email);
             helper.setSubject("Registration Successful - NoteSeva");
@@ -113,13 +110,12 @@ public class EmailService {
     }
 
     @Async
-    public void alertEmail(String email) {
+    public void alertEmail(String email,String name) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
             String otp = otpService.generateOTP(email);
-            String name = userRepo.findByEmail(email).getName();
 
             helper.setTo(email);
             helper.setSubject(alterEmailSubject());

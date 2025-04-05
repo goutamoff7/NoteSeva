@@ -32,10 +32,12 @@ public class Notes {
     @Column(name = "file_type", nullable = false)
     private String fileType;
 
+    @JsonIgnore
     @Lob
     @Column(name = "file_data", columnDefinition = "longblob", nullable = false)
     private byte[] fileData;
 
+    @JsonIgnore
     @Column(name = "file_data_hash", nullable = false, unique = true)
     private String fileDataHash;
 

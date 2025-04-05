@@ -1,13 +1,16 @@
 package com.noteseva.service;
 
-import com.noteseva.model.Notes;
+import com.noteseva.Pagination.PageResponse;
 import com.noteseva.model.Role;
 import com.noteseva.model.Users;
 import com.noteseva.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
 @Service
 public class AdminService {
@@ -28,7 +31,15 @@ public class AdminService {
         return userRepository.save(user);
     }
 
-    public List<Users> getAllUser() {
-        return userRepository.findAll();
+    public PageResponse<Users> getAllUser(
+            int pageNumber,
+            int pageSize,
+            String sortBy,
+            String sortingOrder) {
+        Sort sort = sortingOrder.equalsIgnoreCase("ASC") ?
+                Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+        Page<Users> pageUsers = userRepository.findAll(pageable);
+        return PageResponse.getPageResponse(pageUsers);
     }
 }
