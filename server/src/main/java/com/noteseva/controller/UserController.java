@@ -19,7 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("user")
 @Tag(name = "User APIs", description = "Manage and Modify User")
 public class UserController {
 
@@ -35,6 +35,7 @@ public class UserController {
     @Autowired
     UtilityService utilityService;
 
+    
     @PutMapping("/change-password")
     public ResponseEntity<?> changePassword(@Validated(ChangePasswordValidation.class)
                                             @RequestBody PasswordDTO passwordDTO) {

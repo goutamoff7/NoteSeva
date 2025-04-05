@@ -4,10 +4,8 @@ import com.noteseva.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -37,6 +35,7 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain authFilterChain(HttpSecurity http) throws Exception {
         return http
+                .cors(Customizer.withDefaults())
                 .securityMatcher("/oauth2/**", "/login/oauth2/code/**")
                 .authorizeHttpRequests(request -> request.anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
@@ -50,6 +49,7 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain jwtFilterChain(HttpSecurity http) throws Exception {
         return http
+                .cors(Customizer.withDefaults())
                 .securityMatcher("/**")
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
@@ -61,7 +61,7 @@ public class SecurityConfiguration {
                                 "/notes/**",
                                 "/organizer/**",
                                 "/pyq/**",
-                                "/logged-user/**")
+                                "/user/**")
                         .hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
