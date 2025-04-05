@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/public")
+@RequestMapping("public")
 @Tag(name = "Public APIs", description = "Register and Login User")
 public class PublicController {
 

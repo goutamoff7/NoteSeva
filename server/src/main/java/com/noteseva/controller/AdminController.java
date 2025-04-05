@@ -22,7 +22,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("admin")
 @Tag(name = "Admin APIs", description = "Create admin, Get all user info")
 public class AdminController {
 

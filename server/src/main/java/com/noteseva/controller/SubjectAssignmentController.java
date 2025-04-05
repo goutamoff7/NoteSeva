@@ -20,7 +20,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/subject")
+@RequestMapping("subject")
 @Tag(name = "SubjectAssignment APIs", description = "add, View and Search Subject")
 public class SubjectAssignmentController {
 
