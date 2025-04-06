@@ -1,17 +1,12 @@
 package com.noteseva.controller;
 
 import com.noteseva.DTO.PasswordDTO;
-import com.noteseva.model.TokenResponse;
-import com.noteseva.model.UserPrincipal;
 import com.noteseva.model.Users;
-import com.noteseva.repository.UserRepository;
 import com.noteseva.service.EmailService;
-import com.noteseva.service.JwtService;
 import com.noteseva.service.UserService;
 import com.noteseva.service.UtilityService;
 import com.noteseva.validation.ChangePasswordValidation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
