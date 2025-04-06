@@ -15,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -206,6 +207,15 @@ public class PublicController {
             return new ResponseEntity<>("Something Went Wrong!!",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping("/check-auth")
+    public ResponseEntity<?> checkAuthStatus(Authentication authentication) {
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            return new ResponseEntity<>("User is authenticated", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("User is not authenticated", HttpStatus.UNAUTHORIZED);
     }
 }
 
