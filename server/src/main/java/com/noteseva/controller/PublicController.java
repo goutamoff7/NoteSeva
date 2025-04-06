@@ -2,7 +2,6 @@ package com.noteseva.controller;
 
 import com.noteseva.DTO.PasswordDTO;
 import com.noteseva.DTO.UsersDTO;
-import com.noteseva.model.TokenExpiration;
 import com.noteseva.model.TokenResponse;
 import com.noteseva.model.Users;
 import com.noteseva.service.*;
@@ -38,19 +37,13 @@ public class PublicController {
     OTPService otpService;
 
     @Autowired
-    PublicService publicService;
+    UserService userService;
 
     @Autowired
     RedisService redisService;
 
     @Autowired
-    TokenExpiration tokenExpiration;
-
-    @Autowired
     JwtService jwtService;
-
-    @Autowired
-    UserDetailsServiceImpl userDetailsService;
 
     //localhost:8080/public/generate-otp
     @Operation(summary = "Generate OTP for Email validation")
@@ -97,11 +90,11 @@ public class PublicController {
             Users user = dtoService.getUser(usersDTO);
             String email = user.getEmail();
             String username = utilityService.extractUsernameFromEmail(email);
-            if (publicService.findByUsername(username) != null)
+            if (userService.findByUsername(username) != null)
                 return new ResponseEntity<>("User already exist", HttpStatus.BAD_REQUEST);
             else if (!redisService.isEmailVerified(email))
                 return new ResponseEntity<>("Email Verification Required", HttpStatus.BAD_REQUEST);
-            Users registeredUser = publicService.register(user);
+            Users registeredUser = userService.register(user);
             if (registeredUser != null) {
                 emailService.sendSuccessEmail(registeredUser.getEmail(),
                         registeredUser.getName());
@@ -122,7 +115,7 @@ public class PublicController {
     public ResponseEntity<?> login(@Validated(LoginValidation.class) @RequestBody UsersDTO usersDTO) {
         try {
             Users user = dtoService.getUser(usersDTO);
-            if (!publicService.verify(user))
+            if (!userService.verify(user))
                 return new ResponseEntity<>("Invalid Credentials!", HttpStatus.UNAUTHORIZED);
             String username = user.getUsername();
             String accessToken = jwtService.generateAccessToken(username);
@@ -132,15 +125,15 @@ public class PublicController {
             tokenResponse.setAccessToken(accessToken);
             tokenResponse.setRefreshToken(refreshToken);
 
-            user = publicService.saveRefreshToken(username, refreshToken);
+            user = userService.saveRefreshToken(username, refreshToken);
             if(user==null)
                 return new ResponseEntity<>("Login Failed",
                         HttpStatus.SERVICE_UNAVAILABLE) ;
             // Set JWT in HttpOnly cookie
             ResponseCookie accessTokenCookie =
-                    publicService.getAccessTokenCookie(tokenResponse.getAccessToken());
+                    utilityService.getAccessTokenCookie(tokenResponse.getAccessToken());
             ResponseCookie refreshTokenCookie =
-                    publicService.getRefreshTokenCookie(tokenResponse.getRefreshToken());
+                    utilityService.getRefreshTokenCookie(tokenResponse.getRefreshToken());
 
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.SET_COOKIE, accessTokenCookie.toString());
@@ -164,12 +157,12 @@ public class PublicController {
             String confirmPassword = passwordDTO.getConfirmPassword();
             if (!password.equals(confirmPassword))
                 return new ResponseEntity<>("New Password and Confirm Password should match", HttpStatus.BAD_REQUEST);
-            Users user = publicService.findByUsername(username);
+            Users user = userService.findByUsername(username);
             if (user == null)
                 return new ResponseEntity<>("User not exist", HttpStatus.BAD_REQUEST);
             else if (!redisService.isEmailVerified(email))
                 return new ResponseEntity<>("Email Verification Required", HttpStatus.BAD_REQUEST);
-            Users savedUser = publicService.resetPassword(user, passwordDTO.getNewPassword());
+            Users savedUser = userService.resetPassword(user, passwordDTO.getNewPassword());
             if (savedUser != null) {
                 emailService.successfulPasswordChangingMail(email, savedUser.getName());
                 return new ResponseEntity<>("Password is changed successfully!!", HttpStatus.OK);
@@ -188,7 +181,7 @@ public class PublicController {
         try {
             String refreshToken = jwtService.extractToken(request, "refresh-token");
             String username = jwtService.extractUsername(refreshToken);
-            if (publicService.validateRefreshToken(refreshToken,username)) {
+            if (userService.validateRefreshToken(refreshToken,username)) {
                 String newAccessToken = jwtService
                         .generateAccessToken(username);
                 TokenResponse tokenResponse = new TokenResponse();
@@ -197,9 +190,9 @@ public class PublicController {
 
                 // Set JWT in HttpOnly cookie
                 ResponseCookie accessTokenCookie =
-                        publicService.getAccessTokenCookie(tokenResponse.getAccessToken());
+                        utilityService.getAccessTokenCookie(tokenResponse.getAccessToken());
                 ResponseCookie refreshTokenCookie =
-                        publicService.getRefreshTokenCookie(tokenResponse.getRefreshToken());
+                        utilityService.getRefreshTokenCookie(tokenResponse.getRefreshToken());
 
                 HttpHeaders headers = new HttpHeaders();
                 headers.add(HttpHeaders.SET_COOKIE, accessTokenCookie.toString());

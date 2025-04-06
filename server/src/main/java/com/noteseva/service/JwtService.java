@@ -2,7 +2,6 @@ package com.noteseva.service;
 
 import com.noteseva.model.TokenExpiration;
 import com.noteseva.model.TokenResponse;
-import com.noteseva.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -11,7 +10,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.security.NoSuchAlgorithmException;
@@ -25,12 +23,6 @@ public class JwtService {
 
     @Autowired
     private TokenResponse tokenResponse;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    TokenExpiration tokenExpiration;
 
     public JwtService() {
         try {
@@ -50,12 +42,12 @@ public class JwtService {
     }
 
     public String generateAccessToken(String username){
-        return buildToken(username,tokenExpiration.getAccessTokenExpiration());
+        return buildToken(username,TokenExpiration.ACCESS_TOKEN_EXPIRATION);
     }
 
 
     public String generateRefreshToken(String username){
-        return buildToken(username,tokenExpiration.getRefreshTokenExpiration());
+        return buildToken(username,TokenExpiration.REFRESH_TOKEN_EXPIRATION);
     }
 
 
