@@ -1,8 +1,15 @@
 import React from 'react'
+import { useAppContext } from "../context/AppContext";
 
 const Dashboard = () => {
+
+  const {apiClient,isAuthenticated} = useAppContext()
+  
+
   return (
-    <div>Dashboard</div>
+    isAuthenticated && (
+      <div>Dashboard</div>
+    )
   )
 }
 

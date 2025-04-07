@@ -66,7 +66,7 @@ const ForgotPassword = () => {
       setConfirmPassword("");
       navigate("/login");
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to reset password");
+      toast.error(error.message || "Failed to reset password");
     }
   };
 
