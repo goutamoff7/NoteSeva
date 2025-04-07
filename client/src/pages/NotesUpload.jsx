@@ -1,38 +1,117 @@
-import React, { useState } from 'react';
-import Select from 'react-select';
-import { notesUploadOptions } from '../../data/data.js';
+import React, { useState, useEffect } from "react";
+import Select from "react-select";
+import { useAppContext } from "../context/AppContext.jsx";
+import { toast } from "react-toastify";
 
 const NotesUpload = () => {
-  const { courses, departments, subjects } = notesUploadOptions;
+  const [courses, setCourses] = useState([]);
+  const [departments, setDepartments] = useState([]);
+  const [subjects, setSubjects] = useState([]);
 
-  // State for the form fields
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [selectedSubject, setSelectedSubject] = useState(null);
+  const [topicName, setTopicName] = useState("");
+  const [file, setFile] = useState(null);
+
+  const { AllSubjectsData, apiClient, backendUrl,isAuthenticated } = useAppContext();
+
+  useEffect(() => {
+    const fetchSubjects = async () => {
+      const subjectData = await AllSubjectsData();
+
+      const uniqueCourses = [
+        ...new Set(subjectData.map((item) => item.courseName)),
+      ].map((course) => ({
+        label: course,
+        value: course,
+      }));
+      setCourses(uniqueCourses);
+
+      const uniqueDepartments = [
+        ...new Set(subjectData.map((item) => item.departmentName)),
+      ].map((dept) => ({
+        label: dept,
+        value: dept,
+      }));
+      setDepartments(uniqueDepartments);
+
+      const formattedSubjects = subjectData.map((sub) => ({
+        label: `${sub.subjectName}`,
+        value: sub.subjectCode,
+      }));
+      setSubjects(formattedSubjects);
+    };
+
+    fetchSubjects();
+  }, []);
+
+  // 📤 Handle Form Submit
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
+    if (!selectedCourse || !selectedDepartment || !selectedSubject || !topicName || !file) {
+      toast.warning("Please fill all the required fields");
+      return;
+    }
+  
+    const formData = new FormData();
+  
+    // Append file
+    formData.append("file", file);
+  
+    // Create the DTO as string (like you did in Postman)
+    const notesDTO = {
+      topicName,
+      subjectName: selectedSubject.label,
+      departmentName: selectedDepartment.label,
+      courseName: selectedCourse.label,
+    };
+  
+    // Append the stringified object
+    formData.append("notesDTO", JSON.stringify(notesDTO));
+  
+    try {
+      const res = await apiClient.post(`${backendUrl}/notes/upload`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+      });
+  
+      console.log("Success:", res.data);
+      toast.success("Notes uploaded successfully!");
+    } catch (err) {
+      console.error("Upload failed:", err.message);
+      toast.error("Upload failed");
+    }
+  };
+  
+  
 
   return (
-    <div className="min-h-screen flex items-center justify-evenly bg-gray-900 text-white">
-      <div className='max-w-[400px] space-y-[30px]'>
-        <img src="/notesupload.png" alt="" className='h-[300px] w-[380px]'/>
-        <h2 className='font-bold text-whitee text-2xl leading-[40px] text-center'>
-          <span className='text-btngreen'>Notes</span> are chits created by your brain for exam
-        </h2>
-      </div>
-      <div className="w-full max-w-md space-y-[20px]">
-        <h2 className="text-2xl font-semibold mb-6 text-whitee">Notes Upload</h2>
-        {/* Courses dropdown */}
-        <div className="">
+    isAuthenticated && (
+      <div className="min-h-screen flex items-center justify-evenly bg-gray-900 text-white">
+        <div className="max-w-[400px] space-y-[30px]">
+          <img src="/notesupload.png" alt="" className="h-[300px] w-[380px]" />
+          <h2 className="font-bold text-white text-2xl leading-[40px] text-center">
+            <span className="text-btngreen">Notes</span> are chits created by your brain for exam
+          </h2>
+        </div>
+
+        <form onSubmit={handleSubmit} className="w-full max-w-md space-y-[20px]">
+          <h2 className="text-2xl font-semibold mb-6 text-white">Notes Upload</h2>
+
+          {/* Course Dropdown */}
           <Select
             options={courses}
             value={selectedCourse}
             onChange={setSelectedCourse}
             placeholder="Select Course"
             className="text-black"
-            required
           />
-        </div>
-        {/* Department dropdown */}
-        <div className="">
+
+          {/* Department Dropdown */}
           <Select
             options={departments}
             value={selectedDepartment}
@@ -40,9 +119,8 @@ const NotesUpload = () => {
             placeholder="Select Department"
             className="text-black"
           />
-        </div>
-        {/* Subject dropdown */}
-        <div className="">
+
+          {/* Subject Dropdown */}
           <Select
             options={subjects}
             value={selectedSubject}
@@ -50,34 +128,40 @@ const NotesUpload = () => {
             placeholder="Select Subject"
             className="text-black"
           />
-        </div>
-        {/* Topic input */}
-        <div className="">
-          <label className="block text-sm mb-2">Topic Name</label>
-          <input
-            type="text"
-            placeholder="Ex: Deadlock"
-            className="w-full p-3 rounded-[12px] bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-          />
-        </div>
-        {/* Attach files */}
-        <div className="">
-          <label className="block text-sm mb-2">Attach Files (PDF*)</label>
-          <input
-            type="file"
-            accept="application/pdf"
-            className="w-full rounded-[12px] p-3 bg-gray-800 text-white focus:outline-none"
-          />
-        </div>
 
-        {/* Submit Button */}
-        <div className="">
-          <button className="w-full bg-btngreen custom-shadow text-white font-semibold text-2xl p-3 rounded-[12px] hover:bg-green-700 transition-all">
+          {/* Topic Input */}
+          <div>
+            <label className="block text-sm mb-2">Topic Name</label>
+            <input
+              type="text"
+              value={topicName}
+              onChange={(e) => setTopicName(e.target.value)}
+              placeholder="Ex: Deadlock"
+              className="w-full p-3 rounded-[12px] bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+          </div>
+
+          {/* File Upload */}
+          <div>
+            <label className="block text-sm mb-2">Attach Files (PDF*)</label>
+            <input
+              type="file"
+              accept="application/pdf"
+              onChange={(e) => setFile(e.target.files[0])}
+              className="w-full rounded-[12px] p-3 bg-gray-800 text-white focus:outline-none"
+            />
+          </div>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="w-full bg-btngreen custom-shadow text-white font-semibold text-2xl p-3 rounded-[12px] hover:bg-green-700 transition-all"
+          >
             Submit
           </button>
-        </div>
+        </form>
       </div>
-    </div>
+    )
   );
 };
 
