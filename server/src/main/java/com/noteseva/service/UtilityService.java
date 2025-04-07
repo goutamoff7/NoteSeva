@@ -1,6 +1,8 @@
 package com.noteseva.service;
 
 import com.noteseva.model.TokenExpiration;
+import com.noteseva.repository.FileHashRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
@@ -23,13 +25,6 @@ public class UtilityService {
 
     public String extractUsernameFromEmail(String email) {
         return email.split("@")[0].toLowerCase();
-    }
-
-    public String generateFileHash(byte[] fileData) throws NoSuchAlgorithmException {
-        MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-        byte[] fileDataHash = messageDigest.digest(fileData);
-        // Convert to a Base64 encoded string (easier to store in DB)
-        return Base64.getEncoder().encodeToString(fileDataHash);
     }
 
     public ResponseCookie getAccessTokenCookie(String token){
@@ -79,6 +74,4 @@ public class UtilityService {
                 .maxAge(0)
                 .build();
     }
-
-
 }

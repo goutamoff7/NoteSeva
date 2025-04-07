@@ -10,8 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface NotesRepository extends JpaRepository<Notes, Integer> {
 
-    boolean existsByFileDataHash(String fileDataHash);
-
     @Query("SELECT n from Notes n " +
             "JOIN n.subjectAssignment sa " +
             "JOIN sa.department d " +

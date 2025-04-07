@@ -59,6 +59,8 @@ public class DTOService {
         notesDTO.setDepartmentName(notes.getSubjectAssignment().getDepartment().getDepartmentName());  // Extract Department Name
         notesDTO.setSubjectName(notes.getSubjectAssignment().getSubject().getSubjectName());  // Extract Subject Name
         notesDTO.setTopicName(notes.getTopicName());
+        notesDTO.setUploadDateTime(notes.getUploadDateTime());
+        notesDTO.setSharedBy(notes.getUser().getName());
         notesDTO.setFileName(notes.getFileName());
         notesDTO.setFileType(notes.getFileType());
         return notesDTO;
@@ -87,6 +89,8 @@ public class DTOService {
         organizerDTO.setCourseName(organizer.getSubjectAssignment().getDepartment().getCourse().getCourseName());  // Extract Course Name
         organizerDTO.setDepartmentName(organizer.getSubjectAssignment().getDepartment().getDepartmentName());  // Extract Department Name
         organizerDTO.setSubjectName(organizer.getSubjectAssignment().getSubject().getSubjectName());  // Extract Subject Name
+        organizerDTO.setUploadDateTime(organizer.getUploadDateTime());
+        organizerDTO.setSharedBy(organizer.getUser().getName());
         organizerDTO.setFileName(organizer.getFileName());
         organizerDTO.setFileType(organizer.getFileType());
         return organizerDTO;
@@ -115,6 +119,8 @@ public class DTOService {
         pyqDTO.setCourseName(pyq.getSubjectAssignment().getDepartment().getCourse().getCourseName());  // Extract Course Name
         pyqDTO.setDepartmentName(pyq.getSubjectAssignment().getDepartment().getDepartmentName());  // Extract Department Name
         pyqDTO.setSubjectName(pyq.getSubjectAssignment().getSubject().getSubjectName());  // Extract Subject Name
+        pyqDTO.setUploadDateTime(pyq.getUploadDateTime());
+        pyqDTO.setSharedBy(pyq.getUser().getName());
         pyqDTO.setFileName(pyq.getFileName());
         pyqDTO.setFileType(pyq.getFileType());
         return pyqDTO;

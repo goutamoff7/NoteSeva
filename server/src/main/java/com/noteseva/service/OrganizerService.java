@@ -4,7 +4,6 @@ import com.noteseva.DTO.OrganizerDTO;
 import com.noteseva.Pagination.PageResponse;
 import com.noteseva.model.Organizer;
 import com.noteseva.repository.OrganizerRepository;
-import com.noteseva.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,7 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import java.time.LocalDate;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -21,7 +21,7 @@ public class OrganizerService {
     OrganizerRepository organizerRepository;
 
     @Autowired
-    UserRepository userRepository;
+    UserService userService;
 
     @Autowired
     DTOService dtoService;
@@ -31,8 +31,8 @@ public class OrganizerService {
             organizer.setFileName(file.getOriginalFilename());
             organizer.setFileType(file.getContentType());
             organizer.setFileData(file.getBytes());
-            organizer.setUser(userRepository.findByUsername(username));
-            organizer.setDate(LocalDate.now());
+            organizer.setUser(userService.findByUsername(username));
+            organizer.setUploadDateTime(LocalDateTime.now());
         } catch (Exception e) {
             System.out.println(e.getMessage() + "from service class.");
         }
@@ -59,9 +59,5 @@ public class OrganizerService {
             return PageResponse.getPageResponseDTO(pageOrganizer, organizerDTOList);
         }
         return null;
-    }
-
-    public boolean isFileDataExist(String fileDataHash) {
-        return organizerRepository.existsByFileDataHash(fileDataHash);
     }
 }

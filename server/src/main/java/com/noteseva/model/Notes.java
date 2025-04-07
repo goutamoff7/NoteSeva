@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -19,8 +19,8 @@ public class Notes {
     @Column(name="notes_id")
     private Integer id;
 
-    @Column(name="upload_date",nullable = false)
-    private LocalDate date;
+    @Column(name="upload_date_time",nullable = false)
+    private LocalDateTime uploadDateTime;
 
     @Column(name = "topic_name", nullable = false)
     private String topicName;
@@ -36,10 +36,6 @@ public class Notes {
     @Lob
     @Column(name = "file_data", columnDefinition = "longblob", nullable = false)
     private byte[] fileData;
-
-    @JsonIgnore
-    @Column(name = "file_data_hash", nullable = false, unique = true)
-    private String fileDataHash;
 
     //relationship
     @JsonIgnore

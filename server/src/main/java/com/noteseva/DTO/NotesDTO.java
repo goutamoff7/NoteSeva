@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
+import java.time.LocalDateTime;
 
 @Component
 @Data
@@ -27,6 +28,10 @@ public class NotesDTO {
     @NotBlank(message = "Topic name can't be blank.")
     @Size(min = 5, max = 50, message = "Topic must be within 5 to 50 characters.")
     private String topicName;
+
+    private LocalDateTime uploadDateTime;
+
+    private String sharedBy;
 
     //file handling
     private String fileName;

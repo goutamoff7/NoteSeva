@@ -4,7 +4,6 @@ import com.noteseva.DTO.NotesDTO;
 import com.noteseva.Pagination.PageResponse;
 import com.noteseva.model.Notes;
 import com.noteseva.repository.NotesRepository;
-import com.noteseva.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,7 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -22,7 +21,7 @@ public class NotesService {
     NotesRepository notesRepository;
 
     @Autowired
-    UserRepository userRepository;
+    UserService userService;
 
     @Autowired
     DTOService dtoService;
@@ -32,8 +31,8 @@ public class NotesService {
         notes.setFileName(file.getOriginalFilename());
         notes.setFileType(file.getContentType());
         notes.setFileData(file.getBytes());
-        notes.setUser(userRepository.findByUsername(username));
-        notes.setDate(LocalDate.now());
+        notes.setUser(userService.findByUsername(username));
+        notes.setUploadDateTime(LocalDateTime.now());
         return notesRepository.save(notes);
     }
 
@@ -57,9 +56,5 @@ public class NotesService {
             return PageResponse.getPageResponseDTO(pageNotes,notesDTOList);
         }
         return null;
-    }
-
-    public boolean isFileDataExist(String fileDataHash) {
-        return notesRepository.existsByFileDataHash(fileDataHash);
     }
 }

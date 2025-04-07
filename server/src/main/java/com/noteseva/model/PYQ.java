@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -19,8 +19,8 @@ public class PYQ {
     @Column(name="pyq_id")
     private Integer id;
 
-    @Column(name="published_date",nullable = false)
-    private LocalDate date;
+    @Column(name="upload_date_time",nullable = false)
+    private LocalDateTime uploadDateTime;
 
     @Column(name="published_year",nullable = false,length = 4)
     private String year;
@@ -41,9 +41,6 @@ public class PYQ {
     @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
     @JoinColumn(name="user_id" ,nullable = false)
     private Users user;
-
-    @Column(name = "file_data_hash", nullable = false, unique = true)
-    private String fileDataHash;
 
     @JsonIgnore
     @ManyToOne(fetch=FetchType.LAZY,cascade = {CascadeType.PERSIST})
