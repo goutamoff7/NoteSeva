@@ -2,12 +2,15 @@ package com.noteseva.controller;
 
 import com.noteseva.DTO.PYQDTO;
 import com.noteseva.Pagination.PageResponse;
+import com.noteseva.model.FileHash;
 import com.noteseva.model.PYQ;
 import com.noteseva.service.DTOService;
+import com.noteseva.service.FileHashService;
 import com.noteseva.service.PYQService;
 import com.noteseva.service.UtilityService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +36,19 @@ public class PYQController {
     UtilityService utilityService;
 
     @Autowired
+    FileHashService fileHashService;
+
+    @Autowired
     DTOService dtoService;
 
-    //localhost:8080/pyq/all?courseName=BTECH &
+    //localhost:8080/pyq/all?
+    // courseName=BTECH &
     // departmentName=CSE &
     // subjectName=Basic Electrical Engineering
+    // pageNumber=0&
+    // pageSize=12&
+    // sortBy=id&
+    // sortingOrder=ASC
     @Operation(summary = "Fetch all PYQ")
     @GetMapping("/all")
     public ResponseEntity<?> getAllPYQ(
@@ -50,9 +61,9 @@ public class PYQController {
             @RequestParam(required = false, defaultValue = "ASC") String sortingOrder) {
         try {
             PageResponse<PYQDTO> organizerDTOPageResponse = pyqService
-                    .getAllPYQ(courseName,departmentName,subjectName,
-                            pageNumber,pageSize,sortBy,sortingOrder);
-            if (organizerDTOPageResponse==null)
+                    .getAllPYQ(courseName, departmentName, subjectName,
+                            pageNumber, pageSize, sortBy, sortingOrder);
+            if (organizerDTOPageResponse == null)
                 return new ResponseEntity<>("May be PYQs are not available",
                         HttpStatus.NOT_FOUND);
             return new ResponseEntity<>(organizerDTOPageResponse, HttpStatus.OK);
@@ -70,9 +81,10 @@ public class PYQController {
         try {
             PYQ pyq = pyqService.getPYQ(id);
             if (pyq != null)
-                return new ResponseEntity<>(dtoService.convertToPYQDTO(pyq), HttpStatus.OK);
-            else
-                return new ResponseEntity<>("May be this PYQ is not available!!", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(dtoService.convertToPYQDTO(pyq)
+                        , HttpStatus.OK);
+            return new ResponseEntity<>("May be this PYQ is not available!!"
+                    , HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             log.error(e.toString());
             return new ResponseEntity<>("Something Went Wrong!!",
@@ -82,6 +94,7 @@ public class PYQController {
 
     //localhost:8080/pyq/upload
     @Operation(summary = "Upload PYQ")
+    @Transactional
     @PostMapping("/upload")
     public ResponseEntity<?> uploadNotes(@RequestPart @Valid PYQDTO pyqDTO,
                                          @RequestPart MultipartFile file) {
@@ -90,27 +103,29 @@ public class PYQController {
             utilityService.validateFile(file);
 
             //Generate Hash of fileData
-            String fileDataHash = utilityService.generateFileHash(file.getBytes());
+            String fileDataHash = fileHashService.generateFileDataHash(file.getBytes());
 
             //Check for duplicate fileData
-            boolean fileExists = pyqService.isFileDataExist(fileDataHash);
+            boolean fileExists = fileHashService.isFileDataHashExist(fileDataHash);
             if (fileExists) {
-                return new ResponseEntity<>("This file has already been uploaded!", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("This file has already been uploaded!",
+                        HttpStatus.BAD_REQUEST);
             }
 
             // Converting pyqDTO to pyq
             PYQ pyq = dtoService.getPYQ(pyqDTO);
-            pyq.setFileDataHash(fileDataHash);
 
             //Getting uploader name
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-            // Process and save notes and file
+            // Process and save notes and fileDataHash
             PYQ savedPYQ = pyqService.uploadPYQ(pyq, file, username);
-            if (savedPYQ != null)
-                return new ResponseEntity<>(dtoService.convertToPYQDTO(savedPYQ), HttpStatus.CREATED);
-            else
-                return new ResponseEntity<>("PYQ Upload Unsuccessful", HttpStatus.SERVICE_UNAVAILABLE);
+            FileHash savedFileDataHash = fileHashService.save(fileDataHash);
+            if (savedPYQ != null && savedFileDataHash != null)
+                return new ResponseEntity<>(dtoService.convertToPYQDTO(savedPYQ),
+                        HttpStatus.CREATED);
+            return new ResponseEntity<>("PYQ Upload Unsuccessful",
+                    HttpStatus.SERVICE_UNAVAILABLE);
         } catch (ResponseStatusException e) {
             return new ResponseEntity<>(e.getReason(), e.getStatusCode());
         } catch (Exception e) {
@@ -134,8 +149,9 @@ public class PYQController {
                 headers.setContentType(MediaType.valueOf(fileType));
                 headers.setContentDispositionFormData("attachment", fileName);
                 return new ResponseEntity<>(fileData, headers, HttpStatus.OK);
-            } else
-                return new ResponseEntity<>("May be this pyq is not available!!", HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>("May be this pyq is not available!!"
+                    , HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             log.error(e.toString());
             return new ResponseEntity<>("Something Went Wrong!!",

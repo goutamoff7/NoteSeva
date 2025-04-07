@@ -2,15 +2,21 @@ package com.noteseva.controller;
 
 import com.noteseva.DTO.NotesDTO;
 import com.noteseva.Pagination.PageResponse;
+import com.noteseva.model.FileHash;
 import com.noteseva.model.Notes;
 import com.noteseva.service.DTOService;
+import com.noteseva.service.FileHashService;
 import com.noteseva.service.NotesService;
 import com.noteseva.service.UtilityService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +26,7 @@ import org.springframework.web.server.ResponseStatusException;
 @Slf4j
 @RestController
 @RequestMapping("notes")
-@Tag(name="Notes APIs",description = "View, Search, Upload and Download Notes")
+@Tag(name = "Notes APIs", description = "View, Search, Upload and Download Notes")
 public class NotesController {
 
     @Autowired
@@ -28,6 +34,9 @@ public class NotesController {
 
     @Autowired
     UtilityService utilityService;
+
+    @Autowired
+    FileHashService fileHashService;
 
     @Autowired
     DTOService dtoService;
@@ -46,15 +55,15 @@ public class NotesController {
             @RequestParam String courseName,
             @RequestParam(required = false) String departmentName,
             @RequestParam(required = false) String subjectName,
-            @RequestParam(required = false,defaultValue = "0") int pageNumber,
-            @RequestParam(required = false,defaultValue = "12") int pageSize,
-            @RequestParam(required = false,defaultValue = "id") String sortBy,
-            @RequestParam(required = false,defaultValue = "ASC") String sortingOrder) {
+            @RequestParam(required = false, defaultValue = "0") int pageNumber,
+            @RequestParam(required = false, defaultValue = "12") int pageSize,
+            @RequestParam(required = false, defaultValue = "id") String sortBy,
+            @RequestParam(required = false, defaultValue = "ASC") String sortingOrder) {
         try {
             PageResponse<NotesDTO> notesDTOPageResponse = notesService
-                    .getAllNotes(courseName,departmentName,subjectName,
-                            pageNumber,pageSize,sortBy,sortingOrder);
-            if (notesDTOPageResponse==null)
+                    .getAllNotes(courseName, departmentName, subjectName,
+                            pageNumber, pageSize, sortBy, sortingOrder);
+            if (notesDTOPageResponse == null)
                 return new ResponseEntity<>("May be Notes are not available",
                         HttpStatus.NOT_FOUND);
             return new ResponseEntity<>(notesDTOPageResponse, HttpStatus.OK);
@@ -74,9 +83,8 @@ public class NotesController {
             if (notes != null)
                 return new ResponseEntity<>(dtoService.convertToNotesDTO(notes),
                         HttpStatus.OK);
-            else
-                return new ResponseEntity<>("May be this notes is not available!!",
-                        HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("May be this notes is not available!!",
+                    HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             log.error(e.toString());
             return new ResponseEntity<>("Something Went Wrong!!",
@@ -86,6 +94,7 @@ public class NotesController {
 
     //localhost:8080/notes/upload
     @Operation(summary = "Upload notes")
+    @Transactional
     @PostMapping("/upload")
     public ResponseEntity<?> uploadNotes(@RequestPart @Valid NotesDTO notesDTO,
                                          @RequestPart MultipartFile file) {
@@ -94,29 +103,28 @@ public class NotesController {
             utilityService.validateFile(file);
 
             //Generate Hash of fileData
-            String fileDataHash = utilityService.generateFileHash(file.getBytes());
+            String fileDataHash = fileHashService.generateFileDataHash(file.getBytes());
 
             //Check for duplicate fileData
-            boolean fileExists = notesService.isFileDataExist(fileDataHash);
+            boolean fileExists = fileHashService.isFileDataHashExist(fileDataHash);
             if (fileExists) {
-                return new ResponseEntity<>( "This file has already been uploaded!",
+                return new ResponseEntity<>("This file has already been uploaded!",
                         HttpStatus.BAD_REQUEST);
             }
             // Converting notesDTO to Notes
             Notes notes = dtoService.getNotes(notesDTO);
-            notes.setFileDataHash(fileDataHash);
 
             //Getting uploader name
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-            // Process and save notes and file
+            // Process and save notes and fileDataHash
             Notes savedNotes = notesService.uploadNotes(notes, file, username);
-            if(savedNotes!=null)
+            FileHash savedFileDataHash = fileHashService.save(fileDataHash);
+            if (savedNotes != null && savedFileDataHash != null)
                 return new ResponseEntity<>(dtoService.convertToNotesDTO(savedNotes),
                         HttpStatus.CREATED);
-            else
-                return new ResponseEntity<>("Notes Upload Unsuccessful",
-                        HttpStatus.SERVICE_UNAVAILABLE) ;
+            return new ResponseEntity<>("Notes Upload Unsuccessful",
+                    HttpStatus.SERVICE_UNAVAILABLE);
         } catch (ResponseStatusException e) {
             return new ResponseEntity<>(e.getReason(), e.getStatusCode());
         } catch (Exception e) {
@@ -138,11 +146,11 @@ public class NotesController {
                 byte[] fileData = notes.getFileData();
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.valueOf(fileType));
-                headers.setContentDispositionFormData("attachment",fileName);
+                headers.setContentDispositionFormData("attachment", fileName);
                 return new ResponseEntity<>(fileData, headers, HttpStatus.OK);
-            } else
-                return new ResponseEntity<>("May be this notes is not available!!",
-                        HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>("May be this notes is not available!!",
+                    HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             log.error(e.toString());
             return new ResponseEntity<>("Something Went Wrong!!",

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
+import java.time.LocalDateTime;
 
 @Component
 @Data
@@ -25,6 +26,10 @@ public class PYQDTO {
 
     @NotBlank(message = "Subject name can't be blank.")
     private String subjectName;
+
+    private LocalDateTime uploadDateTime;
+
+    private String sharedBy;
 
     //file handling
     private String fileName;

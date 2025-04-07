@@ -2,12 +2,15 @@ package com.noteseva.controller;
 
 import com.noteseva.DTO.OrganizerDTO;
 import com.noteseva.Pagination.PageResponse;
+import com.noteseva.model.FileHash;
 import com.noteseva.model.Organizer;
 import com.noteseva.service.DTOService;
+import com.noteseva.service.FileHashService;
 import com.noteseva.service.OrganizerService;
 import com.noteseva.service.UtilityService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +26,7 @@ import org.springframework.web.server.ResponseStatusException;
 @Slf4j
 @RestController
 @RequestMapping("organizer")
-@Tag(name="Organizer APIs",description = "View, Search, Upload and Download Organizer")
+@Tag(name = "Organizer APIs", description = "View, Search, Upload and Download Organizer")
 public class OrganizerController {
 
     @Autowired
@@ -33,30 +36,34 @@ public class OrganizerController {
     UtilityService utilityService;
 
     @Autowired
+    FileHashService fileHashService;
+
+    @Autowired
     DTOService dtoService;
 
-    //localhost:8080/organizer/all?courseName=BTECH &
+    //localhost:8080/organizer/all?
+    // courseName=BTECH &
     // departmentName=CSE &
     // subjectName=Basic Electrical Engineering
-//    pageNumber=0&
-//    pageSize=12&
-//    sortBy=id&
-//    sortingOrder=ASC
+    // pageNumber=0&
+    // pageSize=12&
+    // sortBy=id&
+    // sortingOrder=ASC
     @Operation(summary = "Fetch all Organizer")
     @GetMapping("/all")
     public ResponseEntity<?> getAllOrganizer(
             @RequestParam String courseName,
             @RequestParam(required = false) String departmentName,
             @RequestParam(required = false) String subjectName,
-            @RequestParam(required = false,defaultValue = "0") int pageNumber,
-            @RequestParam(required = false,defaultValue = "12") int pageSize,
-            @RequestParam(required = false,defaultValue = "id") String sortBy,
-            @RequestParam(required = false,defaultValue = "ASC") String sortingOrder) {
+            @RequestParam(required = false, defaultValue = "0") int pageNumber,
+            @RequestParam(required = false, defaultValue = "12") int pageSize,
+            @RequestParam(required = false, defaultValue = "id") String sortBy,
+            @RequestParam(required = false, defaultValue = "ASC") String sortingOrder) {
         try {
             PageResponse<OrganizerDTO> organizerDTOPageResponse = organizerService
-                    .getAllOrganizer(courseName,departmentName,subjectName,
-                            pageNumber,pageSize,sortBy,sortingOrder);
-            if (organizerDTOPageResponse==null)
+                    .getAllOrganizer(courseName, departmentName, subjectName,
+                            pageNumber, pageSize, sortBy, sortingOrder);
+            if (organizerDTOPageResponse == null)
                 return new ResponseEntity<>("May be Organizers are not available",
                         HttpStatus.NOT_FOUND);
             return new ResponseEntity<>(organizerDTOPageResponse, HttpStatus.OK);
@@ -76,9 +83,8 @@ public class OrganizerController {
             if (organizer != null)
                 return new ResponseEntity<>(dtoService.convertToOrganizerDTO(organizer),
                         HttpStatus.OK);
-            else
-                return new ResponseEntity<>("May be this Organizer is not available!!",
-                        HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("May be this Organizer is not available!!",
+                    HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             log.error(e.toString());
             return new ResponseEntity<>("Something Went Wrong!!",
@@ -88,6 +94,7 @@ public class OrganizerController {
 
     //localhost:8080/organizer/upload
     @Operation(summary = "Upload organizer")
+    @Transactional
     @PostMapping("/upload")
     public ResponseEntity<?> uploadNotes(@RequestPart @Valid OrganizerDTO organizerDTO,
                                          @RequestPart MultipartFile file) {
@@ -96,30 +103,29 @@ public class OrganizerController {
             utilityService.validateFile(file);
 
             //Generate Hash of fileData
-            String fileDataHash = utilityService.generateFileHash(file.getBytes());
+            String fileDataHash = fileHashService.generateFileDataHash(file.getBytes());
 
             //Check for duplicate fileData
-            boolean fileExists = organizerService.isFileDataExist(fileDataHash);
+            boolean fileExists = fileHashService.isFileDataHashExist(fileDataHash);
             if (fileExists) {
-                return new ResponseEntity<>( "This file has already been uploaded!",
+                return new ResponseEntity<>("This file has already been uploaded!",
                         HttpStatus.BAD_REQUEST);
             }
 
             // Converting organizerDTO to organizer
             Organizer organizer = dtoService.getOrganizer(organizerDTO);
-            organizer.setFileDataHash(fileDataHash);
 
             //Getting uploader name
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-            // Process and save notes and file
+            // Process and save notes and fileDataHash
             Organizer savedOrganizer = organizerService.uploadOrganizer(organizer, file, username);
-            if(savedOrganizer!=null)
+            FileHash savedFileDataHash = fileHashService.save(fileDataHash);
+            if (savedOrganizer != null && savedFileDataHash != null)
                 return new ResponseEntity<>(dtoService.convertToOrganizerDTO(savedOrganizer),
                         HttpStatus.CREATED);
-            else
-                return new ResponseEntity<>("Organizer Upload Unsuccessful",
-                        HttpStatus.SERVICE_UNAVAILABLE) ;
+            return new ResponseEntity<>("Organizer Upload Unsuccessful",
+                    HttpStatus.SERVICE_UNAVAILABLE);
         } catch (ResponseStatusException e) {
             return new ResponseEntity<>(e.getReason(), e.getStatusCode());
         } catch (Exception e) {
@@ -141,11 +147,11 @@ public class OrganizerController {
                 byte[] fileData = organizer.getFileData();
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.valueOf(fileType));
-                headers.setContentDispositionFormData("attachment",fileName);
+                headers.setContentDispositionFormData("attachment", fileName);
                 return new ResponseEntity<>(fileData, headers, HttpStatus.OK);
-            } else
-                return new ResponseEntity<>("May be this Organizer is not available!!",
-                        HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>("May be this Organizer is not available!!",
+                    HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             log.error(e.toString());
             return new ResponseEntity<>("Something Went Wrong!!",

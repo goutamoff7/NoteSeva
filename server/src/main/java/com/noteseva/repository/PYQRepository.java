@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PYQRepository extends JpaRepository<PYQ,Integer> {
-    boolean existsByFileDataHash(String fileDataHash);
 
     @Query("SELECT n from PYQ n " +
             "JOIN n.subjectAssignment sa " +

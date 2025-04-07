@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OrganizerRepository extends JpaRepository<Organizer,Integer> {
-    boolean existsByFileDataHash(String fileDataHash);
 
     @Query("SELECT n from Organizer n " +
             "JOIN n.subjectAssignment sa " +

@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -20,8 +20,8 @@ public class Organizer
     @Column(name="organizer_id")
     private Integer id;
 
-    @Column(name="upload_date",nullable = false)
-    private LocalDate date;
+    @Column(name="upload_date_time",nullable = false)
+    private LocalDateTime uploadDateTime;
 
     @Column(name="published_year",nullable = false,length = 4)
     private String year;
@@ -36,9 +36,6 @@ public class Organizer
     @Lob
     @Column(name = "file_data", columnDefinition = "longblob", nullable = false, unique = true)
     private byte[] fileData;
-
-    @Column(name = "file_data_hash", nullable = false, unique = true)
-    private String fileDataHash;
 
     //relationship
     @JsonIgnore
