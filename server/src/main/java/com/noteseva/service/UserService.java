@@ -1,5 +1,6 @@
 package com.noteseva.service;
 
+import com.noteseva.DTO.UpdateUserDTO;
 import com.noteseva.model.Role;
 import com.noteseva.model.Users;
 import com.noteseva.repository.UserRepository;
@@ -7,10 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -32,6 +35,8 @@ public class UserService {
     public Users register(Users user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.ROLE_USER);
+        user.setRegisteredAt(LocalDateTime.now());
+        user.setImageUrl("https://api.dicebear.com/5.x/initials/svg?seed="+user.getName());
         return userRepository.save(user);
     }
 
@@ -42,6 +47,8 @@ public class UserService {
         user.setUsername(utilityService.extractUsernameFromEmail(user.getEmail()));
         user.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
         user.setRole(Role.ROLE_USER);
+        user.setRegisteredAt(LocalDateTime.now());
+        user.setImageUrl("https://api.dicebear.com/5.x/initials/svg?seed="+user.getName());
         return userRepository.save(user);
     }
 
@@ -57,9 +64,10 @@ public class UserService {
 
     }
 
-    public Users saveRefreshToken(String username, String refreshToken){
+    public Users setRefreshTokenAndLastLoginTime(String username, String refreshToken){
         Users user = findByUsername(username);
         user.setRefreshToken(passwordEncoder.encode(refreshToken));
+        user.setLastLoginAt(LocalDateTime.now());
         return userRepository.save(user);
     }
 
@@ -100,5 +108,29 @@ public class UserService {
 
     public boolean passwordMatch(String givenPassword, String savedPassword){
         return passwordEncoder.matches(givenPassword,savedPassword);
+    }
+
+    public boolean updateUser(UpdateUserDTO updateUserDTO){
+        System.out.println(updateUserDTO.getGitHubUrl());
+        System.out.println(updateUserDTO.getLinkedInUrl());
+        try{
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            Users user=userRepository.findByUsername(username);
+            user.setGender(updateUserDTO.getGender());
+            user.setCollegeName(updateUserDTO.getCollegeName());
+            user.setGitHubUrl(updateUserDTO.getGitHubUrl());
+            user.setLinkedInUrl(updateUserDTO.getLinkedInUrl());
+            user.setOtherUrl(updateUserDTO.getOthersUrl());
+            userRepository.save(user);
+            return true;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+
+    public Users getUserDetails(){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userRepository.findByUsername(username);
     }
 }
