@@ -39,6 +39,30 @@ public class Users{
     @Column(name="password",nullable = false)
     private String password;
 
+    @Column(name="registered_at")
+    private LocalDateTime registeredAt;
+
+    @Column(name="last_login_at")
+    private LocalDateTime lastLoginAt;
+
+    @Column(name="gender")
+    private String gender;
+
+    @Column(name="college_name")
+    private String collegeName;
+
+    @Column(name="image_url")
+    private String imageUrl;
+
+    @Column(name="LinkedIn_url")
+    private String linkedInUrl;
+
+    @Column(name="GitHub_url")
+    private String gitHubUrl;
+
+    @Column(name="others_url")
+    private String otherUrl;
+
     @JsonIgnore
     @Column(name="refresh_token")
     private String refreshToken;

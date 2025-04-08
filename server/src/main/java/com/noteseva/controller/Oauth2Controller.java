@@ -75,7 +75,7 @@ public class Oauth2Controller {
             String refreshToken = jwtService
                     .generateRefreshToken(username);
 
-            Users user = userService.saveRefreshToken(username, refreshToken);
+            Users user = userService.setRefreshTokenAndLastLoginTime(username, refreshToken);
             if(user!=null)
                 return new ResponseEntity<>("Login Failed",
                         HttpStatus.SERVICE_UNAVAILABLE) ;
