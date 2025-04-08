@@ -1,6 +1,7 @@
 package com.noteseva.controller;
 
 import com.noteseva.DTO.PasswordDTO;
+import com.noteseva.DTO.UpdateUserDTO;
 import com.noteseva.model.Users;
 import com.noteseva.service.EmailService;
 import com.noteseva.service.UserService;
@@ -87,6 +88,32 @@ public class UserController {
             log.error(e.toString());
             return new ResponseEntity<>("Something Went Wrong!!",
                     HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/get-user-details")
+    public ResponseEntity<?> getUserDetails(){
+        try{
+            Users users=userService.getUserDetails();
+            if(users!=null)
+                return new ResponseEntity<>(users,HttpStatus.OK);
+            return new ResponseEntity<>("Something went wrong",HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>("Some internal issues",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/update-user-details")
+    public ResponseEntity<?> updateUser(@RequestBody UpdateUserDTO updateUserDTO){
+        try{
+            boolean record=userService.updateUser(updateUserDTO);
+            if(record)
+                return new ResponseEntity<>("Updated details are saved successfully",HttpStatus.OK);
+            return new ResponseEntity<>("Data is not saved successfully",HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>("Some internal problems",HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
