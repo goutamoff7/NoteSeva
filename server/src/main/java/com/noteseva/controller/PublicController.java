@@ -126,7 +126,7 @@ public class PublicController {
             tokenResponse.setAccessToken(accessToken);
             tokenResponse.setRefreshToken(refreshToken);
 
-            user = userService.saveRefreshToken(username, refreshToken);
+            user = userService.setRefreshTokenAndLastLoginTime(username, refreshToken);
             if(user==null)
                 return new ResponseEntity<>("Login Failed",
                         HttpStatus.SERVICE_UNAVAILABLE) ;
