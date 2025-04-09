@@ -1,16 +1,9 @@
-import React from 'react'
-import { useAppContext } from "../context/AppContext";
+import React from "react";
 
 const Dashboard = () => {
+  const { apiClient, isAuthenticated } = useAppContext();
 
-  const {apiClient,isAuthenticated} = useAppContext()
-  
+  return <div>Dashboard</div>;
+};
 
-  return (
-    isAuthenticated && (
-      <div>Dashboard</div>
-    )
-  )
-}
-
-export default Dashboard
+export default Dashboard;
