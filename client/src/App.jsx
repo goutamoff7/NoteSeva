@@ -11,7 +11,7 @@ import ProjectUpload from "./pages/ProjectUpload";
 import ProjectView from "./pages/ProjectView";
 import Contact from "./pages/ContactUs";
 import MyProfile from "./pages/MyProfile";
-import Bookmarked from "./pages/Bookmarked ";
+import Bookmarked from "./pages/Bookmarked";
 import Features from "./pages/Features";
 import Dashboard from "./pages/Dashboard";
 import Resources from "./pages/Resources";
@@ -42,8 +42,6 @@ function App() {
         <Route path="/bookmarked" element={<Bookmarked />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/change-password" element={<ChangePassword />} />
-
-
       </Routes>
     </div>
   );
