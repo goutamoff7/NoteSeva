@@ -5,7 +5,8 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import * as pdfjsLib from "pdfjs-dist/build/pdf"; // Import PDF.js core
 
 // Manually set the worker source
-pdfjsLib.GlobalWorkerOptions.workerSrc = "/node_modules/pdfjs-dist/build/pdf.worker.js";
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  "/node_modules/pdfjs-dist/build/pdf.worker.js";
 
 export default function NoteCard({
   id,
