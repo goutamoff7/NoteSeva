@@ -9,9 +9,10 @@ import UploadSection from "../components/UploadSection";
 import ProjectSection from "../components/ProjectSection";
 import UploadNote from "../components/UploadNote";
 import MapStyleGrid from "../components/MapStyleGrid";
-// import CustomContributionChart from "../components/CustomContributionChart";
+import { useAppContext } from "../context/AppContext";
 const Dashboard = () => {
   const [count, setCount] = useState(0);
+  const { logout } = useAppContext();
   return (
     <section className="grid grid-cols-[300px_auto_300px] bg-[#1E293B] min-h-screen p-4 ">
       {/* left side */}
@@ -19,7 +20,10 @@ const Dashboard = () => {
         <ProfileCard />
         <LikeGains />
         <div className="flex flex-col gap-2 items-center text-white text-xl mt-5">
-          <button className="flex gap-2 flex-row items-center justify-center w-full  py-1 border border-[#F0F6FC1A] bg-[#263238] rounded-lg">
+          <button
+            onClick={logout}
+            className="flex gap-2 flex-row items-center justify-center w-full  py-1 border border-[#F0F6FC1A] bg-[#263238] rounded-lg"
+          >
             <p>Logout</p>
             <CiLogout />
           </button>
