@@ -13,7 +13,7 @@ const LoginPage = () => {
 
   const navigate = useNavigate()
 
-  const { backendUrl, apiClient} = useAppContext();
+  const { backendUrl, apiClient, login} = useAppContext();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -24,10 +24,11 @@ const LoginPage = () => {
     try {
       const {data} = await apiClient.post(`${backendUrl}/public/login`, { email, password });
       toast.success("Login successful");
+      await login();
       navigate('/dashboard')
     } catch (error) {
       toast.error("Login failed. Please check your credentials.");
-      console.error("Error:", error.response?.data || error.message);
+      console.error("Error:", error.message);
     }
   };
 
@@ -92,7 +93,8 @@ const LoginPage = () => {
 
         <p className="mt-6 text-gray-400">
           Don’t have an account?
-          <a href="./signup" className="text-green-500 hover:text-green-600"> Sign up for free!</a>
+          <span onClick={() => navigate("/signup")}
+           className="text-green-500 hover:text-green-600 cursor-pointer"> Sign up for free!</span>
         </p>
       </div>
     </div>

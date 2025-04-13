@@ -253,9 +253,12 @@ const SignUpPage = () => {
         {/* Login Part */}
         <p className="mt-6 text-white">
           Already have an account?{" "}
-          <a href="./login" className="text-green-500 hover:text-green-600">
+          <span
+            onClick={() => navigate("/login")}
+            className="text-green-500 hover:text-green-600 cursor-pointer"
+          >
             Login
-          </a>
+          </span>
         </p>
       </div>
     </div>

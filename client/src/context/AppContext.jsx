@@ -10,6 +10,8 @@ export const AppProvider = ({ children }) => {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
+
 
   const apiClient = axios.create({
     baseURL: backendUrl,
@@ -21,12 +23,14 @@ export const AppProvider = ({ children }) => {
       try {
         await apiClient.get("/public/check-auth");
         setIsAuthenticated(true);
+        await userData();
       } catch {
         setIsAuthenticated(false);
       }
     };
     checkAuth();
   }, []);
+  
 
   let isRefreshing = false;
 
@@ -49,7 +53,7 @@ export const AppProvider = ({ children }) => {
             return apiClient(originalRequest);
           } catch (refreshError) {
             isRefreshing = false;
-            navigate("/login"); // Navigate on refresh failure
+            navigate("/login");
             return Promise.reject(refreshError);
           }
         } else {
@@ -68,6 +72,19 @@ export const AppProvider = ({ children }) => {
     }
   );
 
+
+  // navbar btn swap function
+  const login = async () => {
+    try {
+      await apiClient.get("/public/check-auth");
+      setIsAuthenticated(true);
+      await userData();
+    } catch (error) {
+      setIsAuthenticated(false);
+      console.error("Login check failed:", error);
+    }
+  };
+
   // Logout function
   const logout = async () => {
     try {
@@ -81,6 +98,17 @@ export const AppProvider = ({ children }) => {
       navigate("/login");
     }
   };
+
+  // Get User Profile details
+  const userData = async () => {
+    try {
+      const res = await apiClient.get(`${backendUrl}/user/get-user-details`);
+      setUserInfo(res.data);
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+    }
+  };
+  
 
   // All Subjects
   const AllSubjectsData = async () => {
@@ -99,10 +127,14 @@ export const AppProvider = ({ children }) => {
   const value = {
     backendUrl,
     apiClient,
+    login,
     logout, 
     isAuthenticated,
     AllSubjectsData,
+    userData,
+    userInfo,
   };
+  
 
   return (
     <AppContext.Provider value={value}>

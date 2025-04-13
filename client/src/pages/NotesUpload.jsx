@@ -36,17 +36,23 @@ const NotesUpload = () => {
       }));
       setDepartments(uniqueDepartments);
 
-      const formattedSubjects = subjectData.map((sub) => ({
-        label: `${sub.subjectName}`,
-        value: sub.subjectCode,
-      }));
-      setSubjects(formattedSubjects);
+      const uniqueSubjects = [
+        ...new Set(subjectData.map((item) => item.subjectName)),
+      ].map((subjectName) => {
+        const sub = subjectData.find((item) => item.subjectName === subjectName);
+        return {
+          label: subjectName,
+          value: sub.subjectCode,
+        };
+      });
+      setSubjects(uniqueSubjects);      
+      
     };
 
     fetchSubjects();
   }, []);
 
-  // 📤 Handle Form Submit
+  // Handle Form Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
   
@@ -72,13 +78,7 @@ const NotesUpload = () => {
     formData.append("notesDTO", JSON.stringify(notesDTO));
   
     try {
-      const res = await apiClient.post(`${backendUrl}/notes/upload`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        withCredentials: true,
-      });
-  
+      const res = await apiClient.post(`${backendUrl}/notes/upload`, formData);
       console.log("Success:", res.data);
       toast.success("Notes uploaded successfully!");
     } catch (err) {
@@ -87,11 +87,10 @@ const NotesUpload = () => {
     }
   };
   
-  
 
   return (
     isAuthenticated && (
-      <div className="min-h-screen flex items-center justify-evenly bg-gray-900 text-white">
+      <div className="min-h-screen flex items-center justify-evenly bg-darkbg text-white">
         <div className="max-w-[400px] space-y-[30px]">
           <img src="/notesupload.png" alt="" className="h-[300px] w-[380px]" />
           <h2 className="font-bold text-white text-2xl leading-[40px] text-center">
@@ -137,7 +136,7 @@ const NotesUpload = () => {
               value={topicName}
               onChange={(e) => setTopicName(e.target.value)}
               placeholder="Ex: Deadlock"
-              className="w-full p-3 rounded-[12px] bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-4 py-1.5 rounded-[12px] bg-white text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
@@ -148,14 +147,14 @@ const NotesUpload = () => {
               type="file"
               accept="application/pdf"
               onChange={(e) => setFile(e.target.files[0])}
-              className="w-full rounded-[12px] p-3 bg-gray-800 text-white focus:outline-none"
+              className="w-full rounded-[12px] px-4 py-1.5 bg-white text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-btngreen custom-shadow text-white font-semibold text-2xl p-3 rounded-[12px] hover:bg-green-700 transition-all"
+            className="w-full bg-btngreen custom-shadow text-white font-semibold text-2xl py-2 rounded-[12px] hover:bg-green-700 transition-all"
           >
             Submit
           </button>
