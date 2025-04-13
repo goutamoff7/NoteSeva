@@ -10,9 +10,12 @@ import ProjectSection from "../components/ProjectSection";
 import UploadNote from "../components/UploadNote";
 import MapStyleGrid from "../components/MapStyleGrid";
 import { useAppContext } from "../context/AppContext";
+
 const Dashboard = () => {
+
   const [count, setCount] = useState(0);
   const { logout } = useAppContext();
+
   return (
     <section className="grid grid-cols-[300px_auto_300px] bg-[#1E293B] min-h-screen p-4 ">
       {/* left side */}

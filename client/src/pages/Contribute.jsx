@@ -18,16 +18,28 @@ const Contribute = () => {
               for <br />
               fun & friends
             </p>
-            <div className="flex flex-row gap-[100px]  ">
+            <div className="grid grid-cols-2 gap-x-[100px] gap-y-[50px] pt-10">
               <Link to="/contribute/notesUpload">
-                <button className="bg-btngreen w-[300px] h-[64px] rounded-xl custom-shadow text-whitee text-2xl font-bold ">
+                <button className="bg-btngreen w-[300px] h-[64px] rounded-xl custom-shadow text-whitee text-2xl font-bold hover:scale-105">
                   Notes
                 </button>
               </Link>
               
               <Link to="/contribute/projectUpload">
-                <button className="bg-midblue w-[300px] h-[64px] rounded-xl custom-shadow text-whitee text-2xl font-bold ">
+                <button className="bg-midblue w-[300px] h-[64px] rounded-xl custom-shadow text-whitee text-2xl font-bold hover:scale-105">
                   Projects
+                </button>
+              </Link>
+
+              <Link to="/contribute/organiserUpload">
+                <button className="bg-yellow-600 w-[300px] h-[64px] rounded-xl custom-shadow text-whitee text-2xl font-bold hover:scale-105">
+                  Organiser
+                </button>
+              </Link>
+              
+              <Link to="/contribute/pyqUpload">
+                <button className="bg-red-500 w-[300px] h-[64px] rounded-xl custom-shadow text-whitee text-2xl font-bold hover:scale-105">
+                  PYQ
                 </button>
               </Link>
             </div>

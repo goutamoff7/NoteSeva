@@ -1,5 +1,7 @@
-// src/App.jsx
 import { Routes, Route } from "react-router-dom";
+import ProtectedRoute from "./utils/ProtectedRoute";
+import PublicRoute from "./utils/PublicRoute";
+
 import Home from "./pages/Home";
 import Project from "./pages/Project";
 import Contribute from "./pages/Contribute";
@@ -17,31 +19,41 @@ import Dashboard from "./pages/Dashboard";
 import Resources from "./pages/Resources";
 import ForgotPassword from "./pages/ForgotPassword";
 import ChangePassword from "./pages/ChangePassword";
+import OrganiserUpload from "./pages/OrganiserUpload";
+import PYQUpload from "./pages/PYQUpload";
 
 function App() {
   return (
     <div>
       <Navbar />
       <Routes>
+        {/* Publicly accessible */}
         <Route path="/" element={<Home />} />
         <Route path="/contactUs" element={<Contact />} />
         <Route path="/features" element={<Features />} />
         <Route path="/contribute" element={<Contribute />} />
         <Route path="/project" element={<Project />} />
 
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
+        {/* Public-only routes (block if logged in) */}
+        <Route element={<PublicRoute />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+        </Route>
 
-        <Route path="/project/:projectId" element={<ProjectView />} />
-        <Route path="/contribute/notesUpload" element={<NotesUpload />} />
-        <Route path="/contribute/projectUpload" element={<ProjectUpload />} />
-        <Route path="/features/:feature" element={<Resources />} />
-
-        <Route path="/my-profile" element={<MyProfile />} />
-        <Route path="/bookmarked" element={<Bookmarked />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/change-password" element={<ChangePassword />} />
+        {/* Protected routes (require login) */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/contribute/notesUpload" element={<NotesUpload />} />
+          <Route path="/contribute/organiserUpload" element={<OrganiserUpload />} />
+          <Route path="/contribute/pyqUpload" element={<PYQUpload />} />
+          <Route path="/contribute/projectUpload" element={<ProjectUpload />} />
+          <Route path="/features/:feature" element={<Resources />} />
+          <Route path="/project/:projectId" element={<ProjectView />} />
+          <Route path="/my-profile" element={<MyProfile />} />
+          <Route path="/bookmarked" element={<Bookmarked />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/change-password" element={<ChangePassword />} />
+        </Route>
       </Routes>
     </div>
   );
