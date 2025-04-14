@@ -11,7 +11,7 @@ import HTestimonials from '../components/HomeParts/HTestimonials'
 
 const Home = () => {
   return (
-    <div className="bg-[url('darkbg.png')] bg-cover bg-center w-full h-full bg-repeat flex flex-col shadow-md relative">
+    <div className="bg-[url('darkbg.png')] bg-darkbg bg-cover bg-center w-full h-full flex flex-col shadow-md relative">
 
         <HCommunities/>
 

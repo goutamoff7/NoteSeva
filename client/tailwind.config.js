@@ -1,7 +1,7 @@
 export default {
   content: [
-    "./index.html", // Include index.html for Vite
-    "./src/**/*.{js,ts,jsx,tsx}", // Include all src files
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {

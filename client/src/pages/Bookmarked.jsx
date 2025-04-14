@@ -103,11 +103,11 @@ const Bookmarked = () => {
 
         <li
           className={` flex items-center gap-4 px-4 cursor-pointer ${
-            activeItem === "organiser"
+            activeItem === "organizer"
               ? "bg-btngreen h-8 w-full rounded-full text-center"
               : ""
           }`}
-          onClick={() => handleClick("organiser")}
+          onClick={() => handleClick("organizer")}
           onDoubleClick={handleDoubleClick}
         >
           <svg
@@ -128,7 +128,7 @@ const Bookmarked = () => {
               <path d="M9 7h6" />
             </g>
           </svg>
-          <p className="cursor-pointer">Organiser</p>
+          <p className="cursor-pointer">organizer</p>
         </li>
       </ul>
 

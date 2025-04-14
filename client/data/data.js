@@ -98,7 +98,7 @@ export const features = [
     icon: "notes.png",
   },
   {
-    title: "University Organisers",
+    title: "University organizers",
     description:
       "Automate and track emails to individuals or groups. Skilline’s built-in system helps organize your organization.",
     icon: "organizer.png",

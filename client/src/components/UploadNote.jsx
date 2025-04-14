@@ -4,10 +4,10 @@ import { CiClock2 } from "react-icons/ci";
 const UploadNote = () => {
   const [activeFilter, setActiveFilter] = useState("Recent Upload");
 
-  const filters = ["Recent Upload", "Organiser", "PYQ", "Notes"];
+  const filters = ["Recent Upload", "organizer", "PYQ", "Notes"];
   const uploads = [
     { title: "Two Sum", time: "21 hours ago", category: "PYQ" },
-    { title: "Two Sum", time: "21 hours ago", category: "Organiser" },
+    { title: "Two Sum", time: "21 hours ago", category: "organizer" },
     { title: "Two Sum", time: "21 hours ago", category: "Notes" },
   ];
 

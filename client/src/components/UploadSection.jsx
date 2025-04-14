@@ -8,7 +8,7 @@ const UploadSection = () => {
 
   const categories = [
     {
-      name: "Organiser",
+      name: "organizer",
       count: 231,
       color: "border-[#FAAF3A]",
       backgroundColor: "bg-[#FAAF3A]",
