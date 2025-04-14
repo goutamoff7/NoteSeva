@@ -3,7 +3,7 @@ import Select from "react-select";
 import { useAppContext } from "../context/AppContext.jsx";
 import { toast } from "react-toastify";
 
-const NotesUpload = () => {
+const organizerUpload = () => {
   const [courses, setCourses] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [subjects, setSubjects] = useState([]);
@@ -11,12 +11,12 @@ const NotesUpload = () => {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [selectedSubject, setSelectedSubject] = useState(null);
-  const [topicName, setTopicName] = useState("");
+  const [year, setYear] = useState("");
   const [file, setFile] = useState(null);
 
   const fileInputRef = useRef(null);
 
-  const { AllSubjectsData, apiClient, backendUrl, isAuthenticated } = useAppContext();
+  const { AllSubjectsData, apiClient, backendUrl, isAuthenticated } = useAppContext()
 
   useEffect(() => {
     const fetchSubjects = async () => {
@@ -63,7 +63,7 @@ const NotesUpload = () => {
       !selectedCourse ||
       !selectedDepartment ||
       !selectedSubject ||
-      !topicName ||
+      !year ||
       !file
     ) {
       toast.warning("Please fill all the required fields");
@@ -75,32 +75,32 @@ const NotesUpload = () => {
     // Append file
     formData.append("file", file);
 
-    // Create the DTO as string (like you did in Postman)
-    const notesDTO = {
-      topicName,
+    const organizerDTO = {
+      year,
       subjectName: selectedSubject.label,
       departmentName: selectedDepartment.label,
       courseName: selectedCourse.label,
     };
 
     formData.append(
-      "notesDTO",
-      new Blob([JSON.stringify(notesDTO)], {
+      "organizerDTO",
+      new Blob([JSON.stringify(organizerDTO)], {
         type: "application/json",
       })
     );
 
     try {
-      const res = await apiClient.post(`${backendUrl}/notes/upload`, formData);
-      toast.success("Notes uploaded successfully!");
-
+      const res = await apiClient.post(`${backendUrl}/organizer/upload`,formData);
+      console.log("Success:", res.data);
+      toast.success("Organizer uploaded successfully!");
       // Reset form after success
       setSelectedCourse(null);
       setSelectedDepartment(null);
       setSelectedSubject(null);
-      setTopicName("");
+      setYear("");
       setFile(null);
       fileInputRef.current.value = null;
+
     } catch (err) {
       console.error("Upload failed:", err.message);
       toast.error(err.message || "Upload failed");
@@ -113,8 +113,8 @@ const NotesUpload = () => {
         <div className="max-w-[400px] space-y-[30px]">
           <img src="/notesupload.png" alt="" className="h-[300px] w-[380px]" />
           <h2 className="font-bold text-white text-2xl leading-[40px] text-center">
-            <span className="text-btngreen">Notes</span> are chits created by
-            your brain for exam
+            <span className="text-btngreen">organizer</span> is your digital
+            vault for academic treasures
           </h2>
         </div>
 
@@ -123,7 +123,7 @@ const NotesUpload = () => {
           className="w-full max-w-md space-y-[20px]"
         >
           <h2 className="text-2xl font-semibold mb-6 text-white">
-            Notes Upload
+            organizer Upload
           </h2>
 
           {/* Course Dropdown */}
@@ -153,16 +153,16 @@ const NotesUpload = () => {
             className="text-black"
           />
 
-          {/* Topic Input */}
+          {/* Year Input */}
           <fieldset className="border border-gray-300 rounded-md p-4">
             <legend className="text-sm font-semibold text-white px-2">
-              Topic Name
+              Year
             </legend>
             <input
-              type="text"
-              value={topicName}
-              onChange={(e) => setTopicName(e.target.value)}
-              placeholder="Ex: Deadlock"
+              type="number"
+              value={year}
+              onChange={(e) => setYear(e.target.value)}
+              placeholder="Ex: 2024"
               className="w-full px-4 py-1.5 rounded-[12px] bg-white text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </fieldset>
@@ -192,4 +192,4 @@ const NotesUpload = () => {
   );
 };
 
-export default NotesUpload;
+export default organizerUpload;

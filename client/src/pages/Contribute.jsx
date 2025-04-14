@@ -14,9 +14,9 @@ const Contribute = () => {
           {/* left side */}
           <div className="flex flex-col gap-5 w-[745px]">
             <p className="capitalize text-white  text-4xl font-bold text-center leading-normal">
-              <span className="text-btngreen ">Contribute</span> your resource
-              for <br />
-              fun & friends
+              <span className="text-btngreen ">Upload</span> your resources
+              to <br />
+              friends & fun
             </p>
             <div className="grid grid-cols-2 gap-x-[100px] gap-y-[50px] pt-10">
               <Link to="/contribute/notesUpload">
@@ -31,9 +31,9 @@ const Contribute = () => {
                 </button>
               </Link>
 
-              <Link to="/contribute/organiserUpload">
+              <Link to="/contribute/organizerUpload">
                 <button className="bg-yellow-600 w-[300px] h-[64px] rounded-xl custom-shadow text-whitee text-2xl font-bold hover:scale-105">
-                  Organiser
+                  organizer
                 </button>
               </Link>
               

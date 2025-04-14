@@ -15,53 +15,20 @@ export default function NoteCard({
   userImage,
   noteImage,
   userName,
+  uploadDate,
+  year,
+  downloadLink
 }) {
-  const [pdfPreview, setPdfPreview] = useState(null);
-
-  useEffect(() => {
-    const generatePdfPreview = async () => {
-      try {
-        const loadingTask = pdfjsLib.getDocument(noteImage);
-        const pdf = await loadingTask.promise;
-
-        const page = await pdf.getPage(1);
-        const viewport = page.getViewport({ scale: 1.5 });
-
-        const canvas = document.createElement("canvas");
-        const context = canvas.getContext("2d");
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-
-        const renderContext = {
-          canvasContext: context,
-          viewport: viewport,
-        };
-        await page.render(renderContext).promise;
-
-        const imageDataUrl = canvas.toDataURL("image/png");
-        setPdfPreview(imageDataUrl);
-      } catch (error) {
-        console.error("Error generating PDF preview:", error);
-        setPdfPreview("/fallback-image.jpg");
-      }
-    };
-
-    if (noteImage && noteImage.endsWith(".pdf")) {
-      generatePdfPreview();
-    } else {
-      setPdfPreview(noteImage);
-    }
-  }, [noteImage]);
 
   const handleViewClick = () => {
-    window.open(noteImage, "_blank");
+    window.open(downloadLink, "_blank");
   };
 
   return (
     <div className="w-64 rounded-2xl shadow-lg overflow-hidden border">
       <div className="p-4">
         <div className="flex justify-between">
-          <div className="font-bold text-lg text-white">{title}</div>
+          <div className="font-bold text-lg text-white">{title || year}</div>
           <p className="text-white cursor-pointer">
             <BsThreeDotsVertical />
           </p>
@@ -70,7 +37,7 @@ export default function NoteCard({
 
         <div className="bg-gray-100 rounded-md overflow-hidden h-32 flex items-center justify-center">
           <img
-            src={pdfPreview || "image.png"}
+            src={noteImage ||"/notes.webp"}
             alt="Note Preview"
             className="object-cover h-full w-full"
           />
@@ -93,13 +60,13 @@ export default function NoteCard({
 
         <div className="mt-4 flex items-center space-x-2">
           <img
-            src={userImage}
+            src={userImage || "/upload_area.png"}
             alt="Profile"
             className="w-8 h-8 rounded-full object-cover"
           />
           <div>
             <div className="font-semibold text-sm text-white">{userName}</div>
-            <div className="text-gray-400 text-xs">26 January 2021</div>
+            <div className="text-gray-400 text-xs">{uploadDate}</div>
           </div>
         </div>
       </div>

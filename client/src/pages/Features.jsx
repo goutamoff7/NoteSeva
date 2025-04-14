@@ -46,7 +46,7 @@ const Features = () => {
       description: "Previous year question papers.",
     },
     {
-      title: "Organiser",
+      title: "organizer",
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -71,7 +71,6 @@ const Features = () => {
   ];
 
   const handleContinue = (title) => {
-    // Dynamic route based on title (lowercase for URL consistency)
     const path = `/features/${title.toLowerCase()}`;
     navigate(path);
   };

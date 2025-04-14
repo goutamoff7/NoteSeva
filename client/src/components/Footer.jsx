@@ -36,7 +36,7 @@ const Footer = () => {
           <div className='space-y-[15px]'>
             <h2 className='font-bold text-lg text-darkblue'>Product</h2>
             <p>Classroom Notes</p>
-            <p>Organisers</p>
+            <p>organizers</p>
             <p>Previous Year Question</p>
             <p>Projects</p>
           </div>
