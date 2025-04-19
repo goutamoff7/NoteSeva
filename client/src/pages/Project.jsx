@@ -88,7 +88,7 @@ const Project = () => {
       {/* Hero section */}
       <div className="  bg-darkbg bg-opacity-60 w-full bg-no-repeat flex justify-center overflow-hidden items-center">
         <div className="bg-[url('project-frame.png')] w-full h-[90vh] flex flex-col justify-center items-center gap-10 bg-no-repeat object-fill">
-          <h1 className="font-bold text-6xl text-center text-white_1 w-[550px] leading-tight px-10 z-50">
+          <h1 className="font-bold text-6xl text-center text-white_1 w-[550px] leading-tight px-10 z-1">
             More than just a <span className="text-emerald-400">Project</span>{" "}
             It’s a lifestyle
           </h1>
@@ -115,7 +115,7 @@ const Project = () => {
 
       <main
         className="bg-darkbg w-full max-h-full flex flex-col justify-center items-center gap-8 px-20 pb-[100px]"
-        ref={exploreRef} // Attach the reference to this section
+        ref={exploreRef}
       >
         <span className=" w-full text-center text-whitee underline font-semibold text-5xl mt-14">
           Explore Projects

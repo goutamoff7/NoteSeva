@@ -1,12 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { IoBookmark } from "react-icons/io5";
-import { FaHeart } from "react-icons/fa";
+import React, { useState, useRef } from "react";
+import { IoBookmark, IoBookmarkOutline } from "react-icons/io5";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import * as pdfjsLib from "pdfjs-dist/build/pdf"; // Import PDF.js core
-
-// Manually set the worker source
-pdfjsLib.GlobalWorkerOptions.workerSrc =
-  "/node_modules/pdfjs-dist/build/pdf.worker.js";
+import { IoClose } from "react-icons/io5";
 
 export default function NoteCard({
   id,
@@ -19,25 +15,76 @@ export default function NoteCard({
   year,
   downloadLink
 }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
+
+  const likeSoundRef = useRef(null);
+  const bookmarkSoundRef = useRef(null);
 
   const handleViewClick = () => {
     window.open(downloadLink, "_blank");
   };
 
+  const handleDownload = () => {
+    const a = document.createElement("a");
+    a.href = downloadLink;
+    a.download = `${title || "note"}.pdf`;
+    a.click();
+  };
+
+  const toggleLike = () => {
+    if (!isLiked && likeSoundRef.current) {
+      likeSoundRef.current.currentTime = 0;
+      likeSoundRef.current.play();
+    }
+    setIsLiked(!isLiked);
+  };
+
+  const toggleBookmark = () => {
+    if (!isBookmarked && bookmarkSoundRef.current) {
+      bookmarkSoundRef.current.currentTime = 0;
+      bookmarkSoundRef.current.play();
+    }
+    setIsBookmarked(!isBookmarked);
+  };
+
   return (
     <div className="w-64 rounded-2xl shadow-lg overflow-hidden border">
+
+      {/* Sound Effects */}
+      <audio ref={likeSoundRef} src="/like-btn.mp3" preload="auto" />
+      <audio ref={bookmarkSoundRef} src="/bookmarked-btn.mp3" preload="auto" />
+
       <div className="p-4">
         <div className="flex justify-between">
           <div className="font-bold text-lg text-white">{title || year}</div>
-          <p className="text-white cursor-pointer">
-            <BsThreeDotsVertical />
-          </p>
+          <div className="relative">
+            <button
+              className="text-white cursor-pointer"
+              onClick={() => setMenuOpen(!menuOpen)}
+            >
+              {menuOpen ? <IoClose size={20} /> : <BsThreeDotsVertical size={20} />}
+            </button>
+
+            {menuOpen && (
+              <div className="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg z-1">
+                <button
+                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  onClick={handleDownload}
+                >
+                  Download
+                </button>
+              </div>
+            )}
+          </div>
         </div>
+
         <div className="text-gray-500 text-sm mb-2">{subject}</div>
 
         <div className="bg-gray-100 rounded-md overflow-hidden h-32 flex items-center justify-center">
           <img
-            src={noteImage ||"/notes.webp"}
+            src={noteImage || "/notes.webp"}
             alt="Note Preview"
             className="object-cover h-full w-full"
           />
@@ -52,9 +99,21 @@ export default function NoteCard({
           </button>
 
           <div className="flex items-center space-x-2">
-            <FaHeart className="w-5 h-5 text-red-500" />
-            <span className="text-gray-500">3.2k</span>
-            <IoBookmark className="w-5 h-5 text-gray-500" />
+            <button onClick={toggleLike}>
+              {isLiked ? (
+                <FaHeart className="w-5 h-5 text-red-500" />
+              ) : (
+                <FaRegHeart className="w-5 h-5 text-gray-400" />
+              )}
+            </button>
+            <span className="text-gray-500">{isLiked ? "3.3k" : "3.2k"}</span>
+            <button onClick={toggleBookmark}>
+              {isBookmarked ? (
+                <IoBookmark className="w-5 h-5 text-blue-600" />
+              ) : (
+                <IoBookmarkOutline className="w-5 h-5 text-gray-500" />
+              )}
+            </button>
           </div>
         </div>
 
