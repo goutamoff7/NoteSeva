@@ -19,8 +19,8 @@ import Dashboard from "./pages/Dashboard";
 import Resources from "./pages/Resources";
 import ForgotPassword from "./pages/ForgotPassword";
 import ChangePassword from "./pages/ChangePassword";
-import organiserUpload from "./pages/organizerUpload";
 import PYQUpload from "./pages/PYQUpload";
+import OrganizerUpload from "./pages/OrganizerUpload";
 
 function App() {
   return (
@@ -44,7 +44,7 @@ function App() {
         {/* Protected routes (require login) */}
         <Route element={<ProtectedRoute />}>
           <Route path="/contribute/notesUpload" element={<NotesUpload />} />
-          <Route path="/contribute/organizerUpload" element={<organizerUpload />} />
+          <Route path="/contribute/organizerUpload" element={<OrganizerUpload/>} />
           <Route path="/contribute/pyqUpload" element={<PYQUpload />} />
           <Route path="/contribute/projectUpload" element={<ProjectUpload />} />
           <Route path="/features/:feature" element={<Resources />} />
