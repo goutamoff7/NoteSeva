@@ -1,25 +1,34 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
 import Select from "react-select";
 import { useAppContext } from "../context/AppContext.jsx";
 import { toast } from "react-toastify";
 import NoteCard from "../components/NoteCard.jsx";
 import { useAllContext } from "../context/AllContext.jsx";
+import { Circles } from "react-loader-spinner";
 
 const Resources = () => {
   const [courses, setCourses] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [subjects, setSubjects] = useState([]);
-
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [notes, setNotes] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [sortBy, setSortBy] = useState({ label: "ID", value: "id" });
+  const [sortingOrder, setSortingOrder] = useState({
+    label: "Ascending",
+    value: "ASC",
+  });
+  const [pageNumber, setPageNumber] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
 
   const location = useLocation();
   const resourceType = location.pathname.split("/").pop();
 
-  const { backendUrl, apiClient, isAuthenticated, AllSubjectsData } = useAppContext();
+  const { backendUrl, apiClient, isAuthenticated, AllSubjectsData } =
+    useAppContext();
   const { formatDate } = useAllContext();
 
   useEffect(() => {
@@ -59,11 +68,8 @@ const Resources = () => {
     fetchSubjects();
   }, []);
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
-
+  const handleSearch = async () => {
     if (!selectedCourse) {
-      toast.warning("Please select a course");
       return;
     }
 
@@ -78,36 +84,63 @@ const Resources = () => {
       params.append("subjectName", selectedSubject.label);
     }
 
+    params.append("pageNumber", pageNumber);
+    params.append("pageSize", 8);
+    params.append("sortBy", sortBy.value);
+    params.append("sortingOrder", sortingOrder.value);
+
     try {
+      setLoading(true);
+      setNotes([]);
+
       const res = await apiClient.get(
         `${backendUrl}/${resourceType}/all?${params.toString()}`
       );
-      console.log("Fetched Notes:", res.data);
 
       const fetchedNotes = Array.isArray(res.data.content)
         ? res.data.content
         : [];
-
-      if (fetchedNotes.length === 0) {
-        toast.info("No notes found for selected filters");
-      }
-
       setNotes(fetchedNotes);
+      setTotalPages(res.data.totalPages);
     } catch (error) {
       console.error("Failed to fetch notes:", error.message);
-      toast.error("Failed to fetch notes");
+
+      if (error.response && error.response.status === 404) {
+        toast.warning("No results found for the selected filters.");
+      } else {
+        toast.error(error.message || "Failed to fetch notes");
+      }
+    } finally {
+      setLoading(false);
     }
   };
+
+  // Call handleSearch when page number changes
+  useEffect(() => {
+    handleSearch();
+  }, [
+    pageNumber,
+    selectedCourse,
+    selectedDepartment,
+    selectedSubject,
+    sortBy,
+    sortingOrder,
+  ]);
 
   return (
     isAuthenticated && (
       <div className="w-full min-h-screen flex">
         <form
-          onSubmit={handleSearch}
+          onSubmit={(e) => {
+            e.preventDefault();
+            setPageNumber(0);
+            handleSearch();
+          }}
           className="w-[25%] bg-[#343E4F] flex flex-col space-y-5 pt-10 px-2"
         >
-          {/* Courses dropdown */}
-          <div>
+          {/* Filters and Dropdowns */}
+          <fieldset className="border border-white p-2">
+            <legend className="text-white font-semibold">Course</legend>
             <Select
               options={courses}
               value={selectedCourse}
@@ -116,55 +149,119 @@ const Resources = () => {
               className="text-black"
               required
             />
-          </div>
-
-          {/* Department dropdown */}
-          <div>
+          </fieldset>
+          <fieldset className="border border-white p-2">
+            <legend className="text-white font-semibold">Department</legend>
             <Select
               options={departments}
               value={selectedDepartment}
               onChange={setSelectedDepartment}
               placeholder="Select Department"
               className="text-black"
+              isClearable
             />
-          </div>
+          </fieldset>
 
-          {/* Subject dropdown */}
-          <div>
+          <fieldset className="border border-white p-2 rounded-md">
+            <legend className="text-white font-semibold">Subject</legend>
             <Select
               options={subjects}
               value={selectedSubject}
               onChange={setSelectedSubject}
               placeholder="Select Subject"
               className="text-black"
+              isClearable
             />
-          </div>
+          </fieldset>
+          <fieldset className="border border-white p-2">
+            <legend className="text-white font-semibold">Sorting By</legend>
+            <Select
+              options={[
+                { label: "ID", value: "id" },
+                { label: "Topic Name", value: "topicName" },
+                { label: "Upload Date", value: "uploadDateTime" },
+              ]}
+              value={sortBy}
+              onChange={setSortBy}
+              placeholder="Sort By"
+              className="text-black"
+            />
+          </fieldset>
 
-          <button className="w-full p-2 bg-white text-btngreen rounded-full text-xl font-semibold hover:bg-btngreen hover:text-whitee">
+          <fieldset className="border border-white p-2">
+            <legend className="text-white font-semibold">Sorting Order</legend>
+            <Select
+              options={[
+                { label: "Ascending", value: "ASC" },
+                { label: "Descending", value: "DESC" },
+              ]}
+              value={sortingOrder}
+              onChange={setSortingOrder}
+              placeholder="Sort Order"
+              className="text-black"
+            />
+          </fieldset>
+
+          {/* <button className="w-full p-2 bg-white text-btngreen rounded-full text-xl font-semibold hover:bg-btngreen hover:text-whitee">
             Search
-          </button>
+          </button> */}
         </form>
 
-        {/* Right Part */}
-        <div className="bg-darkbg w-full flex p-6 overflow-y-auto">
-          {notes.length > 0 ? (
-            <div className="flex flex-wrap gap-6 h-fit">
-              {notes.map((note, index) => (
-                <NoteCard
-                  key={note.id || index}
-                  id={note.id || index}
-                  title={note.topicName}
-                  year={note.year}
-                  subject={note.subjectName}
-                  userName={note.sharedBy}
-                  noteImage={note.noteImage}
-                  userImage={note.userImage}
-                  uploadDate={formatDate(note.uploadDateTime)}
-                  downloadLink={`${backendUrl}/${resourceType}/download/${note.id}`}
-                />
-              
-              ))}
+        {/* Notes Display */}
+        <div className="bg-darkbg w-full flex flex-col p-6 overflow-y-auto">
+          {loading ? (
+            <div className="flex items-center justify-center w-full h-full">
+              <Circles
+                height="80"
+                width="80"
+                color="#00BFFF"
+                ariaLabel="loading"
+              />
             </div>
+          ) : notes.length > 0 ? (
+            <>
+              <div className="flex flex-wrap gap-6 h-fit">
+                {notes.map((note, index) => (
+                  <NoteCard
+                    key={note.id || index}
+                    id={note.id || index}
+                    title={note.topicName}
+                    year={note.year}
+                    subject={note.subjectName}
+                    userName={note.sharedBy}
+                    noteImage={note.noteImage}
+                    userImage={note.userImage}
+                    uploadDate={formatDate(note.uploadDateTime)}
+                    downloadLink={`${backendUrl}/${resourceType}/download/${note.id}`}
+                  />
+                ))}
+              </div>
+
+              {/* Pagination Controls */}
+              <div className="flex gap-x-4 justify-center items-center pt-10">
+                <button
+                  onClick={() => setPageNumber((prev) => Math.max(prev - 1, 0))}
+                  disabled={pageNumber === 0}
+                  className="bg-btngreen px-4 py-2 rounded text-white disabled:opacity-50"
+                >
+                  Previous
+                </button>
+
+                <span className="text-white font-semibold">
+                  Page {pageNumber + 1}
+                </span>
+
+                <button
+                  onClick={() =>
+                    setPageNumber((prev) => Math.min(prev + 1, totalPages - 1))
+                  }
+                  disabled={pageNumber === totalPages - 1}
+                  className="bg-btngreen px-4 py-2 rounded text-white disabled:opacity-50"
+                >
+                  Next
+                </button>
+              </div>
+            </>
           ) : (
             <div className="flex flex-col items-center justify-center h-full space-y-5">
               <img

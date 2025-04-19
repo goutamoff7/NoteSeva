@@ -5,7 +5,7 @@ import { FaXTwitter } from "react-icons/fa6";
 
 const Footer = () => {
   return (
-    <div className="bg-[url('Footer.png')] bg-cover bg-center w-full h-[370px] bg-no-repeat space-y-[20px]">
+    <div className="bg-[url('Footer.png')] bg-whitee bg-cover bg-center w-full h-[370px] bg-no-repeat space-y-[20px]">
 
       <div className="flex justify-evenly items-center ">
       

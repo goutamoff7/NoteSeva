@@ -49,7 +49,7 @@ const ProfileCard = () => {
   // Auto-rotation effect with pause on hover or share options visible
   useEffect(() => {
     let interval;
-    
+
     // Only run interval if not hovered and share options are not visible
     if (!isHovered && !showShareOptions) {
       interval = setInterval(() => {
@@ -74,7 +74,7 @@ const ProfileCard = () => {
         className={`bg-[#ffffff1a] text-white p-6 rounded-lg shadow-lg w-[500px] h-[350px] relative transition-opacity duration-500 ${
           fade ? "opacity-0" : "opacity-100"
         }`}
-        onMouseEnter={() => setIsHovered(true)}  // Pause on hover
+        onMouseEnter={() => setIsHovered(true)} // Pause on hover
         onMouseLeave={() => setIsHovered(false)} // Resume on hover out
       >
         {/* Left Arrow */}
@@ -124,24 +124,40 @@ const ProfileCard = () => {
             <a
               href={students[currentIndex].linkedin}
               className="text-[#0A66C2]"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               <FaLinkedin size={30} />
             </a>
-            <a href={students[currentIndex].github} className="text-[#171515]">
+            <a
+              href={students[currentIndex].github}
+              className="text-[#171515]"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <FaGithub size={30} />
             </a>
-            <a href={students[currentIndex].x} className="text-[#171515]">
+            <a
+              href={students[currentIndex].x}
+              className="text-[#171515]"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <FaXTwitter size={30} />
             </a>
             <a
               href={students[currentIndex].facebook}
               className="text-[#1877F2]"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               <FaFacebook size={30} />
             </a>
             <a
               href={students[currentIndex].instagram}
               className="text-pink-600"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               <FaInstagram size={30} />
             </a>

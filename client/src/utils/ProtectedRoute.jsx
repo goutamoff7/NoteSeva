@@ -1,4 +1,3 @@
-// utils/ProtectedRoute.jsx
 import { useAppContext } from "../context/AppContext";
 import { Navigate, Outlet } from "react-router-dom";
 import { toast } from "react-toastify";
