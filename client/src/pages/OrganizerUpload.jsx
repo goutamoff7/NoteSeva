@@ -3,11 +3,7 @@ import Select from "react-select";
 import { useAppContext } from "../context/AppContext.jsx";
 import { toast } from "react-toastify";
 
-const organizerUpload = () => {
-  const [courses, setCourses] = useState([]);
-  const [departments, setDepartments] = useState([]);
-  const [subjects, setSubjects] = useState([]);
-
+const OrganizerUpload = () => {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [selectedSubject, setSelectedSubject] = useState(null);
@@ -16,44 +12,7 @@ const organizerUpload = () => {
 
   const fileInputRef = useRef(null);
 
-  const { AllSubjectsData, apiClient, backendUrl, isAuthenticated } = useAppContext()
-
-  useEffect(() => {
-    const fetchSubjects = async () => {
-      const subjectData = await AllSubjectsData();
-
-      const uniqueCourses = [
-        ...new Set(subjectData.map((item) => item.courseName)),
-      ].map((course) => ({
-        label: course,
-        value: course,
-      }));
-      setCourses(uniqueCourses);
-
-      const uniqueDepartments = [
-        ...new Set(subjectData.map((item) => item.departmentName)),
-      ].map((dept) => ({
-        label: dept,
-        value: dept,
-      }));
-      setDepartments(uniqueDepartments);
-
-      const uniqueSubjects = [
-        ...new Set(subjectData.map((item) => item.subjectName)),
-      ].map((subjectName) => {
-        const sub = subjectData.find(
-          (item) => item.subjectName === subjectName
-        );
-        return {
-          label: subjectName,
-          value: sub.subjectCode,
-        };
-      });
-      setSubjects(uniqueSubjects);
-    };
-
-    fetchSubjects();
-  }, []);
+  const {apiClient, backendUrl, isAuthenticated, courses, departments, subjects,} = useAppContext();
 
   // Handle Form Submit
   const handleSubmit = async (e) => {
@@ -123,7 +82,7 @@ const organizerUpload = () => {
           className="w-full max-w-md space-y-[20px]"
         >
           <h2 className="text-2xl font-semibold mb-6 text-white">
-            organizer Upload
+            Organizer Upload
           </h2>
 
           {/* Course Dropdown */}
@@ -192,4 +151,4 @@ const organizerUpload = () => {
   );
 };
 
-export default organizerUpload;
+export default OrganizerUpload;
