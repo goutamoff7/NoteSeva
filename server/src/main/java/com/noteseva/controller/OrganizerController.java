@@ -4,10 +4,7 @@ import com.noteseva.DTO.OrganizerDTO;
 import com.noteseva.Pagination.PageResponse;
 import com.noteseva.model.FileHash;
 import com.noteseva.model.Organizer;
-import com.noteseva.service.DTOService;
-import com.noteseva.service.FileHashService;
-import com.noteseva.service.OrganizerService;
-import com.noteseva.service.UtilityService;
+import com.noteseva.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
@@ -40,6 +37,9 @@ public class OrganizerController {
 
     @Autowired
     DTOService dtoService;
+
+    @Autowired
+    UserService userService;
 
     //localhost:8080/organizer/all?
     // courseName=BTECH &
@@ -116,7 +116,7 @@ public class OrganizerController {
             Organizer organizer = dtoService.getOrganizer(organizerDTO);
 
             //Getting uploader name
-            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            String username = userService.getCurrentUsername();;
 
             // Process and save notes and fileDataHash
             Organizer savedOrganizer = organizerService.uploadOrganizer(organizer, file, username);

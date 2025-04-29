@@ -21,9 +21,6 @@ import java.util.function.Function;
 public class JwtService {
     private String secretKey;
 
-    @Autowired
-    private TokenResponse tokenResponse;
-
     public JwtService() {
         try {
             KeyGenerator keyGenerator = KeyGenerator.getInstance("HmacSHA256");

@@ -4,10 +4,7 @@ import com.noteseva.DTO.NotesDTO;
 import com.noteseva.Pagination.PageResponse;
 import com.noteseva.model.FileHash;
 import com.noteseva.model.Notes;
-import com.noteseva.service.DTOService;
-import com.noteseva.service.FileHashService;
-import com.noteseva.service.NotesService;
-import com.noteseva.service.UtilityService;
+import com.noteseva.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
@@ -18,7 +15,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.*;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -40,6 +36,9 @@ public class NotesController {
 
     @Autowired
     DTOService dtoService;
+
+    @Autowired
+    UserService userService;
 
     //localhost:8080/notes/all?
     //courseName=BTECH &
@@ -115,7 +114,7 @@ public class NotesController {
             Notes notes = dtoService.getNotes(notesDTO);
 
             //Getting uploader name
-            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            String username = userService.getCurrentUsername();
 
             // Process and save notes and fileDataHash
             Notes savedNotes = notesService.uploadNotes(notes, file, username);

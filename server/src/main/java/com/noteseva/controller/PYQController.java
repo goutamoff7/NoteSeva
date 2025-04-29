@@ -4,10 +4,7 @@ import com.noteseva.DTO.PYQDTO;
 import com.noteseva.Pagination.PageResponse;
 import com.noteseva.model.FileHash;
 import com.noteseva.model.PYQ;
-import com.noteseva.service.DTOService;
-import com.noteseva.service.FileHashService;
-import com.noteseva.service.PYQService;
-import com.noteseva.service.UtilityService;
+import com.noteseva.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
@@ -40,6 +37,9 @@ public class PYQController {
 
     @Autowired
     DTOService dtoService;
+
+    @Autowired
+    UserService userService;
 
     //localhost:8080/pyq/all?
     // courseName=BTECH &
@@ -116,7 +116,7 @@ public class PYQController {
             PYQ pyq = dtoService.getPYQ(pyqDTO);
 
             //Getting uploader name
-            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            String username = userService.getCurrentUsername();
 
             // Process and save notes and fileDataHash
             PYQ savedPYQ = pyqService.uploadPYQ(pyq, file, username);
