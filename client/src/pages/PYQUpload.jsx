@@ -4,10 +4,6 @@ import { useAppContext } from "../context/AppContext.jsx";
 import { toast } from "react-toastify";
 
 const PYQUpload = () => {
-  const [courses, setCourses] = useState([]);
-  const [departments, setDepartments] = useState([]);
-  const [subjects, setSubjects] = useState([]);
-
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [selectedSubject, setSelectedSubject] = useState(null);
@@ -16,44 +12,7 @@ const PYQUpload = () => {
 
   const fileInputRef = useRef(null);
 
-  const { AllSubjectsData, apiClient, backendUrl, isAuthenticated } = useAppContext();
-
-  useEffect(() => {
-    const fetchSubjects = async () => {
-      const subjectData = await AllSubjectsData();
-
-      const uniqueCourses = [
-        ...new Set(subjectData.map((item) => item.courseName)),
-      ].map((course) => ({
-        label: course,
-        value: course,
-      }));
-      setCourses(uniqueCourses);
-
-      const uniqueDepartments = [
-        ...new Set(subjectData.map((item) => item.departmentName)),
-      ].map((dept) => ({
-        label: dept,
-        value: dept,
-      }));
-      setDepartments(uniqueDepartments);
-
-      const uniqueSubjects = [
-        ...new Set(subjectData.map((item) => item.subjectName)),
-      ].map((subjectName) => {
-        const sub = subjectData.find(
-          (item) => item.subjectName === subjectName
-        );
-        return {
-          label: subjectName,
-          value: sub.subjectCode,
-        };
-      });
-      setSubjects(uniqueSubjects);
-    };
-
-    fetchSubjects();
-  }, []);
+  const {apiClient, backendUrl, isAuthenticated, courses, departments, subjects,} = useAppContext();
 
   // Handle Form Submit
   const handleSubmit = async (e) => {

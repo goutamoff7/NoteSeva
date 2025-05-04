@@ -1,180 +1,250 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from "react-router-dom";
 import Select from "react-select";
 import { useAppContext } from "../context/AppContext.jsx";
 import { toast } from "react-toastify";
 import NoteCard from "../components/NoteCard.jsx";
 import { useAllContext } from "../context/AllContext.jsx";
+import { Circles } from "react-loader-spinner";
 
 const Resources = () => {
-  const [courses, setCourses] = useState([]);
-  const [departments, setDepartments] = useState([]);
-  const [subjects, setSubjects] = useState([]);
-
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [notes, setNotes] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [sortBy, setSortBy] = useState({ label: "ID", value: "id" });
+  const [sortingOrder, setSortingOrder] = useState({
+    label: "Ascending",
+    value: "ASC",
+  });
+  const [pageNumber, setPageNumber] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
 
   const location = useLocation();
+  const navigate = useNavigate();
   const resourceType = location.pathname.split("/").pop();
 
-  const { backendUrl, apiClient, isAuthenticated, AllSubjectsData } = useAppContext();
+  const { backendUrl, apiClient, isAuthenticated, courses, departments, subjects } = useAppContext();
   const { formatDate } = useAllContext();
 
+  // 🔁 Update URL based on current selections
+  const updateURL = ({
+    course = selectedCourse,
+    department = selectedDepartment,
+    subject = selectedSubject,
+    sort = sortBy,
+    order = sortingOrder,
+    page = pageNumber,
+  }) => {
+    const params = new URLSearchParams();
+    if (course) params.set("course", course.label);
+    if (department) params.set("department", department.label);
+    if (subject) params.set("subject", subject.label);
+    if (sort) params.set("sortBy", sort.value);
+    if (order) params.set("sortOrder", order.value);
+    if (page !== undefined) params.set("pageNumber", page + 1);
+
+    const newUrl = `${location.pathname}?${params.toString()}`;
+    navigate(newUrl, { replace: true });
+  };
+
   useEffect(() => {
-    const fetchSubjects = async () => {
-      const subjectData = await AllSubjectsData();
+    if (!selectedCourse) return;
 
-      const uniqueCourses = [
-        ...new Set(subjectData.map((item) => item.courseName)),
-      ].map((course) => ({
-        label: course,
-        value: course,
-      }));
-      setCourses(uniqueCourses);
+    const fetchNotes = async () => {
+      const params = new URLSearchParams();
+      params.append("courseName", selectedCourse.label);
+      if (selectedDepartment) params.append("departmentName", selectedDepartment.label);
+      if (selectedSubject) params.append("subjectName", selectedSubject.label);
+      params.append("pageNumber", pageNumber);
+      params.append("sortBy", sortBy.value);
+      params.append("sortingOrder", sortingOrder.value);
 
-      const uniqueDepartments = [
-        ...new Set(subjectData.map((item) => item.departmentName)),
-      ].map((dept) => ({
-        label: dept,
-        value: dept,
-      }));
-      setDepartments(uniqueDepartments);
+      try {
+        setLoading(true);
+        setNotes([]);
 
-      const uniqueSubjects = [
-        ...new Set(subjectData.map((item) => item.subjectName)),
-      ].map((subjectName) => {
-        const sub = subjectData.find(
-          (item) => item.subjectName === subjectName
+        const res = await apiClient.get(
+          `${backendUrl}/${resourceType}/all?${params.toString()}`
         );
-        return {
-          label: subjectName,
-          value: sub.subjectCode,
-        };
-      });
-      setSubjects(uniqueSubjects);
+
+        const fetchedNotes = Array.isArray(res.data.content) ? res.data.content : [];
+        setNotes(fetchedNotes);
+        setTotalPages(res.data.totalPages);
+      } catch (error) {
+        console.error("Fetch error:", error.message);
+        toast.error("Something went wrong");
+      } finally {
+        setLoading(false);
+      }
     };
 
-    fetchSubjects();
-  }, []);
+    fetchNotes();
+  }, [
+    pageNumber,
+    selectedCourse,
+    selectedDepartment,
+    selectedSubject,
+    sortBy,
+    sortingOrder,
+  ]);
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
-
-    if (!selectedCourse) {
-      toast.warning("Please select a course");
-      return;
-    }
-
-    const params = new URLSearchParams();
-    params.append("courseName", selectedCourse.label);
-
-    if (selectedDepartment) {
-      params.append("departmentName", selectedDepartment.label);
-    }
-
-    if (selectedSubject) {
-      params.append("subjectName", selectedSubject.label);
-    }
-
-    try {
-      const res = await apiClient.get(
-        `${backendUrl}/${resourceType}/all?${params.toString()}`
-      );
-      console.log("Fetched Notes:", res.data);
-
-      const fetchedNotes = Array.isArray(res.data.content)
-        ? res.data.content
-        : [];
-
-      if (fetchedNotes.length === 0) {
-        toast.info("No notes found for selected filters");
-      }
-
-      setNotes(fetchedNotes);
-    } catch (error) {
-      console.error("Failed to fetch notes:", error.message);
-      toast.error("Failed to fetch notes");
-    }
-  };
+  // Dynamic sorting options based on resourceType
+  const sortingOptions = resourceType === "notes"
+    ? [
+        { label: "ID", value: "id" },
+        { label: "Topic Name", value: "topicName" },
+        { label: "Upload Date", value: "uploadDateTime" },
+      ]
+    : [
+        { label: "ID", value: "id" },
+        { label: "Year", value: "year" },
+        { label: "Upload Date", value: "uploadDateTime" },
+      ];
 
   return (
     isAuthenticated && (
       <div className="w-full min-h-screen flex">
         <form
-          onSubmit={handleSearch}
+          onSubmit={(e) => {
+            e.preventDefault();
+            setPageNumber(0);
+          }}
           className="w-[25%] bg-[#343E4F] flex flex-col space-y-5 pt-10 px-2"
         >
-          {/* Courses dropdown */}
-          <div>
+          <fieldset className="border border-white p-2">
+            <legend className="text-white font-semibold">Course</legend>
             <Select
               options={courses}
               value={selectedCourse}
-              onChange={setSelectedCourse}
+              onChange={(val) => {
+                setSelectedCourse(val);
+                updateURL({ course: val });
+              }}
               placeholder="Select Course"
               className="text-black"
               required
             />
-          </div>
+          </fieldset>
 
-          {/* Department dropdown */}
-          <div>
+          <fieldset className="border border-white p-2">
+            <legend className="text-white font-semibold">Department</legend>
             <Select
               options={departments}
               value={selectedDepartment}
-              onChange={setSelectedDepartment}
+              onChange={(val) => {
+                setSelectedDepartment(val);
+                updateURL({ department: val });
+              }}
               placeholder="Select Department"
               className="text-black"
+              isClearable
             />
-          </div>
+          </fieldset>
 
-          {/* Subject dropdown */}
-          <div>
+          <fieldset className="border border-white p-2 rounded-md">
+            <legend className="text-white font-semibold">Subject</legend>
             <Select
               options={subjects}
               value={selectedSubject}
-              onChange={setSelectedSubject}
+              onChange={(val) => {
+                setSelectedSubject(val);
+                updateURL({ subject: val });
+              }}
               placeholder="Select Subject"
               className="text-black"
+              isClearable
             />
-          </div>
+          </fieldset>
 
-          <button className="w-full p-2 bg-white text-btngreen rounded-full text-xl font-semibold hover:bg-btngreen hover:text-whitee">
-            Search
-          </button>
+          <fieldset className="border border-white p-2">
+            <legend className="text-white font-semibold">Sorting By</legend>
+            <Select
+              options={sortingOptions}
+              value={sortBy}
+              onChange={(val) => {
+                setSortBy(val);
+                updateURL({ sort: val });
+              }}
+              placeholder="Sort By"
+              className="text-black"
+            />
+          </fieldset>
+
+          <fieldset className="border border-white p-2">
+            <legend className="text-white font-semibold">Sorting Order</legend>
+            <Select
+              options={[
+                { label: "Ascending", value: "ASC" },
+                { label: "Descending", value: "DESC" },
+              ]}
+              value={sortingOrder}
+              onChange={(val) => {
+                setSortingOrder(val);
+                updateURL({ order: val });
+              }}
+              placeholder="Sort Order"
+              className="text-black"
+            />
+          </fieldset>
         </form>
 
-        {/* Right Part */}
-        <div className="bg-darkbg w-full flex p-6 overflow-y-auto">
-          {notes.length > 0 ? (
-            <div className="flex flex-wrap gap-6 h-fit">
-              {notes.map((note, index) => (
-                <NoteCard
-                  key={note.id || index}
-                  id={note.id || index}
-                  title={note.topicName}
-                  year={note.year}
-                  subject={note.subjectName}
-                  userName={note.sharedBy}
-                  noteImage={note.noteImage}
-                  userImage={note.userImage}
-                  uploadDate={formatDate(note.uploadDateTime)}
-                  downloadLink={`${backendUrl}/${resourceType}/download/${note.id}`}
-                />
-              
-              ))}
+        {/* Notes Display */}
+        <div className="bg-darkbg w-full flex flex-col p-6 overflow-y-auto">
+          {loading ? (
+            <div className="flex items-center justify-center w-full h-full">
+              <Circles height="80" width="80" color="#00BFFF" ariaLabel="loading" />
             </div>
+          ) : notes.length > 0 ? (
+            <>
+              <div className="flex flex-wrap gap-6 h-fit">
+                {notes.map((note, index) => (
+                  <NoteCard
+                    key={note.id || index}
+                    id={note.id || index}
+                    title={note.topicName}
+                    year={note.year}
+                    subject={note.subjectName}
+                    userName={note.sharedBy}
+                    noteImage={note.noteImage}
+                    userImage={note.userImage}
+                    uploadDate={formatDate(note.uploadDateTime)}
+                    downloadLink={`${backendUrl}/${resourceType}/download/${note.id}`}
+                  />
+                ))}
+              </div>
+
+              <div className="flex gap-x-4 justify-center items-center pt-10">
+                <button
+                  onClick={() => setPageNumber((prev) => Math.max(prev - 1, 0))}
+                  disabled={pageNumber === 0}
+                  className="bg-btngreen px-4 py-2 rounded text-white disabled:opacity-50"
+                >
+                  Previous
+                </button>
+
+                <span className="text-white font-semibold">
+                  Page {pageNumber + 1}
+                </span>
+
+                <button
+                  onClick={() =>
+                    setPageNumber((prev) => Math.min(prev + 1, totalPages - 1))
+                  }
+                  disabled={pageNumber === totalPages - 1}
+                  className="bg-btngreen px-4 py-2 rounded text-white disabled:opacity-50"
+                >
+                  Next
+                </button>
+              </div>
+            </>
           ) : (
             <div className="flex flex-col items-center justify-center h-full space-y-5">
-              <img
-                src="/amico.png"
-                alt="Search Illustration"
-                className="w-[450px]"
-              />
+              <img src="/amico.png" alt="Search Illustration" className="w-[450px]" />
               <p className="text-white font-semibold text-3xl text-center">
-                <span className="text-btngreen">Search</span> Your Requirement{" "}
-                <br /> in quick and simple words
+                <span className="text-btngreen">Search</span> Your Requirement <br />
+                in quick and simple words
               </p>
             </div>
           )}

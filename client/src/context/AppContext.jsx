@@ -1,8 +1,7 @@
-import { createContext, useContext, useState, useEffect} from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-
 
 export const AppContext = createContext();
 
@@ -11,7 +10,9 @@ export const AppProvider = ({ children }) => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
-
+  const [courses, setCourses] = useState([]);
+  const [departments, setDepartments] = useState([]);
+  const [subjects, setSubjects] = useState([]);
 
   const apiClient = axios.create({
     baseURL: backendUrl,
@@ -30,7 +31,6 @@ export const AppProvider = ({ children }) => {
     };
     checkAuth();
   }, []);
-  
 
   let isRefreshing = false;
 
@@ -72,7 +72,6 @@ export const AppProvider = ({ children }) => {
     }
   );
 
-
   // navbar btn swap function
   const login = async () => {
     try {
@@ -90,7 +89,7 @@ export const AppProvider = ({ children }) => {
     try {
       await apiClient.post(`${backendUrl}/user/logout`);
       setIsAuthenticated(false);
-      toast.success('Logout Successful');
+      toast.success("Logout Successful");
       navigate("/login");
     } catch (error) {
       console.error("Logout failed:", error);
@@ -108,39 +107,61 @@ export const AppProvider = ({ children }) => {
       console.error("Error fetching user details:", error);
     }
   };
-  
 
   // All Subjects
   const AllSubjectsData = async () => {
     try {
-      const response = await axios.get(`${backendUrl}/public/get-subject-structure`);
+      const response = await axios.get(
+        `${backendUrl}/public/get-subject-structure`
+      );
       return response.data;
     } catch (error) {
       console.error("Error fetching subjects:", error);
       return [];
     }
   };
-  
 
+  // Remove the duplicated data
+  const fetchSubjects = async () => {
+    const subjectData = await AllSubjectsData();
 
+    const uniqueCourses = [
+      ...new Set(subjectData.map((item) => item.courseName)),
+    ].map((course) => ({ label: course, value: course }));
+    setCourses(uniqueCourses);
+
+    const uniqueDepartments = [
+      ...new Set(subjectData.map((item) => item.departmentName)),
+    ].map((dept) => ({ label: dept, value: dept }));
+    setDepartments(uniqueDepartments);
+
+    const uniqueSubjects = [
+      ...new Set(subjectData.map((item) => item.subjectName)),
+    ].map((subjectName) => {
+      const sub = subjectData.find((item) => item.subjectName === subjectName);
+      return { label: subjectName, value: sub.subjectCode };
+    });
+    setSubjects(uniqueSubjects);
+  };
+
+  useEffect(() => {
+    fetchSubjects();
+  }, []);
 
   const value = {
     backendUrl,
     apiClient,
     login,
-    logout, 
+    logout,
     isAuthenticated,
-    AllSubjectsData,
     userData,
     userInfo,
+    courses,
+    departments,
+    subjects,
   };
-  
 
-  return (
-    <AppContext.Provider value={value}>
-      {children}
-    </AppContext.Provider>
-  );
+  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
 
 export const useAppContext = () => useContext(AppContext);
