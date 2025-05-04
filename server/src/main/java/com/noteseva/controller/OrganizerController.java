@@ -56,7 +56,7 @@ public class OrganizerController {
             @RequestParam(required = false) String departmentName,
             @RequestParam(required = false) String subjectName,
             @RequestParam(required = false, defaultValue = "0") int pageNumber,
-            @RequestParam(required = false, defaultValue = "12") int pageSize,
+            @RequestParam(required = false, defaultValue = "8") int pageSize,
             @RequestParam(required = false, defaultValue = "id") String sortBy,
             @RequestParam(required = false, defaultValue = "ASC") String sortingOrder) {
         try {

@@ -1,13 +1,10 @@
 package com.noteseva.service;
 
 import com.noteseva.DTO.UpdateUserDTO;
-import com.noteseva.model.Role;
+import com.noteseva.constants.Role;
 import com.noteseva.model.Users;
 import com.noteseva.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -24,9 +21,6 @@ public class UserService {
 
     @Autowired
     UserRepository userRepository;
-
-    @Autowired
-    AuthenticationManager authenticationManager;
 
     @Autowired
     UtilityService utilityService;
@@ -52,18 +46,6 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public boolean verify(Users user) {
-        Authentication authentication =
-                authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(
-                                user.getUsername(),
-                                user.getPassword()
-                        )
-                );
-        return authentication.isAuthenticated();
-
-    }
-
     public Users setRefreshTokenAndLastLoginTime(String username, String refreshToken) {
         Users user = findByUsername(username);
         user.setRefreshToken(passwordEncoder.encode(refreshToken));
@@ -71,10 +53,10 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public Users deleteRefreshToken(String username) {
+    public void deleteRefreshToken(String username) {
         Users user = findByUsername(username);
         user.setRefreshToken(null);
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
     public Users resetPassword(Users user, String newPassword) {

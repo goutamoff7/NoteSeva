@@ -1,15 +1,10 @@
 package com.noteseva.DTO;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
+
 import java.time.LocalDateTime;
 
-@Component
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class PYQDTO {
 
     private Integer id;
@@ -30,6 +25,8 @@ public class PYQDTO {
     private LocalDateTime uploadDateTime;
 
     private String sharedBy;
+
+    private String imageUrl;
 
     //file handling
     private String fileName;

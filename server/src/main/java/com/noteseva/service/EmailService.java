@@ -15,12 +15,6 @@ public class EmailService {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    @Autowired
-    private OTPService otpService;
-
-    @Autowired
-    private UserRepository userRepo;
-
     private static final String fromMail = "noteseva1308@gmail.com";
 
     @Async
@@ -109,26 +103,6 @@ public class EmailService {
         }
     }
 
-    @Async
-    public void alertEmail(String email,String name) {
-        try {
-            MimeMessage message = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-
-            String otp = otpService.generateOTP(email);
-
-            helper.setTo(email);
-            helper.setSubject(alterEmailSubject());
-            helper.setText(alterEmailBody(otp, name), true);  // 'true' enables HTML rendering
-            helper.setFrom(fromMail);
-
-            javaMailSender.send(message);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            throw new EmailSendingException("Failed to send Welcome email");
-        }
-    }
-
     public String alterEmailBody(String otp, String name) {
         return "<div style='font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;'>"
                 + "<h2 style='color: #d63031;'>⚠ Password Reset Attempt ⚠</h2>"
@@ -144,7 +118,6 @@ public class EmailService {
                 + "</div>";
     }
 
-    public String alterEmailSubject() {
-        return "🔐 Password Reset Alert – Your OTP is on the Way!";
+    public void sendQueryEmail(String email, String firstName) {
     }
 }

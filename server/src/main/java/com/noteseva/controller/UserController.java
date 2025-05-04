@@ -67,30 +67,6 @@ public class UserController {
         }
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity<?> logout() {
-        try {
-            String username = SecurityContextHolder
-                    .getContext().getAuthentication().getName();
-            Users savedUser = userService.deleteRefreshToken(username);
-            if (savedUser != null) {
-                ResponseCookie accessTokenCookie = utilityService.getAccessTokenCookie();
-                ResponseCookie refreshTokenCookie = utilityService.getRefreshTokenCookie();
-
-                HttpHeaders headers = new HttpHeaders();
-                headers.add(HttpHeaders.SET_COOKIE, accessTokenCookie.toString());
-                headers.add(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
-
-                return new ResponseEntity<>("Logout Successfully", headers, HttpStatus.OK);
-            }
-            return new ResponseEntity<>("Logout Failed", HttpStatus.SERVICE_UNAVAILABLE);
-        } catch (Exception e) {
-            log.error(e.toString());
-            return new ResponseEntity<>("Something Went Wrong!!",
-                    HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     @GetMapping("/get-user-details")
     public ResponseEntity<?> getUserDetails(){
         try{

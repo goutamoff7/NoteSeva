@@ -55,7 +55,7 @@ public class NotesController {
             @RequestParam(required = false) String departmentName,
             @RequestParam(required = false) String subjectName,
             @RequestParam(required = false, defaultValue = "0") int pageNumber,
-            @RequestParam(required = false, defaultValue = "12") int pageSize,
+            @RequestParam(required = false, defaultValue = "8") int pageSize,
             @RequestParam(required = false, defaultValue = "id") String sortBy,
             @RequestParam(required = false, defaultValue = "ASC") String sortingOrder) {
         try {
@@ -133,10 +133,12 @@ public class NotesController {
         }
     }
 
-    //localhost:8080/notes/download/1
-    @Operation(summary = "Download notes by ID")
-    @GetMapping("/download/{id}")
-    public ResponseEntity<?> downloadNotes(@PathVariable Integer id) {
+    //localhost:8080/notes/get/1?option=view
+    //localhost:8080/notes/get/1?option=download
+    @Operation(summary = "View or Download notes by ID")
+    @GetMapping("/get/{id}")
+    public ResponseEntity<?> downloadNotes(@PathVariable Integer id,
+                                           @RequestParam(required = false, defaultValue = "view") String option) {
         try {
             Notes notes = notesService.getNotes(id);
             if (notes != null) {
@@ -145,7 +147,8 @@ public class NotesController {
                 byte[] fileData = notes.getFileData();
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.valueOf(fileType));
-                headers.setContentDispositionFormData("attachment", fileName);
+                if(option.equals("download"))
+                    headers.setContentDispositionFormData("attachment", fileName);
                 return new ResponseEntity<>(fileData, headers, HttpStatus.OK);
             }
             return new ResponseEntity<>("May be this notes is not available!!",

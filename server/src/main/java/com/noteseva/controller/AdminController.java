@@ -1,5 +1,6 @@
 package com.noteseva.controller;
 
+import com.noteseva.DTO.UserSummaryDTO;
 import com.noteseva.DTO.UsersDTO;
 import com.noteseva.Pagination.PageResponse;
 import com.noteseva.model.Users;
@@ -72,16 +73,16 @@ public class AdminController {
     @GetMapping("/get-all-user")
     public ResponseEntity<?> getAllUser(
             @RequestParam(required = false,defaultValue = "0") int pageNumber,
-            @RequestParam(required = false,defaultValue = "12") int pageSize,
+            @RequestParam(required = false,defaultValue = "8") int pageSize,
             @RequestParam(required = false,defaultValue = "id") String sortBy,
             @RequestParam(required = false,defaultValue = "ASC") String sortingOrder) {
         try {
-            PageResponse<Users> allUser = adminService.getAllUser(
-                    pageNumber,pageSize,sortBy,sortingOrder);
-            if (allUser != null)
-                return new ResponseEntity<>(allUser, HttpStatus.OK);
-            return new ResponseEntity<>("No user available",
-                    HttpStatus.NOT_FOUND);
+            PageResponse<UserSummaryDTO> userSummaryDTOPageResponse = adminService
+                    .getAllUser(pageNumber, pageSize, sortBy, sortingOrder);
+            if (userSummaryDTOPageResponse == null)
+                return new ResponseEntity<>("May be Users are not available",
+                        HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(userSummaryDTOPageResponse, HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.toString());
             return new ResponseEntity<>("Something Went Wrong!!",

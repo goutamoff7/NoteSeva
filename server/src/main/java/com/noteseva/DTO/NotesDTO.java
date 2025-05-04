@@ -1,16 +1,11 @@
 package com.noteseva.DTO;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
+
 import java.time.LocalDateTime;
 
-@Component
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class NotesDTO {
 
     private Integer id;
@@ -32,6 +27,8 @@ public class NotesDTO {
     private LocalDateTime uploadDateTime;
 
     private String sharedBy;
+
+    private String imageUrl;
 
     //file handling
     private String fileName;

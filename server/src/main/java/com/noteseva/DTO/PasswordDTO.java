@@ -3,15 +3,9 @@ package com.noteseva.DTO;
 import com.noteseva.validation.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
 
-@Component
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class PasswordDTO {
 
     @NotBlank(message = "Please enter a valid email",
