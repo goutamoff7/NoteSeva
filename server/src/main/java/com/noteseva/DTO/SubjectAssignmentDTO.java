@@ -2,15 +2,9 @@ package com.noteseva.DTO;
 
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
 
-@Component
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class SubjectAssignmentDTO {
 
     private Integer id;

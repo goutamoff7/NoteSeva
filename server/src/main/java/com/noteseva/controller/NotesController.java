@@ -4,10 +4,7 @@ import com.noteseva.DTO.NotesDTO;
 import com.noteseva.Pagination.PageResponse;
 import com.noteseva.model.FileHash;
 import com.noteseva.model.Notes;
-import com.noteseva.service.DTOService;
-import com.noteseva.service.FileHashService;
-import com.noteseva.service.NotesService;
-import com.noteseva.service.UtilityService;
+import com.noteseva.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
@@ -18,7 +15,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.*;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -41,6 +37,9 @@ public class NotesController {
     @Autowired
     DTOService dtoService;
 
+    @Autowired
+    UserService userService;
+
     //localhost:8080/notes/all?
     //courseName=BTECH &
     //departmentName=CSE &
@@ -56,7 +55,7 @@ public class NotesController {
             @RequestParam(required = false) String departmentName,
             @RequestParam(required = false) String subjectName,
             @RequestParam(required = false, defaultValue = "0") int pageNumber,
-            @RequestParam(required = false, defaultValue = "12") int pageSize,
+            @RequestParam(required = false, defaultValue = "8") int pageSize,
             @RequestParam(required = false, defaultValue = "id") String sortBy,
             @RequestParam(required = false, defaultValue = "ASC") String sortingOrder) {
         try {
@@ -115,7 +114,7 @@ public class NotesController {
             Notes notes = dtoService.getNotes(notesDTO);
 
             //Getting uploader name
-            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            String username = userService.getCurrentUsername();
 
             // Process and save notes and fileDataHash
             Notes savedNotes = notesService.uploadNotes(notes, file, username);
@@ -134,10 +133,12 @@ public class NotesController {
         }
     }
 
-    //localhost:8080/notes/download/1
-    @Operation(summary = "Download notes by ID")
-    @GetMapping("/download/{id}")
-    public ResponseEntity<?> downloadNotes(@PathVariable Integer id) {
+    //localhost:8080/notes/get/1?option=view
+    //localhost:8080/notes/get/1?option=download
+    @Operation(summary = "View or Download notes by ID")
+    @GetMapping("/get/{id}")
+    public ResponseEntity<?> downloadNotes(@PathVariable Integer id,
+                                           @RequestParam(required = false, defaultValue = "view") String option) {
         try {
             Notes notes = notesService.getNotes(id);
             if (notes != null) {
@@ -146,7 +147,8 @@ public class NotesController {
                 byte[] fileData = notes.getFileData();
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.valueOf(fileType));
-                headers.setContentDispositionFormData("attachment", fileName);
+                if(option.equals("download"))
+                    headers.setContentDispositionFormData("attachment", fileName);
                 return new ResponseEntity<>(fileData, headers, HttpStatus.OK);
             }
             return new ResponseEntity<>("May be this notes is not available!!",

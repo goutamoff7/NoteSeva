@@ -61,6 +61,7 @@ public class DTOService {
         notesDTO.setTopicName(notes.getTopicName());
         notesDTO.setUploadDateTime(notes.getUploadDateTime());
         notesDTO.setSharedBy(notes.getUser().getName());
+        notesDTO.setImageUrl(notes.getUser().getImageUrl());
         notesDTO.setFileName(notes.getFileName());
         notesDTO.setFileType(notes.getFileType());
         return notesDTO;
@@ -91,6 +92,7 @@ public class DTOService {
         organizerDTO.setSubjectName(organizer.getSubjectAssignment().getSubject().getSubjectName());  // Extract Subject Name
         organizerDTO.setUploadDateTime(organizer.getUploadDateTime());
         organizerDTO.setSharedBy(organizer.getUser().getName());
+        organizerDTO.setImageUrl(organizer.getUser().getImageUrl());
         organizerDTO.setFileName(organizer.getFileName());
         organizerDTO.setFileType(organizer.getFileType());
         return organizerDTO;
@@ -121,6 +123,7 @@ public class DTOService {
         pyqDTO.setSubjectName(pyq.getSubjectAssignment().getSubject().getSubjectName());  // Extract Subject Name
         pyqDTO.setUploadDateTime(pyq.getUploadDateTime());
         pyqDTO.setSharedBy(pyq.getUser().getName());
+        pyqDTO.setImageUrl(pyq.getUser().getImageUrl());
         pyqDTO.setFileName(pyq.getFileName());
         pyqDTO.setFileType(pyq.getFileType());
         return pyqDTO;
@@ -170,6 +173,28 @@ public class DTOService {
         subjectAssignmentDTO.setSubjectName(subjectAssignment.getSubject().getSubjectName()); // Extract Subject Name
         subjectAssignmentDTO.setSubjectCode(subjectAssignment.getSubject().getSubjectCode()); // Extract Subject Code
         return subjectAssignmentDTO;
+    }
+
+    public UserSummaryDTO convertToUserSummaryDTO(Users user) {
+        UserSummaryDTO userSummaryDTO = new UserSummaryDTO();
+        userSummaryDTO.setName(user.getName());
+        userSummaryDTO.setUsername(user.getUsername());
+        userSummaryDTO.setGender(user.getGender());
+        userSummaryDTO.setCollegeName(user.getCollegeName());
+        userSummaryDTO.setImageUrl(user.getImageUrl());
+        userSummaryDTO.setRegisteredAt(user.getRegisteredAt());
+        userSummaryDTO.setLastLoginAt(user.getLastLoginAt());
+        return userSummaryDTO;
+    }
+
+    public Query getQuery(QueryDTO queryDTO) {
+        Query query = new Query();
+        query.setFirstName(queryDTO.getFirstName());
+        query.setLastName(queryDTO.getLastName());
+        query.setEmail(queryDTO.getEmail());
+        query.setPhoneNumber(queryDTO.getPhoneNumber());
+        query.setQuery(queryDTO.getQuery());
+        return query;
     }
 }
 

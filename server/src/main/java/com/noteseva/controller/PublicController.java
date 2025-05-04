@@ -1,7 +1,9 @@
 package com.noteseva.controller;
 
+import com.noteseva.DTO.QueryDTO;
 import com.noteseva.DTO.PasswordDTO;
 import com.noteseva.DTO.UsersDTO;
+import com.noteseva.model.Query;
 import com.noteseva.model.TokenResponse;
 import com.noteseva.model.Users;
 import com.noteseva.service.*;
@@ -9,6 +11,7 @@ import com.noteseva.validation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -41,10 +44,16 @@ public class PublicController {
     UserService userService;
 
     @Autowired
+    AuthenticationService authenticationService;
+
+    @Autowired
     RedisService redisService;
 
     @Autowired
     JwtService jwtService;
+
+    @Autowired
+    QueryService queryService;
 
     //localhost:8080/public/generate-otp
     @Operation(summary = "Generate OTP for Email validation")
@@ -107,7 +116,6 @@ public class PublicController {
             return new ResponseEntity<>("Something Went Wrong!!",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
     //localhost:8080/public/login
@@ -116,7 +124,7 @@ public class PublicController {
     public ResponseEntity<?> login(@Validated(LoginValidation.class) @RequestBody UsersDTO usersDTO) {
         try {
             Users user = dtoService.getUser(usersDTO);
-            if (!userService.verify(user))
+            if (!authenticationService.verify(user))
                 return new ResponseEntity<>("Invalid Credentials!", HttpStatus.UNAUTHORIZED);
             String username = user.getUsername();
             String accessToken = jwtService.generateAccessToken(username);
@@ -216,6 +224,27 @@ public class PublicController {
             return new ResponseEntity<>("User is authenticated", HttpStatus.OK);
         }
         return new ResponseEntity<>("User is not authenticated", HttpStatus.UNAUTHORIZED);
+    }
+
+    //localhost:8080/public/contact-us
+    @Operation(summary = "Contact Us")
+    @PostMapping("/contact-us")
+    public ResponseEntity<?> raiseQuery(@Valid @RequestBody QueryDTO queryDTO) {
+        try {
+            Query query = dtoService.getQuery(queryDTO);
+            Query savedQuery = queryService.save(query);
+            if (savedQuery != null) {
+                emailService.sendQueryEmail(savedQuery.getEmail(),
+                        savedQuery.getFirstName());
+                return new ResponseEntity<>(savedQuery, HttpStatus.CREATED);
+            } else
+                return new ResponseEntity<>("Failed to Raise Query", HttpStatus.SERVICE_UNAVAILABLE);
+        } catch (Exception e) {
+            log.error(e.toString());
+            return new ResponseEntity<>("Something Went Wrong!!",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 }
 

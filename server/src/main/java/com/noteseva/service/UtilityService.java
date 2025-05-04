@@ -1,17 +1,16 @@
 package com.noteseva.service;
 
-import com.noteseva.model.TokenExpiration;
-import com.noteseva.repository.FileHashRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.noteseva.constants.TokenExpiration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+
 import java.time.Duration;
-import java.util.Base64;
 
 @Service
 public class UtilityService {
@@ -51,27 +50,8 @@ public class UtilityService {
                 .build();
     }
 
-    public ResponseCookie getAccessTokenCookie(){
-        return  ResponseCookie
-                .from("access-token","")
-                .httpOnly(true)
-                .secure(false)
-                //(false) Allows the cookie to be sent over both HTTP and HTTPS.
-                //Ensures cookies are sent only over HTTPS (recommended for production).
-                .path("/")
-                .maxAge(0)
-                .build();
-    }
-
-    public ResponseCookie getRefreshTokenCookie(){
-        return  ResponseCookie
-                .from("refresh-token", "")
-                .httpOnly(true)
-                .secure(false)
-                //(false) Allows the cookie to be sent over both HTTP and HTTPS.
-                //Ensures cookies are sent only over HTTPS (recommended for production).
-                .path("/")
-                .maxAge(0)
-                .build();
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(12);
     }
 }

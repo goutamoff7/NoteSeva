@@ -1,13 +1,11 @@
 package com.noteseva.service;
 
-import com.noteseva.model.TokenExpiration;
-import com.noteseva.model.TokenResponse;
+import com.noteseva.constants.TokenExpiration;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import javax.crypto.KeyGenerator;
@@ -20,9 +18,6 @@ import java.util.function.Function;
 @Service
 public class JwtService {
     private String secretKey;
-
-    @Autowired
-    private TokenResponse tokenResponse;
 
     public JwtService() {
         try {

@@ -1,7 +1,8 @@
 package com.noteseva.service;
 
+import com.noteseva.DTO.UserSummaryDTO;
 import com.noteseva.Pagination.PageResponse;
-import com.noteseva.model.Role;
+import com.noteseva.constants.Role;
 import com.noteseva.model.Users;
 import com.noteseva.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class AdminService {
@@ -24,6 +27,9 @@ public class AdminService {
     @Autowired
     UtilityService utilityService;
 
+    @Autowired
+    DTOService dtoService;
+
     public Users registerAdmin(Users user) {
         user.setUsername(utilityService.extractUsernameFromEmail(user.getEmail()));  // username = substring of email id, before @ symbol
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -31,7 +37,7 @@ public class AdminService {
         return userRepository.save(user);
     }
 
-    public PageResponse<Users> getAllUser(
+    public PageResponse<UserSummaryDTO> getAllUser(
             int pageNumber,
             int pageSize,
             String sortBy,
@@ -40,6 +46,13 @@ public class AdminService {
                 Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
         Page<Users> pageUsers = userRepository.findAll(pageable);
-        return PageResponse.getPageResponse(pageUsers);
+        if(!pageUsers.getContent().isEmpty()) {
+            List<UserSummaryDTO> userSummaryDTOList = pageUsers
+                    .getContent().stream()
+                    .map(user -> dtoService.convertToUserSummaryDTO(user))
+                    .toList();
+            return PageResponse.getPageResponseDTO(pageUsers, userSummaryDTOList);
+        }
+        return null;
     }
 }

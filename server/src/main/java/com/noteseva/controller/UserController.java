@@ -45,7 +45,7 @@ public class UserController {
                 return new ResponseEntity<>("Old Password and New Password must be different", HttpStatus.BAD_REQUEST);
             else if (!newPassword.equals(confirmPassword))
                 return new ResponseEntity<>("New Password and Confirm Password should match", HttpStatus.BAD_REQUEST);
-            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            String username = userService.getCurrentUsername();
             Users savedUser = userService.changePassword(
                     username,
                     passwordDTO.getOldPassword(),
@@ -67,53 +67,34 @@ public class UserController {
         }
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity<?> logout() {
-        try {
-            String username = SecurityContextHolder
-                    .getContext().getAuthentication().getName();
-            Users savedUser = userService.deleteRefreshToken(username);
-            if (savedUser != null) {
-                ResponseCookie accessTokenCookie = utilityService.getAccessTokenCookie();
-                ResponseCookie refreshTokenCookie = utilityService.getRefreshTokenCookie();
-
-                HttpHeaders headers = new HttpHeaders();
-                headers.add(HttpHeaders.SET_COOKIE, accessTokenCookie.toString());
-                headers.add(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
-
-                return new ResponseEntity<>("Logout Successfully", headers, HttpStatus.OK);
-            }
-            return new ResponseEntity<>("Logout Failed", HttpStatus.SERVICE_UNAVAILABLE);
-        } catch (Exception e) {
-            log.error(e.toString());
-            return new ResponseEntity<>("Something Went Wrong!!",
-                    HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     @GetMapping("/get-user-details")
     public ResponseEntity<?> getUserDetails(){
         try{
-            Users users=userService.getUserDetails();
-            if(users!=null)
-                return new ResponseEntity<>(users,HttpStatus.OK);
-            return new ResponseEntity<>("Something went wrong",HttpStatus.NOT_FOUND);
+            String username =userService.getCurrentUsername();
+            Users user = userService.findByUsername(username);
+            if(user!=null)
+                return new ResponseEntity<>(user,HttpStatus.OK);
+            return new ResponseEntity<>("User Not Found",HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new ResponseEntity<>("Some internal issues",HttpStatus.INTERNAL_SERVER_ERROR);
+            log.error(e.toString());
+            return new ResponseEntity<>("Something Went Wrong!!"
+                    ,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PutMapping("/update-user-details")
     public ResponseEntity<?> updateUser(@RequestBody UpdateUserDTO updateUserDTO){
         try{
-            boolean record=userService.updateUser(updateUserDTO);
-            if(record)
-                return new ResponseEntity<>("Updated details are saved successfully",HttpStatus.OK);
-            return new ResponseEntity<>("Data is not saved successfully",HttpStatus.BAD_REQUEST);
+           Users user =userService.updateUser(updateUserDTO);
+            if(user!=null)
+                return new ResponseEntity<>("User Updated successfully",
+                        HttpStatus.OK);
+            return new ResponseEntity<>("User Update Failed",
+                    HttpStatus.SERVICE_UNAVAILABLE);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new ResponseEntity<>("Some internal problems",HttpStatus.INTERNAL_SERVER_ERROR);
+            log.error(e.toString());
+            return new ResponseEntity<>("Something Went Wrong!!",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

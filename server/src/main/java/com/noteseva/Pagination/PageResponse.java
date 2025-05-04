@@ -26,16 +26,5 @@ public class PageResponse<T> {
         pageResponse.setLastPage(page.isLast());
         return pageResponse;
     }
-
-    public static <T> PageResponse<T> getPageResponse(Page<T> page){
-        PageResponse<T> pageResponse = new PageResponse<>();
-        pageResponse.setContent(page.getContent());
-        pageResponse.setPageNumber(page.getNumber());
-        pageResponse.setPageSize(page.getSize());
-        pageResponse.setTotalElements(page.getTotalElements());
-        pageResponse.setTotalPages(page.getTotalPages());
-        pageResponse.setLastPage(page.isLast());
-        return pageResponse;
-    }
 }
 
