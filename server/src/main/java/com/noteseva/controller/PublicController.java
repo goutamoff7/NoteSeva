@@ -235,7 +235,7 @@ public class PublicController {
             Query savedQuery = queryService.save(query);
             if (savedQuery != null) {
                 emailService.sendQueryEmail(savedQuery.getEmail(),
-                        savedQuery.getFirstName());
+                        savedQuery.getFirstName(),savedQuery.getQuery());
                 return new ResponseEntity<>(savedQuery, HttpStatus.CREATED);
             } else
                 return new ResponseEntity<>("Failed to Raise Query", HttpStatus.SERVICE_UNAVAILABLE);
