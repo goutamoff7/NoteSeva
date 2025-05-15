@@ -135,10 +135,12 @@ public class OrganizerController {
         }
     }
 
-    //localhost:8080/organizer/download/1
-    @Operation(summary = "Download organizer by ID")
-    @GetMapping("/download/{id}")
-    public ResponseEntity<?> downloadNotes(@PathVariable Integer id) {
+    //localhost:8080/organizer/get/1?option=view
+    //localhost:8080/organizer/get/1?option=download
+    @Operation(summary = "View or Download organizer by ID")
+    @GetMapping("/get/{id}")
+    public ResponseEntity<?> getOrganizer(@PathVariable Integer id,
+                                          @RequestParam(required = false, defaultValue = "view") String option) {
         try {
             Organizer organizer = organizerService.getOrganizer(id);
             if (organizer != null) {
@@ -147,15 +149,16 @@ public class OrganizerController {
                 byte[] fileData = organizer.getFileData();
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.valueOf(fileType));
-                headers.setContentDispositionFormData("attachment", fileName);
+                if (option.equals("download")) {
+                    headers.setContentDispositionFormData("attachment", fileName);
+                }
                 return new ResponseEntity<>(fileData, headers, HttpStatus.OK);
             }
-            return new ResponseEntity<>("May be this Organizer is not available!!",
-                    HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Maybe this Organizer is not available!!", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             log.error(e.toString());
-            return new ResponseEntity<>("Something Went Wrong!!",
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Something Went Wrong!!", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 }

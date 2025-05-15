@@ -65,7 +65,7 @@ public class SecurityConfiguration {
                 .cors(Customizer.withDefaults())
                 .securityMatcher("/**")
                 .csrf(AbstractHttpConfigurer::disable)
-                .httpBasic(Customizer.withDefaults())
+                //.httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(
                                 "/public/**",
