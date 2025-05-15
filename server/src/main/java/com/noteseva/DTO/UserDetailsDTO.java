@@ -49,4 +49,8 @@ public class UserDetailsDTO {
     private Set<Organizer> organizer;
 
     private Set<PYQ> pyq;
+
+    private Set<Notes> bookmarkedNotes;
+    private Set<Organizer> bookmarkedOrganizer;
+    private Set<PYQ> bookmarkedPyq;
 }

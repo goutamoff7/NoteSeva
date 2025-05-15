@@ -6,6 +6,7 @@ import com.noteseva.constants.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -65,6 +66,7 @@ public class Users{
     private String refreshToken;
 
     //relationship
+
     @JsonIgnore
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
     private Set<Notes> notes;
@@ -76,5 +78,25 @@ public class Users{
     @JsonIgnore
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
     private Set<PYQ> pyq;
+
+    // Bookmark
+
+    @ManyToMany
+    @JoinTable(name = "user_bookmarked_notes",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "notes_id"))
+    private Set<Notes> bookmarkedNotes = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(name = "user_bookmarked_organizer",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "organizer_id"))
+    private Set<Organizer> bookmarkedOrganizer = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(name = "user_bookmarked_pyq",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "pyq_id"))
+    private Set<PYQ> bookmarkedPYQ = new HashSet<>();
 
 }
