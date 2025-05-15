@@ -2,7 +2,9 @@ package com.noteseva.controller;
 
 import com.noteseva.DTO.PasswordDTO;
 import com.noteseva.DTO.UpdateUserDTO;
+import com.noteseva.DTO.UserDetailsDTO;
 import com.noteseva.model.Users;
+import com.noteseva.service.DTOService;
 import com.noteseva.service.EmailService;
 import com.noteseva.service.UserService;
 import com.noteseva.service.UtilityService;
@@ -10,11 +12,8 @@ import com.noteseva.validation.ChangePasswordValidation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +31,9 @@ public class UserController {
 
     @Autowired
     UtilityService utilityService;
+
+    @Autowired
+    DTOService dtoService;
 
 
     @PutMapping("/change-password")
@@ -72,9 +74,10 @@ public class UserController {
         try{
             String username =userService.getCurrentUsername();
             Users user = userService.findByUsername(username);
-            if(user!=null)
-                return new ResponseEntity<>(user,HttpStatus.OK);
-            return new ResponseEntity<>("User Not Found",HttpStatus.NOT_FOUND);
+            if(user==null)
+                return new ResponseEntity<>("User Not Found",HttpStatus.NOT_FOUND);
+            UserDetailsDTO userDetailsDTO = dtoService.convertToUserDetailsDTO(user);
+            return new ResponseEntity<>(userDetailsDTO,HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.toString());
             return new ResponseEntity<>("Something Went Wrong!!"

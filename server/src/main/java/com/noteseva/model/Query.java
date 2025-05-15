@@ -2,12 +2,14 @@ package com.noteseva.model;
 
 import com.noteseva.constants.Status;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Data
 @Entity
+@Getter
+@Setter
 @Table(name="contact_us")
 public class Query {
 

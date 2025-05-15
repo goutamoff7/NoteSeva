@@ -1,7 +1,6 @@
 package com.noteseva.service;
 
 import com.noteseva.exception.EmailSendingException;
-import com.noteseva.repository.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;

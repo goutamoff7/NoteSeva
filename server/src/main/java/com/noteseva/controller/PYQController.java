@@ -15,7 +15,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -149,9 +148,8 @@ public class PYQController {
                 byte[] fileData = pyq.getFileData();
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.valueOf(fileType));
-                if (option.equals("download")) {
+                if (option.equals("download"))
                     headers.setContentDispositionFormData("attachment", fileName);
-                }
                 return new ResponseEntity<>(fileData, headers, HttpStatus.OK);
             }
             return new ResponseEntity<>("Maybe this PYQ is not available!!", HttpStatus.NOT_FOUND);
