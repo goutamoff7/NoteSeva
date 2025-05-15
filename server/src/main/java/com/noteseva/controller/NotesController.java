@@ -73,24 +73,6 @@ public class NotesController {
         }
     }
 
-    //localhost:8080/notes/1
-    @Operation(summary = "Fetch notes by ID")
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getNotes(@PathVariable Integer id) {
-        try {
-            Notes notes = notesService.getNotes(id);
-            if (notes != null)
-                return new ResponseEntity<>(dtoService.convertToNotesDTO(notes),
-                        HttpStatus.OK);
-            return new ResponseEntity<>("May be this notes is not available!!",
-                    HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            log.error(e.toString());
-            return new ResponseEntity<>("Something Went Wrong!!",
-                    HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     //localhost:8080/notes/upload
     @Operation(summary = "Upload notes")
     @Transactional

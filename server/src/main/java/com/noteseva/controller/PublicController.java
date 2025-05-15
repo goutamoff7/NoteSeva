@@ -162,16 +162,16 @@ public class PublicController {
         try {
             String email = passwordDTO.getEmail();
             String username = utilityService.extractUsernameFromEmail(email);
-            String password = passwordDTO.getNewPassword();
+            String newPassword = passwordDTO.getNewPassword();
             String confirmPassword = passwordDTO.getConfirmPassword();
-            if (!password.equals(confirmPassword))
+            if (!newPassword.equals(confirmPassword))
                 return new ResponseEntity<>("New Password and Confirm Password should match", HttpStatus.BAD_REQUEST);
             Users user = userService.findByUsername(username);
             if (user == null)
                 return new ResponseEntity<>("User not exist", HttpStatus.BAD_REQUEST);
             else if (!redisService.getAndDeleteEmailVerified(email))
                 return new ResponseEntity<>("Email Verification Required", HttpStatus.BAD_REQUEST);
-            Users savedUser = userService.resetPassword(user, passwordDTO.getNewPassword());
+            Users savedUser = userService.resetPassword(user,newPassword);
             if (savedUser != null) {
                 emailService.successfulPasswordChangingMail(email, savedUser.getName());
                 return new ResponseEntity<>("Password is changed successfully!!", HttpStatus.OK);

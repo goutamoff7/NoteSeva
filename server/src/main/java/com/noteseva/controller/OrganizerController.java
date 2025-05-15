@@ -73,24 +73,6 @@ public class OrganizerController {
         }
     }
 
-    //localhost:8080/organizer/1
-    @Operation(summary = "Fetch organizer by ID")
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getOrganizer(@PathVariable Integer id) {
-        try {
-            Organizer organizer = organizerService.getOrganizer(id);
-            if (organizer != null)
-                return new ResponseEntity<>(dtoService.convertToOrganizerDTO(organizer),
-                        HttpStatus.OK);
-            return new ResponseEntity<>("May be this Organizer is not available!!",
-                    HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            log.error(e.toString());
-            return new ResponseEntity<>("Something Went Wrong!!",
-                    HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     //localhost:8080/organizer/upload
     @Operation(summary = "Upload organizer")
     @Transactional

@@ -25,7 +25,6 @@ public class UserService {
     @Autowired
     UtilityService utilityService;
 
-
     public Users register(Users user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.ROLE_USER);

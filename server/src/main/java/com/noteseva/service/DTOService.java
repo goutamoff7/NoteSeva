@@ -216,6 +216,9 @@ public class DTOService {
         userDetailsDTO.setNotes(user.getNotes());
         userDetailsDTO.setOrganizer(user.getOrganizer());
         userDetailsDTO.setPyq(user.getPyq());
+        userDetailsDTO.setBookmarkedNotes(user.getBookmarkedNotes());
+        userDetailsDTO.setBookmarkedOrganizer(user.getBookmarkedOrganizer());
+        userDetailsDTO.setBookmarkedPyq(user.getBookmarkedPYQ());
         return userDetailsDTO;
     }
 }
