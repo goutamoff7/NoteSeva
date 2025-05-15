@@ -27,9 +27,13 @@ const LoginPage = () => {
       await login();
       navigate('/dashboard')
     } catch (error) {
-      toast.error("Login failed. Please check your credentials.");
+      toast.error(error.message || "Login failed. Please check your credentials.");
       console.error("Error:", error.message);
     }
+  };
+
+  const handleGoogleSignUp = () => {
+    window.location.href = `${backendUrl}/oauth2/authorization/google`;
   };
 
   return (
@@ -86,7 +90,8 @@ const LoginPage = () => {
         </form>
 
         <div className="flex justify-center">
-          <button className="mt-4 w-full flex justify-center items-center gap-2 bg-darkblack text-white p-3 rounded-lg">
+          <button onClick={handleGoogleSignUp}
+          className="mt-4 w-full flex justify-center items-center gap-2 bg-darkblack text-white p-3 rounded-lg">
             <FcGoogle className="w-[30px] h-[30px]" /> Google
           </button>
         </div>

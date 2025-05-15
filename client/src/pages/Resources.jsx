@@ -25,10 +25,17 @@ const Resources = () => {
   const navigate = useNavigate();
   const resourceType = location.pathname.split("/").pop();
 
-  const { backendUrl, apiClient, isAuthenticated, courses, departments, subjects } = useAppContext();
+  const {
+    backendUrl,
+    apiClient,
+    isAuthenticated,
+    courses,
+    departments,
+    subjects,
+  } = useAppContext();
   const { formatDate } = useAllContext();
 
-  // 🔁 Update URL based on current selections
+  // Update URL based on current selections
   const updateURL = ({
     course = selectedCourse,
     department = selectedDepartment,
@@ -58,6 +65,7 @@ const Resources = () => {
       if (selectedDepartment) params.append("departmentName", selectedDepartment.label);
       if (selectedSubject) params.append("subjectName", selectedSubject.label);
       params.append("pageNumber", pageNumber);
+      params.append("pageSize", 8);
       params.append("sortBy", sortBy.value);
       params.append("sortingOrder", sortingOrder.value);
 
@@ -69,12 +77,19 @@ const Resources = () => {
           `${backendUrl}/${resourceType}/all?${params.toString()}`
         );
 
-        const fetchedNotes = Array.isArray(res.data.content) ? res.data.content : [];
+        const fetchedNotes = Array.isArray(res.data.content)
+          ? res.data.content
+          : [];
         setNotes(fetchedNotes);
         setTotalPages(res.data.totalPages);
       } catch (error) {
         console.error("Fetch error:", error.message);
-        toast.error("Something went wrong");
+
+        if (error.response?.status === 404) {
+          toast.warning("No data found with the above filters");
+        } else {
+          toast.error(error.message || "Something went wrong");
+        }
       } finally {
         setLoading(false);
       }
@@ -91,17 +106,18 @@ const Resources = () => {
   ]);
 
   // Dynamic sorting options based on resourceType
-  const sortingOptions = resourceType === "notes"
-    ? [
-        { label: "ID", value: "id" },
-        { label: "Topic Name", value: "topicName" },
-        { label: "Upload Date", value: "uploadDateTime" },
-      ]
-    : [
-        { label: "ID", value: "id" },
-        { label: "Year", value: "year" },
-        { label: "Upload Date", value: "uploadDateTime" },
-      ];
+  const sortingOptions =
+    resourceType === "notes"
+      ? [
+          { label: "ID", value: "id" },
+          { label: "Topic Name", value: "topicName" },
+          { label: "Upload Date", value: "uploadDateTime" },
+        ]
+      : [
+          { label: "ID", value: "id" },
+          { label: "Year", value: "year" },
+          { label: "Upload Date", value: "uploadDateTime" },
+        ];
 
   return (
     isAuthenticated && (
@@ -113,7 +129,7 @@ const Resources = () => {
           }}
           className="w-[25%] bg-[#343E4F] flex flex-col space-y-5 pt-10 px-2"
         >
-          <fieldset className="border border-white p-2">
+          <fieldset className="border border-white p-2 rounded-md">
             <legend className="text-white font-semibold">Course</legend>
             <Select
               options={courses}
@@ -128,7 +144,7 @@ const Resources = () => {
             />
           </fieldset>
 
-          <fieldset className="border border-white p-2">
+          <fieldset className="border border-white p-2 rounded-md">
             <legend className="text-white font-semibold">Department</legend>
             <Select
               options={departments}
@@ -158,7 +174,7 @@ const Resources = () => {
             />
           </fieldset>
 
-          <fieldset className="border border-white p-2">
+          <fieldset className="border border-white p-2 rounded-md">
             <legend className="text-white font-semibold">Sorting By</legend>
             <Select
               options={sortingOptions}
@@ -172,7 +188,7 @@ const Resources = () => {
             />
           </fieldset>
 
-          <fieldset className="border border-white p-2">
+          <fieldset className="border border-white p-2 rounded-md">
             <legend className="text-white font-semibold">Sorting Order</legend>
             <Select
               options={[
@@ -194,7 +210,12 @@ const Resources = () => {
         <div className="bg-darkbg w-full flex flex-col p-6 overflow-y-auto">
           {loading ? (
             <div className="flex items-center justify-center w-full h-full">
-              <Circles height="80" width="80" color="#00BFFF" ariaLabel="loading" />
+              <Circles
+                height="80"
+                width="80"
+                color="#00BFFF"
+                ariaLabel="loading"
+              />
             </div>
           ) : notes.length > 0 ? (
             <>
@@ -208,16 +229,21 @@ const Resources = () => {
                     subject={note.subjectName}
                     userName={note.sharedBy}
                     noteImage={note.noteImage}
-                    userImage={note.userImage}
+                    userImage={note.imageUrl}
                     uploadDate={formatDate(note.uploadDateTime)}
-                    downloadLink={`${backendUrl}/${resourceType}/download/${note.id}`}
+                    viewLink={`${backendUrl}/${resourceType}/get/${note.id}?option=view`}
+                    downloadLink={`${backendUrl}/${resourceType}/get/${note.id}?option=download`}
                   />
                 ))}
               </div>
 
               <div className="flex gap-x-4 justify-center items-center pt-10">
                 <button
-                  onClick={() => setPageNumber((prev) => Math.max(prev - 1, 0))}
+                  onClick={() => {
+                    const newPage = Math.max(pageNumber - 1, 0);
+                    setPageNumber(newPage);
+                    updateURL({ page: newPage });
+                  }}
                   disabled={pageNumber === 0}
                   className="bg-btngreen px-4 py-2 rounded text-white disabled:opacity-50"
                 >
@@ -229,9 +255,11 @@ const Resources = () => {
                 </span>
 
                 <button
-                  onClick={() =>
-                    setPageNumber((prev) => Math.min(prev + 1, totalPages - 1))
-                  }
+                  onClick={() => {
+                    const newPage = Math.min(pageNumber + 1, totalPages - 1);
+                    setPageNumber(newPage);
+                    updateURL({ page: newPage });
+                  }}
                   disabled={pageNumber === totalPages - 1}
                   className="bg-btngreen px-4 py-2 rounded text-white disabled:opacity-50"
                 >
@@ -241,9 +269,14 @@ const Resources = () => {
             </>
           ) : (
             <div className="flex flex-col items-center justify-center h-full space-y-5">
-              <img src="/amico.png" alt="Search Illustration" className="w-[450px]" />
+              <img
+                src="/amico.png"
+                alt="Search Illustration"
+                className="w-[450px]"
+              />
               <p className="text-white font-semibold text-3xl text-center">
-                <span className="text-btngreen">Search</span> Your Requirement <br />
+                <span className="text-btngreen">Search</span> Your Requirement{" "}
+                <br />
                 in quick and simple words
               </p>
             </div>

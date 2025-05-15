@@ -1,5 +1,5 @@
 import React from "react";
-import { FaInstagram, FaGithub, FaLinkedin, FaLink ,FaGlobe } from "react-icons/fa";
+import { FaInstagram, FaGithub, FaLinkedin,FaGlobe } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
 

@@ -1,5 +1,6 @@
 import React from "react";
 import { FaTelegramPlane } from "react-icons/fa";
+import axios from 'axios';
 import {
   FaPhoneVolume,
   FaLocationDot,
@@ -9,19 +10,39 @@ import {
 import { MdEmail } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import Footer from '../components/Footer'
+import { useAppContext } from "../context/AppContext";
+import { toast } from "react-toastify";
+
 
 const ContactUs = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
     reset,
   } = useForm();
-  const onSubmit = (data) => {
-    console.log("Form Data:", data);
-    alert("Message sent successfully!");
-    reset();
+  
+  const {backendUrl,apiClient} = useAppContext()
+  
+  const onSubmit = async (data) => {
+    try {
+      const payload = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        phoneNumber: data.phoneNumber,
+        query: data.query,
+      };
+      const response = await apiClient.post(`${backendUrl}/public/contact-us`, payload);
+      toast.success(response.message || "Message sent successfully!");
+      reset();
+    } catch (error) {
+      console.error("Error sending message:", error);
+      toast.error("Failed to send message. Please try again later.");
+    }
   };
+  
+
+
   return (
     <div className="grid place-items-center bg-[#1E293B] xl:h-[85vh] min-h-fit ">
       {/* heading */}
@@ -98,34 +119,25 @@ const ContactUs = () => {
                 <label className="block mb-2 font-medium">First Name</label>
                 <input
                   type="text"
-                  {...register("firstname", {
+                  {...register("firstName", {
                     required: "First name is required",
                   })}
                   className="w-full bg-transparent border-b border-gray-500 text-white text-sm focus:outline-none focus:border-white"
                   placeholder="John"
                 />
-                {errors.firstname && (
-                  <p className="text-red-500 text-sm">
-                    {errors.firstname.message}
-                  </p>
-                )}
               </div>
               {/* Last Name input */}
               <div>
                 <label className="block mb-2 font-medium">Last Name</label>
                 <input
                   type="text"
-                  {...register("lastname", {
+                  {...register("lastName", {
                     required: " Last name is required",
                   })}
                   className="w-full bg-transparent border-b border-gray-500 text-white text-sm focus:outline-none focus:border-white"
                   placeholder="Doe"
                 />
-                {errors.lastname && (
-                  <p className="text-red-500 text-sm">
-                    {errors.lastname.message}
-                  </p>
-                )}
+                
               </div>
               {/* Email input */}
               <div>
@@ -142,16 +154,14 @@ const ContactUs = () => {
                   className="w-full bg-transparent border-b border-gray-500 text-white text-sm focus:outline-none focus:border-white"
                   placeholder="H8C7o@example.com"
                 />
-                {errors.email && (
-                  <p className="text-red-500 text-sm">{errors.email.message}</p>
-                )}
+
               </div>
               {/* phone input */}
               <div>
                 <label className="block mb-2 font-medium">Phone Number</label>
                 <input
                   type="tel"
-                  {...register("phone", {
+                  {...register("phoneNumber", {
                     required: "Phone number is required",
                     pattern: {
                       value: /^[0-9]{10}$/,
@@ -161,23 +171,17 @@ const ContactUs = () => {
                   className="w-full bg-transparent border-b border-gray-500 text-white text-sm focus:outline-none focus:border-white"
                   placeholder="+91-123-456-789"
                 />
-                {errors.phone && (
-                  <p className="text-red-500 text-sm">{errors.phone.message}</p>
-                )}
               </div>
             </div>
             {/* Message input */}
             <div className="mt-4 ">
               <label className="block mb-2 font-medium">Message</label>
               <textarea
-                {...register("message", { required: "Message is required" })}
+                {...register("query", { required: "Message is required" })}
                 rows="1"
                 className="w-full bg-transparent border-b border-gray-500 text-white text-sm focus:outline-none focus:border-white"
                 placeholder="Write your message."
               ></textarea>
-              {errors.message && (
-                <p className="text-red-500 text-sm">{errors.message.message}</p>
-              )}
             </div>
 
             {/* Submit button */}

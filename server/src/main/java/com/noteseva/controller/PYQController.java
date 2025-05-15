@@ -135,10 +135,12 @@ public class PYQController {
         }
     }
 
-    //localhost:8080/pyq/download/1
-    @Operation(summary = "Download PYQ by ID")
-    @GetMapping("/download/{id}")
-    public ResponseEntity<?> downloadNotes(@PathVariable Integer id) {
+    //localhost:8080/pyq/get/1?option=view
+    //localhost:8080/pyq/get/1?option=download
+    @Operation(summary = "View or Download PYQ by ID")
+    @GetMapping("/get/{id}")
+    public ResponseEntity<?> getPYQ(@PathVariable Integer id,
+                                    @RequestParam(required = false, defaultValue = "view") String option) {
         try {
             PYQ pyq = pyqService.getPYQ(id);
             if (pyq != null) {
@@ -147,15 +149,16 @@ public class PYQController {
                 byte[] fileData = pyq.getFileData();
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.valueOf(fileType));
-                headers.setContentDispositionFormData("attachment", fileName);
+                if (option.equals("download")) {
+                    headers.setContentDispositionFormData("attachment", fileName);
+                }
                 return new ResponseEntity<>(fileData, headers, HttpStatus.OK);
             }
-            return new ResponseEntity<>("May be this pyq is not available!!"
-                    , HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Maybe this PYQ is not available!!", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             log.error(e.toString());
-            return new ResponseEntity<>("Something Went Wrong!!",
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Something Went Wrong!!", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 }

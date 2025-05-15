@@ -13,7 +13,8 @@ export default function NoteCard({
   userName,
   uploadDate,
   year,
-  downloadLink
+  downloadLink,
+  viewLink
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
@@ -23,7 +24,7 @@ export default function NoteCard({
   const bookmarkSoundRef = useRef(null);
 
   const handleViewClick = () => {
-    window.open(downloadLink, "_blank");
+    window.open(viewLink, "_blank");
   };
 
   const handleDownload = () => {
@@ -84,7 +85,7 @@ export default function NoteCard({
 
         <div className="bg-gray-100 rounded-md overflow-hidden h-32 flex items-center justify-center">
           <img
-            src={noteImage || "/notes.webp"}
+            src={noteImage || "/notecard.jpg" || "/notes.webp"}
             alt="Note Preview"
             className="object-cover h-full w-full"
           />
