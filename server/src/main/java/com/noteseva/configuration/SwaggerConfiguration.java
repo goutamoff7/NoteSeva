@@ -40,7 +40,8 @@ public class SwaggerConfiguration {
                                 new Tag().name("SubjectAssignment APIs"),
                                 new Tag().name("Oauth2.0 Login API"),
                                 new Tag().name("User APIs"),
-                                new Tag().name("AppCache API")
+                                new Tag().name("AppCache API"),
+                                new Tag().name("Bookmark APIs")
 
                         )
                 )
