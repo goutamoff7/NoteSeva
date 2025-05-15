@@ -196,6 +196,26 @@ public class DTOService {
         query.setQuery(queryDTO.getQuery());
         return query;
     }
+
+    public UserDetailsDTO convertToUserDetailsDTO(Users user) {
+        UserDetailsDTO userDetailsDTO = new UserDetailsDTO();
+        userDetailsDTO.setId(user.getId());
+        userDetailsDTO.setUsername(user.getUsername());
+        userDetailsDTO.setRole(user.getRole());
+        userDetailsDTO.setName(user.getName());
+        userDetailsDTO.setEmail(user.getEmail());
+        userDetailsDTO.setPassword(user.getPassword());
+        userDetailsDTO.setRegisteredAt(user.getRegisteredAt());
+        userDetailsDTO.setLastLoginAt(user.getLastLoginAt());
+        userDetailsDTO.setGender(user.getGender());
+        userDetailsDTO.setCollegeName(user.getCollegeName());
+        userDetailsDTO.setImageUrl(user.getImageUrl());
+        userDetailsDTO.setLinkedInUrl(user.getLinkedInUrl());
+        userDetailsDTO.setGitHubUrl(user.getGitHubUrl());
+        userDetailsDTO.setOtherUrl(user.getOtherUrl());
+        userDetailsDTO.setNotes(user.getNotes());
+        userDetailsDTO.setOrganizer(user.getOrganizer());
+        userDetailsDTO.setPyq(user.getPyq());
+        return userDetailsDTO;
+    }
 }
-
-
