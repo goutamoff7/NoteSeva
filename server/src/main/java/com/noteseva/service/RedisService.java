@@ -1,10 +1,12 @@
 package com.noteseva.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Service
 public class RedisService {
 
@@ -12,7 +14,6 @@ public class RedisService {
     private RedisTemplate<String, String> redisTemplate;
 
     private final long OTP_EXPIRATION_TIME=600L;//10 minutes
-    private final long VERIFIED_EMAIL_EXPIRATION=86400L; //24 Hrs
 
     public void saveOTP(String email, String otp) {
         redisTemplate.opsForValue().set(
@@ -32,14 +33,12 @@ public class RedisService {
 
     public void markEmailAsVerified(String email) {
         redisTemplate.opsForValue().set(
-                "verified:" + email,
-                "true",
-                VERIFIED_EMAIL_EXPIRATION,
-                TimeUnit.SECONDS);
+                "verified:" + email, "true");
     }
 
-    public boolean isEmailVerified(String email) {
-        return redisTemplate.opsForValue().get("verified:" + email) != null;
+    public boolean getAndDeleteEmailVerified(String email) {
+        String verified = redisTemplate.opsForValue().getAndDelete("verified:" + email);
+        return verified != null && verified.equals("true");
     }
 }
 
