@@ -73,24 +73,6 @@ public class PYQController {
         }
     }
 
-    //localhost:8080/pyq/1
-    @Operation(summary = "Fetch PYQ by ID")
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getOrganizer(@PathVariable Integer id) {
-        try {
-            PYQ pyq = pyqService.getPYQ(id);
-            if (pyq != null)
-                return new ResponseEntity<>(dtoService.convertToPYQDTO(pyq)
-                        , HttpStatus.OK);
-            return new ResponseEntity<>("May be this PYQ is not available!!"
-                    , HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            log.error(e.toString());
-            return new ResponseEntity<>("Something Went Wrong!!",
-                    HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     //localhost:8080/pyq/upload
     @Operation(summary = "Upload PYQ")
     @Transactional

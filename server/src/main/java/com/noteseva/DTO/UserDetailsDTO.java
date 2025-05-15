@@ -6,7 +6,6 @@ import com.noteseva.model.Organizer;
 import com.noteseva.model.PYQ;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -51,6 +50,8 @@ public class UserDetailsDTO {
     private Set<PYQ> pyq;
 
     private Set<Notes> bookmarkedNotes;
+
     private Set<Organizer> bookmarkedOrganizer;
+
     private Set<PYQ> bookmarkedPyq;
 }
