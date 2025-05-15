@@ -102,7 +102,7 @@ public class PublicController {
             String username = utilityService.extractUsernameFromEmail(email);
             if (userService.findByUsername(username) != null)
                 return new ResponseEntity<>("User already exist", HttpStatus.BAD_REQUEST);
-            else if (!redisService.isEmailVerified(email))
+            else if (!redisService.getAndDeleteEmailVerified(email))
                 return new ResponseEntity<>("Email Verification Required", HttpStatus.BAD_REQUEST);
             Users registeredUser = userService.register(user);
             if (registeredUser != null) {
@@ -169,7 +169,7 @@ public class PublicController {
             Users user = userService.findByUsername(username);
             if (user == null)
                 return new ResponseEntity<>("User not exist", HttpStatus.BAD_REQUEST);
-            else if (!redisService.isEmailVerified(email))
+            else if (!redisService.getAndDeleteEmailVerified(email))
                 return new ResponseEntity<>("Email Verification Required", HttpStatus.BAD_REQUEST);
             Users savedUser = userService.resetPassword(user, passwordDTO.getNewPassword());
             if (savedUser != null) {

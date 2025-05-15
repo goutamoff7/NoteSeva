@@ -2,9 +2,11 @@ package com.noteseva.DTO;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class QueryDTO {
 
     @NotBlank(message = "Please enter your First Name")

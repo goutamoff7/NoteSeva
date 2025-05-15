@@ -3,15 +3,12 @@ package com.noteseva.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import java.time.LocalDateTime;
 
-@Data
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
+@Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class PYQ {
     @Id
@@ -32,6 +29,7 @@ public class PYQ {
     @Column(name = "file_type", nullable = false)
     private String fileType;
 
+    @JsonIgnore
     @Lob
     @Column(name = "file_data", columnDefinition = "longblob", nullable = false, unique = true)
     private byte[] fileData;

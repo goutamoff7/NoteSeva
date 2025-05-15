@@ -1,7 +1,6 @@
 package com.noteseva.service;
 
 import com.noteseva.model.Users;
-import com.noteseva.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
