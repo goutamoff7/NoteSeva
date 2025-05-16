@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/bookmark")
-@Tag(name = "Bookmark APIs", description = "Bookmark or un Bookmark Notes, Organizer, and PYQ")
+@Tag(name = "Bookmark APIs", description = "Bookmark or un-Bookmark Notes, Organizer, and PYQ")
 public class BookmarkController {
 
     @Autowired
