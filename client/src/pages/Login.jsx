@@ -4,7 +4,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useAppContext } from "../context/AppContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -81,7 +81,7 @@ const LoginPage = () => {
               <input type="checkbox" id="remember-me" className="cursor-pointer" />
               <label htmlFor="remember-me" className="text-white ml-2 cursor-pointer">Remember me</label>
             </div>
-            <a href="forgot-password" className="text-white hover:text-btngreen">Forgot password</a>
+            <Link to="/forgot-password" className="text-white hover:text-btngreen">Forgot password</Link>
           </div>
 
           <button type="submit" className="w-full bg-btngreen text-white p-3 rounded-lg hover:bg-green-600 transition-colors">

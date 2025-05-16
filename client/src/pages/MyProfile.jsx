@@ -2,11 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useAppContext } from "../context/AppContext";
 import { toast } from "react-toastify";
 
-
 const MyProfile = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [image, setImage] = useState(null);
-  const { apiClient, isAuthenticated, userInfo ,userData } = useAppContext();
+  const { apiClient, isAuthenticated, userInfo, userData } = useAppContext();
 
   const [editableUser, setEditableUser] = useState({
     name: "",
@@ -14,7 +13,7 @@ const MyProfile = () => {
     gender: "",
     linkedInUrl: "",
     gitHubUrl: "",
-    othersUrl: ""
+    othersUrl: "",
   });
 
   // Update editableUser when userInfo becomes available
@@ -26,20 +25,23 @@ const MyProfile = () => {
         gender: userInfo.gender || "",
         linkedInUrl: userInfo.linkedInUrl || "",
         gitHubUrl: userInfo.gitHubUrl || "",
-        othersUrl: userInfo.othersUrl || ""
+        othersUrl: userInfo.othersUrl || "",
       });
     }
   }, [userInfo]);
 
   const handleSave = async () => {
     try {
-      const res = await apiClient.put("/user/update-user-details", editableUser);
+      const res = await apiClient.put(
+        "/user/update-user-details",
+        editableUser
+      );
       console.log("Updated successfully:", res.data);
-      toast.success("Profile Updated Successfully")
+      toast.success("Profile Updated Successfully");
       await userData();
       setIsEdit(false);
     } catch (error) {
-      toast.error(error)
+      toast.error(error);
       console.error("Failed to update profile:", error);
     }
   };
@@ -51,47 +53,15 @@ const MyProfile = () => {
 
   return (
     <div className="w-full min-h-screen flex flex-col gap-2 text-sm px-10 py-10 bg-darkbg">
-      {/* Profile image */}
-      {isEdit ? (
-        <label htmlFor="image">
-          <div className="inline-block relative cursor-pointer">
-            <img
-              className="w-36 h-36 rounded-full opacity-30"
-              src={image ? URL.createObjectURL(image) : userInfo.imageUrl}
-              alt="Profile"
-            />
-            <img
-              className="w-10 absolute bottom-12 right-12"
-              src={image ? "" : "./upload_icon.png"}
-              alt="Upload"
-            />
-          </div>
-          <input
-            onChange={(e) => setImage(e.target.files[0])}
-            type="file"
-            id="image"
-            hidden
-          />
-        </label>
-      ) : (
-        <img
-          className="w-36 h-36 rounded-full"
-          src={userInfo.imageUrl || "./upload_area.png"}
-          alt="Profile"
-        />
-      )}
+      <img
+        className="w-36 h-36 rounded-full"
+        src={userInfo.imageUrl || "./upload_area.png"}
+        alt="Profile"
+      />
 
       {/* Profile name */}
-      {isEdit ? (
-        <input
-          className="bg-gray-400 p-1 rounded-md text-3xl font-medium max-w-60 mt-4"
-          type="text"
-          value={editableUser.name}
-          onChange={(e) => setEditableUser((prev) => ({ ...prev, name: e.target.value }))}
-        />
-      ) : (
-        <p className="font-medium text-3xl text-whitee mt-4">{userInfo.name}</p>
-      )}
+      
+      <p className="font-medium text-3xl text-whitee mt-4">{userInfo.name}</p>
 
       <hr className="bg-zinc-400 h-[1px] border-none" />
 
@@ -106,7 +76,9 @@ const MyProfile = () => {
         {isEdit ? (
           <select
             className="max-w-24 bg-gray-400 text-black p-1 rounded-md"
-            onChange={(e) => setEditableUser((prev) => ({ ...prev, gender: e.target.value }))}
+            onChange={(e) =>
+              setEditableUser((prev) => ({ ...prev, gender: e.target.value }))
+            }
             value={editableUser.gender}
           >
             <option value="">Select</option>
@@ -123,7 +95,12 @@ const MyProfile = () => {
             className="bg-gray-400 text-black p-1 max-w-72 rounded-md"
             type="text"
             value={editableUser.collegeName}
-            onChange={(e) => setEditableUser((prev) => ({ ...prev, collegeName: e.target.value }))}
+            onChange={(e) =>
+              setEditableUser((prev) => ({
+                ...prev,
+                collegeName: e.target.value,
+              }))
+            }
           />
         ) : (
           <p className="text-gray-400">{userInfo.collegeName ?? "null"}</p>
@@ -135,7 +112,12 @@ const MyProfile = () => {
             className="bg-gray-400 text-black p-1 max-w-72 rounded-md"
             type="url"
             value={editableUser.gitHubUrl}
-            onChange={(e) => setEditableUser((prev) => ({ ...prev, gitHubUrl: e.target.value }))}
+            onChange={(e) =>
+              setEditableUser((prev) => ({
+                ...prev,
+                gitHubUrl: e.target.value,
+              }))
+            }
           />
         ) : userInfo.gitHubUrl ? (
           <a
@@ -156,7 +138,12 @@ const MyProfile = () => {
             className="bg-gray-400 text-black p-1 max-w-72 rounded-md"
             type="url"
             value={editableUser.linkedInUrl}
-            onChange={(e) => setEditableUser((prev) => ({ ...prev, linkedInUrl: e.target.value }))}
+            onChange={(e) =>
+              setEditableUser((prev) => ({
+                ...prev,
+                linkedInUrl: e.target.value,
+              }))
+            }
           />
         ) : userInfo.linkedInUrl ? (
           <a
@@ -177,7 +164,12 @@ const MyProfile = () => {
             className="bg-gray-400 text-black p-1 max-w-72 rounded-md"
             type="url"
             value={editableUser.othersUrl}
-            onChange={(e) => setEditableUser((prev) => ({ ...prev, othersUrl: e.target.value }))}
+            onChange={(e) =>
+              setEditableUser((prev) => ({
+                ...prev,
+                othersUrl: e.target.value,
+              }))
+            }
           />
         ) : userInfo.otherUrl ? (
           <a

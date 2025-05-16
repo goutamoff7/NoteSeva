@@ -6,7 +6,6 @@ const ProtectedRoute = () => {
   const { isAuthenticated } = useAppContext();
 
   if (!isAuthenticated) {
-    toast.info("Please login");
     return <Navigate to="/login" replace />;
   }
 

@@ -338,3 +338,37 @@ export const userNoteData = [
     userImage: "./Manojit.jpg",
   },
 ];
+
+export const badgeLevels = [
+  {
+    name: "Bronze Badge",
+    description: "Earned after 10 uploads. You're just getting started!",
+    image: "/badge/bronze.png",
+    min: 10,
+  },
+  {
+    name: "Silver Badge",
+    description: "Unlocked at 50 uploads. Keep going, you're leveling up!",
+    image: "/badge/silver.png",
+    min: 50,
+  },
+  {
+    name: "Gold Badge",
+    description:
+      "Achieved at 200 uploads. Your contributions are making an impact!",
+    image: "/badge/gold.png",
+    min: 200,
+  },
+  {
+    name: "Ruby Badge",
+    description: "Secured at 500 uploads. You're among the top contributors!",
+    image: "/badge/ruby.png",
+    min: 500,
+  },
+  {
+    name: "Emerald Badge",
+    description: "Unlocked at 1000 uploads. You’ve reached legendary status!",
+    image: "/badge/emerald.png",
+    min: 1000,
+  },
+];

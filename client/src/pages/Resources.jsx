@@ -62,7 +62,8 @@ const Resources = () => {
     const fetchNotes = async () => {
       const params = new URLSearchParams();
       params.append("courseName", selectedCourse.label);
-      if (selectedDepartment) params.append("departmentName", selectedDepartment.label);
+      if (selectedDepartment)
+        params.append("departmentName", selectedDepartment.label);
       if (selectedSubject) params.append("subjectName", selectedSubject.label);
       params.append("pageNumber", pageNumber);
       params.append("pageSize", 8);
@@ -233,6 +234,8 @@ const Resources = () => {
                     uploadDate={formatDate(note.uploadDateTime)}
                     viewLink={`${backendUrl}/${resourceType}/get/${note.id}?option=view`}
                     downloadLink={`${backendUrl}/${resourceType}/get/${note.id}?option=download`}
+                    bookmarkedLink={`${backendUrl}/bookmark/${resourceType}/${note.id}`}
+                    isInitiallyBookmarked={false}
                   />
                 ))}
               </div>

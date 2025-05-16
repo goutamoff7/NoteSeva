@@ -8,13 +8,13 @@ import { useState } from "react";
 import UploadSection from "../components/UploadSection";
 import ProjectSection from "../components/ProjectSection";
 import UploadNote from "../components/UploadNote";
-import MapStyleGrid from "../components/MapStyleGrid";
 import { useAppContext } from "../context/AppContext";
+import { useAllContext } from "../context/AllContext";
 
 const Dashboard = () => {
 
-  const [count, setCount] = useState(0);
-  const { logout } = useAppContext();
+  const { logout, userInfo, backendUrl} = useAppContext();
+  const {formatDate} = useAllContext()
 
   return (
     <section className="grid grid-cols-[300px_auto_300px] bg-[#1E293B] min-h-screen p-4 ">
@@ -39,17 +39,16 @@ const Dashboard = () => {
         </div>
       </div>
       {/* middle side */}
-      <div className=" rounded-md mt-4">
+      <div className="rounded-md mt-4 space-y-5">
         <div className="flex gap-2 flex-row">
-          <UploadSection />
+          <UploadSection userInfo={userInfo}/>
           <ProjectSection />{" "}
         </div>
-        <MapStyleGrid />
-        <UploadNote />
+        <UploadNote userInfo={userInfo} backendUrl={backendUrl} formatDate={formatDate}/>
       </div>
       {/* right side */}
       <div className="m-4">
-        <BadgeProgress uploadCount={count} />
+        <BadgeProgress userInfo={userInfo}/>
       </div>
     </section>
   );

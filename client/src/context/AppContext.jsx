@@ -72,7 +72,7 @@ export const AppProvider = ({ children }) => {
     }
   );
 
-  // navbar btn swap function
+  // Login function
   const login = async () => {
     try {
       await apiClient.get("/public/check-auth");
@@ -108,40 +108,44 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // All Subjects
-  const AllSubjectsData = async () => {
+  // Refresh user details without full page reload
+  const refreshUserInfo = async () => {
+    try {
+      const res = await apiClient.get(`${backendUrl}/user/get-user-details`);
+      setUserInfo(res.data);
+    } catch (error) {
+      console.error("Error refreshing user info:", error);
+    }
+  };
+
+  // Fetch all subjects, courses, and departments
+  const fetchSubjects = async () => {
     try {
       const response = await axios.get(
         `${backendUrl}/public/get-subject-structure`
       );
-      return response.data;
+      const subjectData = response.data;
+
+      const uniqueCourses = [
+        ...new Set(subjectData.map((item) => item.courseName)),
+      ].map((course) => ({ label: course, value: course }));
+      setCourses(uniqueCourses);
+
+      const uniqueDepartments = [
+        ...new Set(subjectData.map((item) => item.departmentName)),
+      ].map((dept) => ({ label: dept, value: dept }));
+      setDepartments(uniqueDepartments);
+
+      const uniqueSubjects = [
+        ...new Set(subjectData.map((item) => item.subjectName)),
+      ].map((subjectName) => {
+        const sub = subjectData.find((item) => item.subjectName === subjectName);
+        return { label: subjectName, value: sub.subjectCode };
+      });
+      setSubjects(uniqueSubjects);
     } catch (error) {
       console.error("Error fetching subjects:", error);
-      return [];
     }
-  };
-
-  // Remove the duplicated data
-  const fetchSubjects = async () => {
-    const subjectData = await AllSubjectsData();
-
-    const uniqueCourses = [
-      ...new Set(subjectData.map((item) => item.courseName)),
-    ].map((course) => ({ label: course, value: course }));
-    setCourses(uniqueCourses);
-
-    const uniqueDepartments = [
-      ...new Set(subjectData.map((item) => item.departmentName)),
-    ].map((dept) => ({ label: dept, value: dept }));
-    setDepartments(uniqueDepartments);
-
-    const uniqueSubjects = [
-      ...new Set(subjectData.map((item) => item.subjectName)),
-    ].map((subjectName) => {
-      const sub = subjectData.find((item) => item.subjectName === subjectName);
-      return { label: subjectName, value: sub.subjectCode };
-    });
-    setSubjects(uniqueSubjects);
   };
 
   useEffect(() => {
@@ -155,6 +159,7 @@ export const AppProvider = ({ children }) => {
     logout,
     isAuthenticated,
     userData,
+    refreshUserInfo,
     userInfo,
     courses,
     departments,

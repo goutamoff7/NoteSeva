@@ -1,8 +1,11 @@
 import React, { useState, useRef } from "react";
+import axios from "axios";
 import { IoBookmark, IoBookmarkOutline } from "react-icons/io5";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { IoClose } from "react-icons/io5";
+import { useAppContext } from "../context/AppContext";
+import { toast } from "react-toastify";
 
 export default function NoteCard({
   id,
@@ -14,11 +17,15 @@ export default function NoteCard({
   uploadDate,
   year,
   downloadLink,
-  viewLink
+  viewLink,
+  bookmarkedLink,
+  isInitiallyBookmarked,
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
-  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(isInitiallyBookmarked);
+  const [loading, setLoading] = useState(false);
+  const { apiClient, refreshUserInfo } = useAppContext();
 
   const likeSoundRef = useRef(null);
   const bookmarkSoundRef = useRef(null);
@@ -42,20 +49,45 @@ export default function NoteCard({
     setIsLiked(!isLiked);
   };
 
-  const toggleBookmark = () => {
-    if (!isBookmarked && bookmarkSoundRef.current) {
-      bookmarkSoundRef.current.currentTime = 0;
-      bookmarkSoundRef.current.play();
+  const toggleBookmark = async () => {
+    try {
+      setLoading(true);
+
+      if (isBookmarked) {
+        // Unbookmark (DELETE)
+        const response = await apiClient.delete(bookmarkedLink);
+        console.log("Unbookmarked:", response.data);
+      } else {
+        // Bookmark (POST)
+        const response = await apiClient.post(bookmarkedLink);
+        console.log("Bookmarked:", response.data);
+
+        if (bookmarkSoundRef.current) {
+          bookmarkSoundRef.current.currentTime = 0;
+          bookmarkSoundRef.current.play();
+        }
+      }
+
+      // Refresh user info without full reload
+      await refreshUserInfo();
+      setIsBookmarked(!isBookmarked);
+    } catch (error) {
+      console.error("Bookmark request failed:", error);
+      toast.error("Failed to update bookmark status. Please try again.");
+    } finally {
+      setLoading(false);
     }
-    setIsBookmarked(!isBookmarked);
   };
 
   return (
     <div className="w-64 rounded-2xl shadow-lg overflow-hidden border">
-
       {/* Sound Effects */}
-      <audio ref={likeSoundRef} src="/like-btn.mp3" preload="auto" />
-      <audio ref={bookmarkSoundRef} src="/bookmarked-btn.mp3" preload="auto" />
+      <audio ref={likeSoundRef} src="/like-btn.mp3" preload="preload" />
+      <audio
+        ref={bookmarkSoundRef}
+        src="/bookmarked-btn.mp3"
+        preload="preload"
+      />
 
       <div className="p-4">
         <div className="flex justify-between">
@@ -65,7 +97,11 @@ export default function NoteCard({
               className="text-white cursor-pointer"
               onClick={() => setMenuOpen(!menuOpen)}
             >
-              {menuOpen ? <IoClose size={20} /> : <BsThreeDotsVertical size={20} />}
+              {menuOpen ? (
+                <IoClose size={20} />
+              ) : (
+                <BsThreeDotsVertical size={20} />
+              )}
             </button>
 
             {menuOpen && (
@@ -108,9 +144,10 @@ export default function NoteCard({
               )}
             </button>
             <span className="text-gray-500">{isLiked ? "3.3k" : "3.2k"}</span>
-            <button onClick={toggleBookmark}>
+
+            <button onClick={toggleBookmark} disabled={loading}>
               {isBookmarked ? (
-                <IoBookmark className="w-5 h-5 text-blue-600" />
+                <IoBookmark className="w-5 h-5 text-white" />
               ) : (
                 <IoBookmarkOutline className="w-5 h-5 text-gray-500" />
               )}
