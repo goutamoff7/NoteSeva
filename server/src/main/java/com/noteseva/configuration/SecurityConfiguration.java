@@ -68,13 +68,7 @@ public class SecurityConfiguration {
                                 "/public/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**").permitAll()
-                        .requestMatchers(
-                                "/notes/**",
-                                "/organizer/**",
-                                "/pyq/**",
-                                "/user/**")
-                        .hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/admin/**","/subject/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
