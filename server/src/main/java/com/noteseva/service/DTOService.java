@@ -9,6 +9,9 @@ import com.noteseva.repository.SubjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Service
 public class DTOService {
 
@@ -213,12 +216,68 @@ public class DTOService {
         userDetailsDTO.setLinkedInUrl(user.getLinkedInUrl());
         userDetailsDTO.setGitHubUrl(user.getGitHubUrl());
         userDetailsDTO.setOtherUrl(user.getOtherUrl());
-        userDetailsDTO.setNotes(user.getNotes());
-        userDetailsDTO.setOrganizer(user.getOrganizer());
-        userDetailsDTO.setPyq(user.getPyq());
-        userDetailsDTO.setBookmarkedNotes(user.getBookmarkedNotes());
-        userDetailsDTO.setBookmarkedOrganizer(user.getBookmarkedOrganizer());
-        userDetailsDTO.setBookmarkedPyq(user.getBookmarkedPYQ());
         return userDetailsDTO;
     }
+
+    public UploadedDocsDTO convertToUploadedDocsDTO(Users user) {
+
+        UploadedDocsDTO uploadedDocsDTO = new UploadedDocsDTO();
+
+        Set<NotesDTO> notesDTOList = user.getNotes()
+                .stream()
+                .map(this::convertToNotesDTO)
+                .collect(Collectors.toSet());
+
+        uploadedDocsDTO.setNotesDTOList(notesDTOList);
+
+        Set<OrganizerDTO> organizerDTOList = user.getOrganizer()
+                .stream()
+                .map(this::convertToOrganizerDTO)
+                .collect(Collectors.toSet());
+
+        uploadedDocsDTO.setOrganizerDTOList(organizerDTOList);
+
+        Set<PYQDTO> pyqDTOList = user.getPyq()
+                .stream()
+                .map(this::convertToPYQDTO)
+                .collect(Collectors.toSet());
+
+        uploadedDocsDTO.setPyqDTOList(pyqDTOList);
+
+        Set<NotesDTO> bookmarkedNotesDTO = user.getBookmarkedNotes()
+                .stream()
+                .map(this::convertToNotesDTO)
+                .collect(Collectors.toSet());
+
+        return uploadedDocsDTO;
+    }
+
+    public BookmarkedDocsDTO convertToBookmarkedDocsDTO(Users user){
+
+        BookmarkedDocsDTO bookmarkedDocsDTO = new BookmarkedDocsDTO();
+
+        Set<NotesDTO> bookmarkedNotesDTO = user.getBookmarkedNotes()
+                .stream()
+                .map(this::convertToNotesDTO)
+                .collect(Collectors.toSet());
+
+        bookmarkedDocsDTO.setBookmarkedNotesDTO(bookmarkedNotesDTO);
+
+        Set<OrganizerDTO> bookmarkedOrganizerDTO = user.getBookmarkedOrganizer()
+                .stream()
+                .map(this::convertToOrganizerDTO)
+                .collect(Collectors.toSet());
+
+        bookmarkedDocsDTO.setBookmarkedOrganizerDTO(bookmarkedOrganizerDTO);
+
+        Set<PYQDTO> bookmarkedPyqDTO = user.getBookmarkedPYQ()
+                .stream()
+                .map(this::convertToPYQDTO)
+                .collect(Collectors.toSet());
+
+        bookmarkedDocsDTO.setBookmarkedPyqDTO(bookmarkedPyqDTO);
+
+        return bookmarkedDocsDTO;
+    }
+
 }
