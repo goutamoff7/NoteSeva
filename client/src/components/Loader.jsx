@@ -1,4 +1,3 @@
-import React from "react";
 import { motion } from "framer-motion";
 
 const Loader = () => {
@@ -6,7 +5,7 @@ const Loader = () => {
     <div className=" h-screen w-full flex justify-center items-center bg-white overflow-hidden flex-col ">
       {/* Image moves from center to up */}
       <motion.img
-        src="loader.svg"
+        src="/loader.svg"
         alt="loader"
         className="h-[200px] w-[200px] "
         initial={{ opacity: 0, scale: 0.1 }}

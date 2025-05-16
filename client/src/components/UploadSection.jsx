@@ -1,34 +1,33 @@
-import React from "react";
 import GaugeChart from "react-gauge-chart";
 
-const UploadSection = () => {
-  const totalUploads = 1127;
-  const maxUploads = 1000; // You can adjust scale here
-  const percent = Math.min(totalUploads / maxUploads, 1);
-
+const UploadSection = ({ userInfo }) => {
   const categories = [
     {
+      name: "Notes",
+      count: userInfo.notes.length,
+      color: "border-[#21B573]",
+      backgroundColor: "bg-[#21B573]",
+      icon: "icon/carbon--book.svg",
+    },
+    {
       name: "organizer",
-      count: 231,
+      count: userInfo.organizer.length,
       color: "border-[#FAAF3A]",
       backgroundColor: "bg-[#FAAF3A]",
       icon: "icon/clarity--book-line.svg",
     },
     {
       name: "PYQ",
-      count: 345,
+      count: userInfo.pyq.length,
       color: "border-[#DF615C]",
       backgroundColor: "bg-[#DF615C]",
       icon: "icon/quill--paper.svg",
     },
-    {
-      name: "Notes",
-      count: 561,
-      color: "border-[#21B573]",
-      backgroundColor: "bg-[#21B573]",
-      icon: "icon/carbon--book.svg",
-    },
   ];
+
+  const totalUploads =
+    userInfo.organizer.length + userInfo.pyq.length + userInfo.notes.length;
+  const arcsLength = categories.map((item) => item.count / totalUploads);
 
   return (
     <div className="bg-[#0c1b2a] text-white p-6 rounded-2xl w-full max-w-xl border border-white flex justify-between items-center shadow-xl">
@@ -41,8 +40,10 @@ const UploadSection = () => {
           nrOfLevels={3}
           colors={["#4ade80", "#f87171", "#fbbf24"]}
           arcWidth={0.3}
-          percent={percent}
+          arcsLength={arcsLength}
           textColor="#ffffff00"
+          needleColor="#ffffff00"
+          needleBaseColor="#ffffff00"
           arcPadding={0.02}
           hideNeedle={true}
         />
