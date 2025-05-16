@@ -1,8 +1,6 @@
 package com.noteseva.controller;
 
-import com.noteseva.DTO.PasswordDTO;
-import com.noteseva.DTO.UpdateUserDTO;
-import com.noteseva.DTO.UserDetailsDTO;
+import com.noteseva.DTO.*;
 import com.noteseva.model.Users;
 import com.noteseva.service.DTOService;
 import com.noteseva.service.EmailService;
@@ -17,6 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -102,9 +103,49 @@ public class UserController {
         }
     }
 
+    @GetMapping("/get-uploaded-docs")
+    public ResponseEntity<?> getUploadedDocs(){
+        try{
+            String username =userService.getCurrentUsername();
+            Users user = userService.findByUsername(username);
+            if(user==null)
+                return new ResponseEntity<>("User Not Found",HttpStatus.NOT_FOUND);
+            UploadedDocsDTO uploadedDocsDTO = dtoService.convertToUploadedDocsDTO(user);
+            if(uploadedDocsDTO == null)
+                return new ResponseEntity<>("Failed to Get Uploaded Docs",
+                        HttpStatus.SERVICE_UNAVAILABLE);
+            return new ResponseEntity<>(uploadedDocsDTO,HttpStatus.OK);
+        } catch (Exception e) {
+            log.error(e.toString());
+            return new ResponseEntity<>("Something Went Wrong!!"
+                    ,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/get-bookmarked-docs")
+    public ResponseEntity<?> getBookmarkedDocs(){
+        try{
+            String username =userService.getCurrentUsername();
+            Users user = userService.findByUsername(username);
+            if(user==null)
+                return new ResponseEntity<>("User Not Found",HttpStatus.NOT_FOUND);
+            BookmarkedDocsDTO bookmarkedDocsDTO = dtoService.convertToBookmarkedDocsDTO(user);
+            if(bookmarkedDocsDTO == null)
+                return new ResponseEntity<>("Failed to Get Uploaded Docs",
+                        HttpStatus.SERVICE_UNAVAILABLE);
+            return new ResponseEntity<>(bookmarkedDocsDTO,HttpStatus.OK);
+        } catch (Exception e) {
+            log.error(e.toString());
+            return new ResponseEntity<>("Something Went Wrong!!"
+                    ,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("/check-auth")
     public ResponseEntity<?> checkAuthStatus(Authentication authentication) {
             return new ResponseEntity<>("User/Admin is authenticated", HttpStatus.OK);
     }
+
+
 }
 
