@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -15,6 +17,9 @@ public class PYQ {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="pyq_id")
     private Integer id;
+
+    @Column(name="document_type",nullable = false)
+    private String documentType;
 
     @Column(name="upload_date_time",nullable = false)
     private LocalDateTime uploadDateTime;
@@ -44,4 +49,16 @@ public class PYQ {
     @ManyToOne(fetch=FetchType.LAZY,cascade = {CascadeType.PERSIST})
     @JoinColumn(name="subject_Assignment_id",nullable = false)
     private SubjectAssignment subjectAssignment;
+
+    // Bookmark
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "bookmarkedPYQ", fetch = FetchType.LAZY)
+    private Set<Users> bookmarkedByUsers = new HashSet<>();
+
+    // Like
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "likedPYQ", fetch = FetchType.LAZY)
+    private Set<Users> likedByUsers = new HashSet<>();
 }
