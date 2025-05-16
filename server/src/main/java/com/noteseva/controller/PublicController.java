@@ -217,15 +217,6 @@ public class PublicController {
         }
     }
 
-    @GetMapping("/check-auth")
-    public ResponseEntity<?> checkAuthStatus(Authentication authentication) {
-
-        if (authentication != null && authentication.isAuthenticated()) {
-            return new ResponseEntity<>("User is authenticated", HttpStatus.OK);
-        }
-        return new ResponseEntity<>("User is not authenticated", HttpStatus.UNAUTHORIZED);
-    }
-
     //localhost:8080/public/contact-us
     @Operation(summary = "Contact Us")
     @PostMapping("/contact-us")
