@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,16 +27,13 @@ public class OrganizerService {
     @Autowired
     DTOService dtoService;
 
-    public Organizer uploadOrganizer(Organizer organizer, MultipartFile file, String username) {
-        try {
-            organizer.setFileName(file.getOriginalFilename());
-            organizer.setFileType(file.getContentType());
-            organizer.setFileData(file.getBytes());
-            organizer.setUser(userService.findByUsername(username));
-            organizer.setUploadDateTime(LocalDateTime.now());
-        } catch (Exception e) {
-            System.out.println(e.getMessage() + "from service class.");
-        }
+    public Organizer uploadOrganizer(Organizer organizer, MultipartFile file, String username) throws IOException {
+        organizer.setDocumentType("Organizer");
+        organizer.setFileName(file.getOriginalFilename());
+        organizer.setFileType(file.getContentType());
+        organizer.setFileData(file.getBytes());
+        organizer.setUser(userService.findByUsername(username));
+        organizer.setUploadDateTime(LocalDateTime.now());
         return organizerRepository.save(organizer);
     }
 

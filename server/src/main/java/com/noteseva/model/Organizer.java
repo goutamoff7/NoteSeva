@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -17,6 +19,9 @@ public class Organizer
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="organizer_id")
     private Integer id;
+
+    @Column(name="document_type",nullable = false)
+    private String documentType;
 
     @Column(name="upload_date_time",nullable = false)
     private LocalDateTime uploadDateTime;
@@ -46,4 +51,16 @@ public class Organizer
     @ManyToOne(fetch=FetchType.LAZY,cascade = {CascadeType.PERSIST})
     @JoinColumn(name="subject_Assignment_id",nullable = false)
     private SubjectAssignment subjectAssignment;
+
+    // Bookmark
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "bookmarkedOrganizer", fetch = FetchType.LAZY)
+    private Set<Users> bookmarkedByUsers = new HashSet<>();
+
+    // Like
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "likedOrganizer", fetch = FetchType.LAZY)
+    private Set<Users> likedByUsers = new HashSet<>();
 }

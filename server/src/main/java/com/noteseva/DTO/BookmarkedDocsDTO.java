@@ -9,9 +9,9 @@ import java.util.Set;
 @Setter
 public class BookmarkedDocsDTO {
 
-    private Set<NotesDTO> bookmarkedNotesDTO;
+    private Set<NotesDTO> bookmarkedNotesDTOList;
 
-    private Set<OrganizerDTO> bookmarkedOrganizerDTO;
+    private Set<OrganizerDTO> bookmarkedOrganizerDTOList;
 
-    private Set<PYQDTO> bookmarkedPyqDTO;
+    private Set<PYQDTO> bookmarkedPyqDTOList;
 }

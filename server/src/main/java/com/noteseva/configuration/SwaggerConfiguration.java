@@ -41,8 +41,8 @@ public class SwaggerConfiguration {
                                 new Tag().name("Oauth2.0 Login API"),
                                 new Tag().name("User APIs"),
                                 new Tag().name("AppCache API"),
-                                new Tag().name("Bookmark APIs")
-
+                                new Tag().name("Bookmark APIs"),
+                                new Tag().name("Like APIs")
                         )
                 )
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))

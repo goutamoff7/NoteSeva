@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,6 +29,7 @@ public class NotesService {
 
 
     public Notes uploadNotes(Notes notes, MultipartFile file, String username) throws IOException {
+        notes.setDocumentType("Notes");
         notes.setFileName(file.getOriginalFilename());
         notes.setFileType(file.getContentType());
         notes.setFileData(file.getBytes());
@@ -48,12 +50,12 @@ public class NotesService {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
         Page<Notes> pageNotes = notesRepository.getAllNotes(
                 courseName, departmentName, subjectName, pageable);
-        if(!pageNotes.getContent().isEmpty()) {
+        if (!pageNotes.getContent().isEmpty()) {
             List<NotesDTO> notesDTOList = pageNotes
                     .getContent().stream()
                     .map(notes -> dtoService.convertToNotesDTO(notes))
                     .toList();
-            return PageResponse.getPageResponseDTO(pageNotes,notesDTOList);
+            return PageResponse.getPageResponseDTO(pageNotes, notesDTOList);
         }
         return null;
     }
