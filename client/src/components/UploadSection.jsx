@@ -1,44 +1,48 @@
 import GaugeChart from "react-gauge-chart";
 
-const UploadSection = ({ userInfo }) => {
+const UploadSection = ({ userUploadedDocs = {} }) => {
+  // Safely extracting lists with default empty arrays to avoid undefined errors
+  const notesDTOList = userUploadedDocs.notesDTOList || [];
+  const organizerDTOList = userUploadedDocs.organizerDTOList || [];
+  const pyqDTOList = userUploadedDocs.pyqDTOList || [];
+
   const categories = [
     {
       name: "Notes",
-      count: userInfo.notes.length,
+      count: notesDTOList.length,
       color: "border-[#21B573]",
       backgroundColor: "bg-[#21B573]",
       icon: "icon/carbon--book.svg",
     },
     {
-      name: "organizer",
-      count: userInfo.organizer.length,
+      name: "Organizer",
+      count: organizerDTOList.length,
       color: "border-[#FAAF3A]",
       backgroundColor: "bg-[#FAAF3A]",
       icon: "icon/clarity--book-line.svg",
     },
     {
       name: "PYQ",
-      count: userInfo.pyq.length,
+      count: pyqDTOList.length,
       color: "border-[#DF615C]",
       backgroundColor: "bg-[#DF615C]",
       icon: "icon/quill--paper.svg",
     },
   ];
 
-  const totalUploads =
-    userInfo.organizer.length + userInfo.pyq.length + userInfo.notes.length;
-  const arcsLength = categories.map((item) => item.count / totalUploads);
+  const totalUploads = notesDTOList.length + organizerDTOList.length + pyqDTOList.length;
+  const arcsLength = totalUploads > 0 ? categories.map((item) => item.count / totalUploads) : [0.33, 0.33, 0.33];
 
   return (
     <div className="bg-[#0c1b2a] text-white p-6 rounded-2xl w-full max-w-xl border border-white flex justify-between items-center shadow-xl">
-      <div className="w-2/3 ">
+      <div className="w-2/3">
         <h2 className="text-lg font-semibold underline decoration-white mb-2">
           Total Uploads
         </h2>
         <GaugeChart
           id="gauge-chart"
           nrOfLevels={3}
-          colors={["#4ade80", "#f87171", "#fbbf24"]}
+          colors={["#4ade80", "#fbbf24", "#f87171"]}
           arcWidth={0.3}
           arcsLength={arcsLength}
           textColor="#ffffff00"
@@ -61,7 +65,7 @@ const UploadSection = ({ userInfo }) => {
             <div
               className={`w-12 h-12 rounded-md border-2  ${cat.color} bg-opacity-20 ${cat.backgroundColor} flex items-center justify-center text-lg`}
             >
-              <img src={cat.icon} className="opacity-100" alt="" />
+              <img src={cat.icon} className="opacity-100" alt={cat.name} />
             </div>
             <div>
               <p className="text-sm">{cat.name}</p>

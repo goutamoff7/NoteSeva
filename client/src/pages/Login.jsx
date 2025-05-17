@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { useAppContext } from "../context/AppContext";
 import { Link, useNavigate } from "react-router-dom";

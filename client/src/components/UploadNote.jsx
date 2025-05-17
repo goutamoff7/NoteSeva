@@ -1,18 +1,17 @@
-import React, { useState } from "react";
-import { CiClock2 } from "react-icons/ci";
-import { useAppContext } from "../context/AppContext";
-import { useAllContext } from "../context/AllContext";
+import { useState } from "react";
+import { FaDownload, FaEye, FaHeart } from "react-icons/fa";
+import { GrLike } from "react-icons/gr";
 
-const UploadNote = ({ userInfo, backendUrl, formatDate }) => {
+const UploadNote = ({ userUploads, backendUrl, formatDate }) => {
   const [activeFilter, setActiveFilter] = useState("Notes");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
   // Extracting different upload types
   const uploadsMap = {
-    Notes: userInfo.notes || [],
-    organizer: userInfo.organizer || [],
-    PYQ: userInfo.pyq || [],
+    Notes: userUploads.notesDTOList || [],
+    organizer: userUploads.organizerDTOList || [],
+    PYQ: userUploads.pyqDTOList || [],
   };
 
   // Getting the filtered uploads based on active filter
@@ -30,13 +29,17 @@ const UploadNote = ({ userInfo, backendUrl, formatDate }) => {
 
   // Handle view action
   const handleViewClick = (upload) => {
-    const viewLink = `${backendUrl}/${activeFilter.toLowerCase()}/get/${upload.id}?option=view`;
+    const viewLink = `${backendUrl}/${activeFilter.toLowerCase()}/get/${
+      upload.id
+    }?option=view`;
     window.open(viewLink, "_blank");
   };
 
   // Handle download action
   const handleDownload = (upload) => {
-    const downloadLink = `${backendUrl}/${activeFilter.toLowerCase()}/get/${upload.id}?option=download`;
+    const downloadLink = `${backendUrl}/${activeFilter.toLowerCase()}/get/${
+      upload.id
+    }?option=download`;
     const a = document.createElement("a");
     a.href = downloadLink;
     a.download = `${upload.topicName || upload.year || "note"}.pdf`;
@@ -69,24 +72,38 @@ const UploadNote = ({ userInfo, backendUrl, formatDate }) => {
 
       {/* Upload List */}
       <div className="space-y-3">
+        <div className="px-4 py-2 grid grid-cols-[0.5fr_3fr_5fr_2fr_2fr_2fr_3fr] place-items-center">
+          <p>#</p>
+          <p>Topic Name</p>
+          <p>Subject Name</p>
+          <p>Likes</p>
+          <p>View</p>
+          <p>Download</p>
+          <p>Upload Date</p>
+        </div>
         {paginatedUploads.map((upload, index) => (
           <div
             key={upload.id || index}
-            className="bg-[#1e293b] px-4 py-2 rounded-lg grid grid-cols-[0.5fr_5fr_2fr_2fr_3fr] place-items-center"
+            className="bg-[#1e293b] px-4 py-2 rounded-lg grid grid-cols-[0.5fr_3fr_5fr_2fr_2fr_2fr_3fr] place-items-center"
           >
             <p>{(currentPage - 1) * itemsPerPage + index + 1}</p>
             <p>{upload.topicName || upload.year || "No Title"}</p>
+            <p>{upload.subjectName || "No Title"}</p>
+            <p className="flex items-center gap-1">
+              {upload.likeCount}
+              <FaHeart />
+            </p>
             <button
               onClick={() => handleViewClick(upload)}
               className="border px-3 py-1 rounded-full text-center w-fit"
             >
-              View
+              <FaEye />
             </button>
             <button
               onClick={() => handleDownload(upload)}
               className="border px-3 py-1 rounded-full text-center w-fit"
             >
-              Download
+              <FaDownload />
             </button>
             <span className="text-sm text-gray-300">
               {formatDate(upload.uploadDateTime)}

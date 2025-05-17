@@ -13,6 +13,8 @@ export const AppProvider = ({ children }) => {
   const [courses, setCourses] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [subjects, setSubjects] = useState([]);
+  const [userUploads, setUserUploads] = useState(null);
+  const [bookmarked, setBookmarked] = useState(null);
 
   const apiClient = axios.create({
     baseURL: backendUrl,
@@ -22,7 +24,7 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        await apiClient.get("/public/check-auth");
+        await apiClient.get("/user/check-auth");
         setIsAuthenticated(true);
         await userData();
       } catch {
@@ -32,50 +34,10 @@ export const AppProvider = ({ children }) => {
     checkAuth();
   }, []);
 
-  let isRefreshing = false;
-
-  // Response interceptor for token refresh
-  apiClient.interceptors.response.use(
-    (res) => res,
-    async (err) => {
-      const originalRequest = err.config;
-
-      if (err.response?.status === 401 && !originalRequest._retry) {
-        originalRequest._retry = true;
-
-        if (!isRefreshing) {
-          isRefreshing = true;
-          try {
-            await axios.get(`${backendUrl}/public/refresh-token`, {
-              withCredentials: true,
-            });
-            isRefreshing = false;
-            return apiClient(originalRequest);
-          } catch (refreshError) {
-            isRefreshing = false;
-            navigate("/login");
-            return Promise.reject(refreshError);
-          }
-        } else {
-          return new Promise((resolve) => {
-            const checkRefresh = setInterval(() => {
-              if (!isRefreshing) {
-                clearInterval(checkRefresh);
-                resolve(apiClient(originalRequest));
-              }
-            }, 100);
-          });
-        }
-      }
-
-      return Promise.reject(err);
-    }
-  );
-
   // Login function
   const login = async () => {
     try {
-      await apiClient.get("/public/check-auth");
+      await apiClient.get("/user/check-auth");
       setIsAuthenticated(true);
       await userData();
     } catch (error) {
@@ -108,16 +70,6 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // Refresh user details without full page reload
-  const refreshUserInfo = async () => {
-    try {
-      const res = await apiClient.get(`${backendUrl}/user/get-user-details`);
-      setUserInfo(res.data);
-    } catch (error) {
-      console.error("Error refreshing user info:", error);
-    }
-  };
-
   // Fetch all subjects, courses, and departments
   const fetchSubjects = async () => {
     try {
@@ -139,7 +91,9 @@ export const AppProvider = ({ children }) => {
       const uniqueSubjects = [
         ...new Set(subjectData.map((item) => item.subjectName)),
       ].map((subjectName) => {
-        const sub = subjectData.find((item) => item.subjectName === subjectName);
+        const sub = subjectData.find(
+          (item) => item.subjectName === subjectName
+        );
         return { label: subjectName, value: sub.subjectCode };
       });
       setSubjects(uniqueSubjects);
@@ -148,8 +102,30 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  // Get User Uploaded Docs
+  const userUploadedDocs = async () => {
+    try {
+      const response = await apiClient.get(`${backendUrl}/user/get-uploaded-docs`);
+      setUserUploads(response.data);
+    } catch (error) {
+      console.error("Error fetching userUploadedDocs details:", error);
+    }
+  };
+
+  // Get User Uploaded Docs
+  const userBookmarkedDocs = async () => {
+    try {
+      const res = await apiClient.get(`${backendUrl}/user/get-bookmarked-docs`);
+      setBookmarked(res.data);
+    } catch (error) {
+      console.error("Error fetching BookmarkedDocs details:", error);
+    }
+  };
+
   useEffect(() => {
-    fetchSubjects();
+    fetchSubjects(),
+    userUploadedDocs(),
+    userBookmarkedDocs()
   }, []);
 
   const value = {
@@ -159,11 +135,13 @@ export const AppProvider = ({ children }) => {
     logout,
     isAuthenticated,
     userData,
-    refreshUserInfo,
     userInfo,
     courses,
     departments,
     subjects,
+    userUploads,
+    bookmarked,
+    userBookmarkedDocs,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
