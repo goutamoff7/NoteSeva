@@ -105,21 +105,6 @@ public class EmailService {
         }
     }
 
-    public String alterEmailBody(String otp, String name) {
-        return "<div style='font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;'>"
-                + "<h2 style='color: #d63031;'>⚠ Password Reset Attempt ⚠</h2>"
-                + "<p style='font-size: 16px; color: #2c3e50;'>Dear " + name + ",</p>"
-                + "<p style='font-size: 16px;'>We noticed a request to reset your password using the <strong>Forgot Password</strong> option.</p>"
-                + "<p style='font-size: 16px;'>If this was you, please proceed with the next steps.</p>"
-                + "<p style='color: #e74c3c; font-size: 14px;'>🚨 If you did not request this, please ignore this email and ensure your account security.</p>"
-                + "<p style='font-size: 16px;'>Your OTP for password reset is: "
-                + "<strong style='color: #e74c3c; font-size: 20px;'>" + otp + "</strong></p>"
-                + "<p style='font-size: 14px; color: #7f8c8d;'>This OTP is valid for 1 minute. Do not share it with anyone.</p>"
-                + "<p style='margin-top: 20px;'>Stay secure and vigilant!</p>"
-                + "<p><strong>Best regards,</strong><br>NoteSeva Teams</p>"
-                + "</div>";
-    }
-
     @Async
     public void sendQueryEmail(String email, String firstName , String query) throws MessagingException {
 
@@ -135,7 +120,7 @@ public class EmailService {
                     + "<div style='background-color: #fff; padding: 15px; border-left: 4px solid #0984e3; margin: 15px 0;'>"
                     + "<p style='margin: 0;'><strong>Your asked query:</strong> " + query + "</p>"
                     + "</div>"
-                    + "<p style='font-size: 14px; color: #636e72;'>Our team usually responds within 24–48 hours. If your issue is urgent, please feel free to call us directly at +1-800-123-4567.</p>"
+                    + "<p style='font-size: 14px; color: #636e72;'>Our team usually responds within 24–48 hours.</p>"
                     + "<p style='margin-top: 20px;'>Thanks for your patience and for contacting us.</p>"
                     + "<p><strong>Best regards,</strong><br>Team NoteSeva Teams</p>"
                     + "</div>";
