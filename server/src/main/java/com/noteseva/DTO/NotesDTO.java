@@ -5,12 +5,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Getter
 @Setter
 public class NotesDTO {
 
     private Integer id;
+
+    private String documentType;
 
     //subject selection
     @NotBlank(message = "Course name can't be blank.")
@@ -31,6 +34,14 @@ public class NotesDTO {
     private String sharedBy;
 
     private String imageUrl;
+
+    private Integer likeCount;
+
+    private boolean currentUserLiked;
+
+    private Set<UserPreviewDTO> likedUserList;
+
+    private boolean currentUserBookmarked;
 
     //file handling
     private String fileName;

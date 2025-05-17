@@ -102,4 +102,27 @@ public class Users{
             inverseJoinColumns = @JoinColumn(name = "pyq_id"))
     private Set<PYQ> bookmarkedPYQ = new HashSet<>();
 
+    // Like
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_liked_notes",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "notes_id"))
+    private Set<Notes> likedNotes = new HashSet<>();
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_liked_organizer",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "organizer_id"))
+    private Set<Organizer> likedOrganizer = new HashSet<>();
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_liked_pyq",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "pyq_id"))
+    private Set<PYQ> likedPYQ = new HashSet<>();
+
 }

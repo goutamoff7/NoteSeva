@@ -4,12 +4,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Getter
 @Setter
 public class PYQDTO {
 
     private Integer id;
+
+    private String documentType;
 
     @NotBlank(message = "Please choose any Year")
     private String year;
@@ -29,6 +32,15 @@ public class PYQDTO {
     private String sharedBy;
 
     private String imageUrl;
+
+    private Integer likeCount;
+
+    private boolean currentUserLiked;
+
+    private Set<UserPreviewDTO> likedUserList;
+
+    private boolean currentUserBookmarked;
+
 
     //file handling
     private String fileName;

@@ -30,6 +30,9 @@ public class DTOService {
     @Autowired
     UtilityService utilityService;
 
+    @Autowired
+    UserService userService;
+
     public Users getUser(UsersDTO userDTO) {
         Users user = new Users();
         user.setName(userDTO.getName());
@@ -37,6 +40,14 @@ public class DTOService {
         user.setEmail(userDTO.getEmail().toLowerCase());
         user.setPassword(userDTO.getPassword());
         return user;
+    }
+
+    public UserPreviewDTO convertToUserPreviewDTO(Users user) {
+        UserPreviewDTO userPreviewDTO = new UserPreviewDTO();
+        userPreviewDTO.setId(user.getId());
+        userPreviewDTO.setName(user.getName());
+        userPreviewDTO.setImageUrl(user.getImageUrl());
+        return userPreviewDTO;
     }
 
     public Notes getNotes(NotesDTO notesDTO) {
@@ -58,6 +69,7 @@ public class DTOService {
     public NotesDTO convertToNotesDTO(Notes notes) {
         NotesDTO notesDTO = new NotesDTO();
         notesDTO.setId(notes.getId());
+        notesDTO.setDocumentType(notes.getDocumentType());
         notesDTO.setCourseName(notes.getSubjectAssignment().getDepartment().getCourse().getCourseName());  // Extract Course Name
         notesDTO.setDepartmentName(notes.getSubjectAssignment().getDepartment().getDepartmentName());  // Extract Department Name
         notesDTO.setSubjectName(notes.getSubjectAssignment().getSubject().getSubjectName());  // Extract Subject Name
@@ -65,6 +77,31 @@ public class DTOService {
         notesDTO.setUploadDateTime(notes.getUploadDateTime());
         notesDTO.setSharedBy(notes.getUser().getName());
         notesDTO.setImageUrl(notes.getUser().getImageUrl());
+
+        // Like Data
+        Set<UserPreviewDTO> likedUserList = notes
+                .getLikedByUsers()
+                .stream()
+                .map(this::convertToUserPreviewDTO)
+                .collect(Collectors.toSet());
+        notesDTO.setLikeCount(likedUserList.size());
+        boolean currentUserLiked = notes.getLikedByUsers()
+                .stream()
+                        .anyMatch(user ->
+                                user.getUsername().equals(userService.getCurrentUsername()));
+
+        notesDTO.setCurrentUserLiked(currentUserLiked);
+        notesDTO.setLikedUserList(likedUserList);
+
+        // Bookmark Data
+        Set<Users> bookmarkedUsersList = notes.getBookmarkedByUsers();
+        boolean currentUserBookmarked = bookmarkedUsersList
+                .stream()
+                        .anyMatch(user ->
+                                user.getUsername().equals(userService.getCurrentUsername()));
+
+        notesDTO.setCurrentUserBookmarked(currentUserBookmarked);
+
         notesDTO.setFileName(notes.getFileName());
         notesDTO.setFileType(notes.getFileType());
         return notesDTO;
@@ -89,6 +126,7 @@ public class DTOService {
     public OrganizerDTO convertToOrganizerDTO(Organizer organizer) {
         OrganizerDTO organizerDTO = new OrganizerDTO();
         organizerDTO.setId(organizer.getId());
+        organizerDTO.setDocumentType(organizer.getDocumentType());
         organizerDTO.setYear(organizer.getYear());
         organizerDTO.setCourseName(organizer.getSubjectAssignment().getDepartment().getCourse().getCourseName());  // Extract Course Name
         organizerDTO.setDepartmentName(organizer.getSubjectAssignment().getDepartment().getDepartmentName());  // Extract Department Name
@@ -96,6 +134,31 @@ public class DTOService {
         organizerDTO.setUploadDateTime(organizer.getUploadDateTime());
         organizerDTO.setSharedBy(organizer.getUser().getName());
         organizerDTO.setImageUrl(organizer.getUser().getImageUrl());
+
+        // Like Data
+        Set<UserPreviewDTO> likedUserList = organizer
+                .getLikedByUsers()
+                .stream()
+                .map(this::convertToUserPreviewDTO)
+                .collect(Collectors.toSet());
+        organizerDTO.setLikeCount(likedUserList.size());
+        boolean currentUserLiked = organizer.getLikedByUsers()
+                .stream()
+                .anyMatch(user ->
+                        user.getUsername().equals(userService.getCurrentUsername()));
+
+        organizerDTO.setCurrentUserLiked(currentUserLiked);
+        organizerDTO.setLikedUserList(likedUserList);
+
+        // Bookmark Data
+        Set<Users> bookmarkedUsersList = organizer.getBookmarkedByUsers();
+        boolean currentUserBookmarked = bookmarkedUsersList
+                .stream()
+                .anyMatch(user ->
+                        user.getUsername().equals(userService.getCurrentUsername()));
+
+        organizerDTO.setCurrentUserBookmarked(currentUserBookmarked);
+
         organizerDTO.setFileName(organizer.getFileName());
         organizerDTO.setFileType(organizer.getFileType());
         return organizerDTO;
@@ -120,6 +183,7 @@ public class DTOService {
     public PYQDTO convertToPYQDTO(PYQ pyq) {
         PYQDTO pyqDTO = new PYQDTO();
         pyqDTO.setId(pyq.getId());
+        pyqDTO.setDocumentType(pyq.getDocumentType());
         pyqDTO.setYear(pyq.getYear());
         pyqDTO.setCourseName(pyq.getSubjectAssignment().getDepartment().getCourse().getCourseName());  // Extract Course Name
         pyqDTO.setDepartmentName(pyq.getSubjectAssignment().getDepartment().getDepartmentName());  // Extract Department Name
@@ -127,6 +191,31 @@ public class DTOService {
         pyqDTO.setUploadDateTime(pyq.getUploadDateTime());
         pyqDTO.setSharedBy(pyq.getUser().getName());
         pyqDTO.setImageUrl(pyq.getUser().getImageUrl());
+
+        // Like Data
+        Set<UserPreviewDTO> likedUserList = pyq
+                .getLikedByUsers()
+                .stream()
+                .map(this::convertToUserPreviewDTO)
+                .collect(Collectors.toSet());
+        pyqDTO.setLikeCount(likedUserList.size());
+        boolean currentUserLiked = pyq.getLikedByUsers()
+                .stream()
+                .anyMatch(user ->
+                        user.getUsername().equals(userService.getCurrentUsername()));
+
+        pyqDTO.setCurrentUserLiked(currentUserLiked);
+        pyqDTO.setLikedUserList(likedUserList);
+
+        // Bookmark Data
+        Set<Users> bookmarkedUsersList = pyq.getBookmarkedByUsers();
+        boolean currentUserBookmarked = bookmarkedUsersList
+                .stream()
+                .anyMatch(user ->
+                        user.getUsername().equals(userService.getCurrentUsername()));
+
+        pyqDTO.setCurrentUserBookmarked(currentUserBookmarked);
+
         pyqDTO.setFileName(pyq.getFileName());
         pyqDTO.setFileType(pyq.getFileType());
         return pyqDTO;
@@ -252,7 +341,7 @@ public class DTOService {
         return uploadedDocsDTO;
     }
 
-    public BookmarkedDocsDTO convertToBookmarkedDocsDTO(Users user){
+    public BookmarkedDocsDTO convertToBookmarkedDocsDTO(Users user) {
 
         BookmarkedDocsDTO bookmarkedDocsDTO = new BookmarkedDocsDTO();
 
@@ -261,21 +350,21 @@ public class DTOService {
                 .map(this::convertToNotesDTO)
                 .collect(Collectors.toSet());
 
-        bookmarkedDocsDTO.setBookmarkedNotesDTO(bookmarkedNotesDTO);
+        bookmarkedDocsDTO.setBookmarkedNotesDTOList(bookmarkedNotesDTO);
 
         Set<OrganizerDTO> bookmarkedOrganizerDTO = user.getBookmarkedOrganizer()
                 .stream()
                 .map(this::convertToOrganizerDTO)
                 .collect(Collectors.toSet());
 
-        bookmarkedDocsDTO.setBookmarkedOrganizerDTO(bookmarkedOrganizerDTO);
+        bookmarkedDocsDTO.setBookmarkedOrganizerDTOList(bookmarkedOrganizerDTO);
 
         Set<PYQDTO> bookmarkedPyqDTO = user.getBookmarkedPYQ()
                 .stream()
                 .map(this::convertToPYQDTO)
                 .collect(Collectors.toSet());
 
-        bookmarkedDocsDTO.setBookmarkedPyqDTO(bookmarkedPyqDTO);
+        bookmarkedDocsDTO.setBookmarkedPyqDTOList(bookmarkedPyqDTO);
 
         return bookmarkedDocsDTO;
     }

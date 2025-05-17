@@ -27,6 +27,7 @@ public class PYQService {
     DTOService dtoService;
 
     public PYQ uploadPYQ(PYQ pyq, MultipartFile file, String username) throws IOException {
+        pyq.setDocumentType("Previous Year Questions");
         pyq.setFileName(file.getOriginalFilename());
         pyq.setFileType(file.getContentType());
         pyq.setFileData(file.getBytes());
