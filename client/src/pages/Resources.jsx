@@ -241,6 +241,7 @@ const Resources = () => {
                     totalLike={note.likeCount}
                     likedUsers={note.likedUserList}
                     noteFetch={fetchNotes}
+                    docType={resourceType}
                   />
                 ))}
               </div>
