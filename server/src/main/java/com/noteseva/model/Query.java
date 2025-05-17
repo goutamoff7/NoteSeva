@@ -10,11 +10,11 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-@Table(name="contact_us")
 public class Query {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="query_id")
     private Integer id;
 
     @Column(name="first_name",nullable = false)
