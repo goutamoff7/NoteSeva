@@ -68,24 +68,24 @@ const ContactUs = () => {
             </p>
           </div>
           {/* contact section */}
-          <div className="flex flex-col gap-8 pl-5">
+          <div className="flex flex-col gap-8 px-10">
             <a
-              href="tel:+91-123-456-789"
+              href="tel:+91 8392095796"
               className="flex items-center gap-2 text-sm"
             >
               <FaPhoneVolume className="mr-2 text-xl" />
-              +91-123-456-789
+              +91 8392095796
             </a>
             <a
-              href="mailto:ABC@gmail.com"
+              href="mailto:noteseva1308@gmail.com"
               className="flex items-center gap-2 text-sm"
             >
               <MdEmail className="mr-2 text-2xl" />
-              ABC@gmail.com
+              noteseva1308@gmail.com
             </a>
             <span className="flex items-center gap-2 text-sm pr-4">
               <FaLocationDot className="mr-2 text-3xl" />
-              132 Dartmouth Street Boston, Massachusetts 02156 United States
+              Durgapur, West Bengal, India
             </span>
           </div>
           {/* social media */}

@@ -142,6 +142,7 @@ const Bookmarked = () => {
                   isInitiallyLiked={note.currentUserLiked}
                   totalLike={note.likeCount}
                   likedUsers={note.likedUserList}
+                  docType={activeItem}
                 />
               ))}
             </div>
