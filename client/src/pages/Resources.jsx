@@ -56,47 +56,47 @@ const Resources = () => {
     navigate(newUrl, { replace: true });
   };
 
-  useEffect(() => {
-    if (!selectedCourse) return;
+  // Move fetchNotes outside useEffect
+  const fetchNotes = async () => {
+    const params = new URLSearchParams();
+    params.append("courseName", selectedCourse?.label || "");
+    if (selectedDepartment)
+      params.append("departmentName", selectedDepartment.label);
+    if (selectedSubject) params.append("subjectName", selectedSubject.label);
+    params.append("pageNumber", pageNumber);
+    params.append("pageSize", 8);
+    params.append("sortBy", sortBy.value);
+    params.append("sortingOrder", sortingOrder.value);
 
-    const fetchNotes = async () => {
-      const params = new URLSearchParams();
-      params.append("courseName", selectedCourse.label);
-      if (selectedDepartment)
-        params.append("departmentName", selectedDepartment.label);
-      if (selectedSubject) params.append("subjectName", selectedSubject.label);
-      params.append("pageNumber", pageNumber);
-      params.append("pageSize", 8);
-      params.append("sortBy", sortBy.value);
-      params.append("sortingOrder", sortingOrder.value);
+    try {
+      setLoading(true);
+      setNotes([]);
 
-      try {
-        setLoading(true);
-        setNotes([]);
+      const res = await apiClient.get(
+        `${backendUrl}/${resourceType}/all?${params.toString()}`
+      );
 
-        const res = await apiClient.get(
-          `${backendUrl}/${resourceType}/all?${params.toString()}`
-        );
+      const fetchedNotes = Array.isArray(res.data.content)
+        ? res.data.content
+        : [];
+      setNotes(fetchedNotes);
+      setTotalPages(res.data.totalPages);
+    } catch (error) {
+      console.error("Fetch error:", error.message);
 
-        const fetchedNotes = Array.isArray(res.data.content)
-          ? res.data.content
-          : [];
-        setNotes(fetchedNotes);
-        setTotalPages(res.data.totalPages);
-      } catch (error) {
-        console.error("Fetch error:", error.message);
-
-        if (error.response?.status === 404) {
-          toast.warning("No data found with the above filters");
-        } else {
-          toast.error(error.message || "Something went wrong");
-        }
-      } finally {
-        setLoading(false);
+      if (error.response?.status === 404) {
+        toast.warning("No data found with the above filters");
+      } else {
+        toast.error(error.message || "Something went wrong");
       }
-    };
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchNotes();
+  // Call fetchNotes on dependency change
+  useEffect(() => {
+    if (selectedCourse) fetchNotes();
   }, [
     pageNumber,
     selectedCourse,
@@ -235,7 +235,12 @@ const Resources = () => {
                     viewLink={`${backendUrl}/${resourceType}/get/${note.id}?option=view`}
                     downloadLink={`${backendUrl}/${resourceType}/get/${note.id}?option=download`}
                     bookmarkedLink={`${backendUrl}/bookmark/${resourceType}/${note.id}`}
-                    isInitiallyBookmarked={false}
+                    likeLink={`${backendUrl}/like/${resourceType}/${note.id}`}
+                    isInitiallyBookmarked={note.currentUserBookmarked}
+                    isInitiallyLiked={note.currentUserLiked}
+                    totalLike={note.likeCount}
+                    likedUsers={note.likedUserList}
+                    noteFetch={fetchNotes}
                   />
                 ))}
               </div>

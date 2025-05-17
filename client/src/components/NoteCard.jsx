@@ -19,13 +19,20 @@ export default function NoteCard({
   downloadLink,
   viewLink,
   bookmarkedLink,
+  likeLink,
   isInitiallyBookmarked,
+  isInitiallyLiked,
+  totalLike,
+  likedUsers,
+  noteFetch,
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isLiked, setIsLiked] = useState(false);
+  const [isLiked, setIsLiked] = useState(isInitiallyLiked);
+  const [likeCount, setLikeCount] = useState(totalLike);
   const [isBookmarked, setIsBookmarked] = useState(isInitiallyBookmarked);
   const [loading, setLoading] = useState(false);
-  const { apiClient, refreshUserInfo } = useAppContext();
+  const { apiClient, userBookmarkedDocs } = useAppContext();
+  const [likePopupOpen, setLikePopupOpen] = useState(false); 
 
   const likeSoundRef = useRef(null);
   const bookmarkSoundRef = useRef(null);
@@ -41,36 +48,25 @@ export default function NoteCard({
     a.click();
   };
 
-  const toggleLike = () => {
-    if (!isLiked && likeSoundRef.current) {
-      likeSoundRef.current.currentTime = 0;
-      likeSoundRef.current.play();
-    }
-    setIsLiked(!isLiked);
-  };
-
   const toggleBookmark = async () => {
     try {
       setLoading(true);
 
       if (isBookmarked) {
-        // Unbookmark (DELETE)
-        const response = await apiClient.delete(bookmarkedLink);
-        console.log("Unbookmarked:", response.data);
+        await apiClient.delete(bookmarkedLink);
+        setIsBookmarked(false);
       } else {
-        // Bookmark (POST)
-        const response = await apiClient.post(bookmarkedLink);
-        console.log("Bookmarked:", response.data);
+        await apiClient.post(bookmarkedLink);
+        setIsBookmarked(true);
 
         if (bookmarkSoundRef.current) {
           bookmarkSoundRef.current.currentTime = 0;
           bookmarkSoundRef.current.play();
         }
       }
-
-      // Refresh user info without full reload
-      await refreshUserInfo();
-      setIsBookmarked(!isBookmarked);
+      if (userBookmarkedDocs) {
+        userBookmarkedDocs();
+      }
     } catch (error) {
       console.error("Bookmark request failed:", error);
       toast.error("Failed to update bookmark status. Please try again.");
@@ -79,8 +75,44 @@ export default function NoteCard({
     }
   };
 
+  const toggleLike = async () => {
+    try {
+      setLoading(true);
+
+      const newLikeStatus = !isLiked;
+      setIsLiked(newLikeStatus);
+      setLikeCount(newLikeStatus ? likeCount + 1 : likeCount - 1);
+
+      if (newLikeStatus) {
+        await apiClient.post(likeLink);
+
+        if (likeSoundRef.current) {
+          likeSoundRef.current.currentTime = 0;
+          likeSoundRef.current.play();
+        }
+      } else {
+        await apiClient.delete(likeLink);
+      }
+
+      // Refresh the notes list
+      if (noteFetch) {
+        noteFetch();
+        userBookmarkedDocs();
+      }
+    } catch (error) {
+      console.error("Like request failed:", error);
+      toast.error("Failed to update like status. Please try again.");
+
+      // Revert optimistic update in case of error
+      setIsLiked(!isLiked);
+      setLikeCount(isLiked ? likeCount + 1 : likeCount - 1);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="w-64 rounded-2xl shadow-lg overflow-hidden border">
+    <div className="w-64 rounded-2xl shadow-lg overflow-hidden border relative">
       {/* Sound Effects */}
       <audio ref={likeSoundRef} src="/like-btn.mp3" preload="preload" />
       <audio
@@ -136,14 +168,19 @@ export default function NoteCard({
           </button>
 
           <div className="flex items-center space-x-2">
-            <button onClick={toggleLike}>
+            <button onClick={toggleLike} disabled={loading}>
               {isLiked ? (
                 <FaHeart className="w-5 h-5 text-red-500" />
               ) : (
                 <FaRegHeart className="w-5 h-5 text-gray-400" />
               )}
             </button>
-            <span className="text-gray-500">{isLiked ? "3.3k" : "3.2k"}</span>
+            <span
+              className="text-gray-500 cursor-pointer"
+              onClick={() => setLikePopupOpen(!likePopupOpen)}
+            >
+              {likeCount}
+            </span>
 
             <button onClick={toggleBookmark} disabled={loading}>
               {isBookmarked ? (
@@ -152,6 +189,23 @@ export default function NoteCard({
                 <IoBookmarkOutline className="w-5 h-5 text-gray-500" />
               )}
             </button>
+
+            {likePopupOpen && (
+              <div className="absolute right-0 bottom-0 mt-2 bg-transparent rounded-md shadow-lg z-20 p-2 max-h-60 overflow-y-auto">
+                {likedUsers.length > 0 ? (
+                  likedUsers.map((user, index) => (
+                    <div
+                      key={index}
+                      className="text-gray-700 px-2 py-1 hover:bg-gray-100 rounded"
+                    >
+                      <img className="size-5 rounded-full" src={user.imageUrl} alt="" />
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-gray-500 px-2 py-1">No likes yet</div>
+                )}
+              </div>
+            )}
           </div>
         </div>
 

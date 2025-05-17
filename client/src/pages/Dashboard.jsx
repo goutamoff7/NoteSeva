@@ -1,4 +1,3 @@
-import React from "react";
 import ProfileCard from "../components/ProfileCard";
 import LikeGains from "../components/LikeGains";
 import { IoSettingsSharp } from "react-icons/io5";
@@ -10,12 +9,14 @@ import ProjectSection from "../components/ProjectSection";
 import UploadNote from "../components/UploadNote";
 import { useAppContext } from "../context/AppContext";
 import { useAllContext } from "../context/AllContext";
+import MapStyleGrid from "../components/MapStyleGrid";
+
 
 const Dashboard = () => {
 
-  const { logout, userInfo, backendUrl} = useAppContext();
+  const { logout, userInfo, backendUrl,userUploads} = useAppContext();
   const {formatDate} = useAllContext()
-
+  
   return (
     <section className="grid grid-cols-[300px_auto_300px] bg-[#1E293B] min-h-screen p-4 ">
       {/* left side */}
@@ -41,14 +42,15 @@ const Dashboard = () => {
       {/* middle side */}
       <div className="rounded-md mt-4 space-y-5">
         <div className="flex gap-2 flex-row">
-          <UploadSection userInfo={userInfo}/>
+          <UploadSection userUploadedDocs={userUploads}/>
           <ProjectSection />{" "}
         </div>
-        <UploadNote userInfo={userInfo} backendUrl={backendUrl} formatDate={formatDate}/>
+        {/* <MapStyleGrid/> */}
+        <UploadNote userUploads={userUploads} backendUrl={backendUrl} formatDate={formatDate}/>
       </div>
       {/* right side */}
       <div className="m-4">
-        <BadgeProgress userInfo={userInfo}/>
+        <BadgeProgress userUploads={userUploads}/>
       </div>
     </section>
   );
