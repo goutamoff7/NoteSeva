@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { FaDownload, FaEye, FaHeart } from "react-icons/fa";
-import { GrLike } from "react-icons/gr";
 
 const UploadNote = ({ userUploads, backendUrl, formatDate }) => {
   const [activeFilter, setActiveFilter] = useState("Notes");
@@ -9,9 +8,9 @@ const UploadNote = ({ userUploads, backendUrl, formatDate }) => {
 
   // Extracting different upload types
   const uploadsMap = {
-    Notes: userUploads.notesDTOList || [],
-    organizer: userUploads.organizerDTOList || [],
-    PYQ: userUploads.pyqDTOList || [],
+    Notes: userUploads?.notesDTOList || [],
+    organizer: userUploads?.organizerDTOList || [],
+    PYQ: userUploads?.pyqDTOList || [],
   };
 
   // Getting the filtered uploads based on active filter

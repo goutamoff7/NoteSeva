@@ -1,10 +1,10 @@
 import GaugeChart from "react-gauge-chart";
 
-const UploadSection = ({ userUploadedDocs = {} }) => {
+const UploadSection = ({ userUploads }) => {
   // Safely extracting lists with default empty arrays to avoid undefined errors
-  const notesDTOList = userUploadedDocs.notesDTOList || [];
-  const organizerDTOList = userUploadedDocs.organizerDTOList || [];
-  const pyqDTOList = userUploadedDocs.pyqDTOList || [];
+  const notesDTOList = userUploads?.notesDTOList || [];
+  const organizerDTOList = userUploads?.organizerDTOList || [];
+  const pyqDTOList = userUploads?.pyqDTOList || [];
 
   const categories = [
     {

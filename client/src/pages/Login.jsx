@@ -12,7 +12,7 @@ const LoginPage = () => {
 
   const navigate = useNavigate()
 
-  const { backendUrl, apiClient, login} = useAppContext();
+  const { backendUrl, apiClient, login, userBookmarkedDocs} = useAppContext();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -24,6 +24,7 @@ const LoginPage = () => {
       const {data} = await apiClient.post(`${backendUrl}/public/login`, { email, password });
       toast.success("Login successful");
       await login();
+      await userBookmarkedDocs();
       navigate('/dashboard')
     } catch (error) {
       toast.error(error.message || "Login failed. Please check your credentials.");

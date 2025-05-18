@@ -1,5 +1,4 @@
 import React, { useState, useRef } from "react";
-import axios from "axios";
 import { IoBookmark, IoBookmarkOutline } from "react-icons/io5";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -49,33 +48,6 @@ export default function NoteCard({
     a.click();
   };
 
-  const toggleBookmark = async () => {
-    try {
-      setLoading(true);
-
-      if (isBookmarked) {
-        await apiClient.delete(bookmarkedLink);
-        setIsBookmarked(false);
-      } else {
-        await apiClient.post(bookmarkedLink);
-        setIsBookmarked(true);
-
-        if (bookmarkSoundRef.current) {
-          bookmarkSoundRef.current.currentTime = 0;
-          bookmarkSoundRef.current.play();
-        }
-      }
-      if (userBookmarkedDocs) {
-        userBookmarkedDocs();
-      }
-    } catch (error) {
-      console.error("Bookmark request failed:", error);
-      toast.error("Failed to update bookmark status. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const toggleLike = async () => {
     try {
       setLoading(true);
@@ -104,9 +76,35 @@ export default function NoteCard({
       console.error("Like request failed:", error);
       toast.error("Failed to update like status. Please try again.");
 
-      // Revert optimistic update in case of error
       setIsLiked(!isLiked);
       setLikeCount(isLiked ? likeCount + 1 : likeCount - 1);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const toggleBookmark = async () => {
+    try {
+      setLoading(true);
+
+      if (isBookmarked) {
+        await apiClient.delete(bookmarkedLink);
+        setIsBookmarked(false);
+      } else {
+        await apiClient.post(bookmarkedLink);
+        setIsBookmarked(true);
+
+        if (bookmarkSoundRef.current) {
+          bookmarkSoundRef.current.currentTime = 0;
+          bookmarkSoundRef.current.play();
+        }
+      }
+      if (userBookmarkedDocs) {
+        userBookmarkedDocs();
+      }
+    } catch (error) {
+      console.error("Bookmark request failed:", error);
+      toast.error("Failed to update bookmark status. Please try again.");
     } finally {
       setLoading(false);
     }
