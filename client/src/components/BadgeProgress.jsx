@@ -1,7 +1,7 @@
 import { badgeLevels } from "../../data/data.js"; 
 
 export default function BadgeProgress({userUploads}) {
-  const uploadCount = userUploads.organizerDTOList.length + userUploads.pyqDTOList.length + userUploads.notesDTOList.length;
+  const uploadCount = userUploads?.organizerDTOList.length + userUploads?.pyqDTOList.length + userUploads?.notesDTOList.length;
   
   const currentBadge =
     [...badgeLevels].reverse().find((badge) => uploadCount >= badge.min) ||

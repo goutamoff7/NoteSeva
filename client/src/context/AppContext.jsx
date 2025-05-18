@@ -142,6 +142,7 @@ export const AppProvider = ({ children }) => {
     userUploads,
     bookmarked,
     userBookmarkedDocs,
+    userUploadedDocs
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
